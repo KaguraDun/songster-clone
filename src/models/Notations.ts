@@ -12,6 +12,11 @@ export enum Duration { // size of note in fractions of quarter
     'EighthWithDot' = 0.75,
     'SixteenWithDot' = 0.375,
     'ThirtySecondWithDot' = 0.1875,
+
+    'EighthTriplet' = 0.33,
+    'QuarterTriplet' = 0.67,
+    'EighthQuintol' = 0.2,
+    'QuarterQuintol' = 0.4
 }
 
 export enum Clef {
@@ -28,7 +33,8 @@ export enum Touch {
     Staccato,
     Accent,
     Legato,
-    NonLegato
+    NonLegato,
+    Marcato
 }
 
 export enum NoteName {

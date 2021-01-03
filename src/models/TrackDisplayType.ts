@@ -16,13 +16,21 @@ export interface Track {
 
 export interface Section {
     Bpm: number;
+    Key: NoteName;
     Clef: Clef;
     Size: Size;  //number of beats per measure
     Measures: Measure[];
 }
 
 export interface Measure {
-    Notes: Note[];  // sum of all notes durations must be equal to size!!!
+    Id: number;
+    Time: number;
+    Notes: Chord[];  // sum of all notes durations must be equal to size!!!
+}
+
+export interface Chord {
+    Name:string;
+    Notes: Note[];
 }
 
 export interface Note {
