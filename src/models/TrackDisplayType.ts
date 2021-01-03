@@ -9,8 +9,8 @@ export interface Song {
 
 export interface Track {
     Instrument: string;
-    Name: string;
-    Author: string;
+    Name?: string;
+    Author?: string;
     Sections: Section[];
 }
 
@@ -29,13 +29,13 @@ export interface Measure {
 }
 
 export interface Chord {
-    Name:string;
+    Name?:string;
     Notes: Note[];
 }
 
 export interface Note {
-    Name: NoteName;
-    Octave: number;
+    Name?: NoteName;
+    Octave?: number;
     Duration: Duration;
     IsDotted: boolean;
     IsPause: boolean;
