@@ -1,72 +1,78 @@
 import Vex from 'vexflow';
 import { track } from '../../public/songs/Intertainer';
-import { NoteName, Clef } from '../models/Notations';
+import { NoteName} from '../models/Notations';
 
 export default class SheetMusicPage {
   parentElement: HTMLElement;
+  VF: any;
+  context: any;
 
   constructor(parentElement: HTMLElement) {
     this.parentElement = parentElement;
+    this.VF = Vex.Flow;
+    this.context = null;
+  }
+
+  drawStaveMeasure(section) {
+    const timeSignature = `${section.Size.Count}/${section.Size.Per}`;
+    const sectionSizeX = 300;
+
+    section.Measures.forEach((measure, index) => {
+      const stave = new this.VF.Stave(sectionSizeX * index, 0, sectionSizeX);
+
+      if (index === 0) stave.addClef('treble').addTimeSignature(timeSignature);
+
+      stave.setContext(this.context).draw();
+
+      const notesArray = this.getNotesArray(measure.Notes);
+      const beams = this.VF.Beam.generateBeams(notesArray);
+
+      this.VF.Formatter.FormatAndDraw(this.context, stave, notesArray);
+
+      beams.forEach((beam) => {
+        beam.setContext(this.context).draw();
+      });
+    });
+  }
+
+  getNotesArray(notes) {
+    let notesArray = [];
+
+    notes.forEach((notes) => {
+      let note = notes.Notes[0];
+
+      if (typeof note.Name === 'undefined') return;
+
+      const noteObj = new this.VF.StaveNote({
+        clef: 'treble',
+        keys: [`${NoteName[note.Name]}/${note.Octave}`],
+        duration: note.Duration,
+        auto_stem: true,
+      });
+
+      //noteObj.addAccidental(0, new this.VF.Accidental("b"));
+      //добавить лигу (связка ноты)
+      if (note.IsDotted) noteObj.addDot(0);
+
+      notesArray.push(noteObj);
+    });
+
+    return notesArray;
   }
 
   render() {
     console.log(track);
 
-    const VF = Vex.Flow;
-
-    var renderer = new VF.Renderer(this.parentElement, VF.Renderer.Backends.SVG);
+    const renderer = new this.VF.Renderer(this.parentElement, this.VF.Renderer.Backends.SVG);
 
     // Size our SVG:
-    renderer.resize(500, 500);
+    renderer.resize(1200, 600);
 
     // And get a drawing context:
-    var context = renderer.getContext();
+    this.context = renderer.getContext();
 
-    // Create a stave at position 10, 40 of width 400 on the canvas.
-    var stave = new VF.Stave(10, 40, 400);
-
-    // Add a clef and time signature.
-    stave.addClef('treble').addTimeSignature('4/4');
-
-    // Connect it to the rendering context and draw!
-    stave.setContext(context).draw();
-
-    let notesArray = [];
-    
-    console.log(track.Sections);
-
-    track.Sections[0].Measures.forEach((notes) => {
-      notes.Notes.forEach((notes) => {
-
-        let note = notes.Notes[0];
-
-        if (!note.Name) return;
-
-        // console.log(NoteName[note.Name] + '/4');
-
-        const noteObj = new VF.StaveNote({
-          clef: 'treble',
-          keys: [NoteName[note.Name] + '/4'],
-          duration: 'q',
-        });
-
-        notesArray.push(noteObj);
-      });
+    track.Sections.forEach((section) => {
+      this.drawStaveMeasure(section);
     });
-
-    console.log(notesArray);
-    // Create a voice in 4/4 and add the notes from above
-    var voice = new VF.Voice({ num_beats: 4, beat_value: 4 });
-    voice.addTickables(notesArray.slice(0, 4));
-
-    // Format and justify the notes to 400 pixels.
-    var formatter = new VF.Formatter().joinVoices([voice]).format([voice], 400);
-
-    // Render voice
-    voice.draw(context, stave);
-  }
-
-  drawSection() {
-
   }
 }
