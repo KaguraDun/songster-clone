@@ -9,8 +9,8 @@
 }
 
 .sheet-music__render{
-    margin: 0 50px;
     display: grid;
     grid-gap: 0;
     grid-template-columns: repeat(auto-fit, 400px);
+    justify-content: center;
 }
