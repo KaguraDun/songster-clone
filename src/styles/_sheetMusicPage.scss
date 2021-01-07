@@ -1,3 +1,16 @@
 .sheet-music__container{
-    margin: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.sheet-music__bitrate{
+    margin: 0 50px;
+}
+
+.sheet-music__render{
+    margin: 0 50px;
+    display: grid;
+    grid-gap: 0;
+    grid-template-columns: repeat(auto-fit, 400px);
 }
