@@ -1,4 +1,4 @@
-import { Duration, Clef, Size, Touch, NoteName } from './Notations';
+import { Duration, Clef, Size, Touch, NoteName, Alteration } from './Notations';
 
 export interface Song {
     Tracks: Track[];
@@ -11,10 +11,7 @@ export interface Track {
     Instrument: string;
     Name?: string;
     Author?: string;
-    Sections: Section[];
-}
 
-export interface Section {
     Bpm: number;
     Key: NoteName;
     Clef: Clef;
@@ -35,6 +32,7 @@ export interface Chord {
 
 export interface Note {
     Name?: NoteName;
+    Alteration?: Alteration;
     Octave?: number;
     Duration: Duration;
     IsDotted: boolean;

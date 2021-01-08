@@ -20,17 +20,17 @@ export enum Duration { // size of note in fractions of quarter
 }
 
 export enum Clef {
-    'bass',
-    'treble',
-    'tenor',
-    'alto',
-    'soprano',
-    'percussion',
-    'mezzo-soprano',
-    'baritone-c',
-    'baritone-f',
-    'subbass',
-    'french',
+    Bass = 'bass',
+    Treble = 'treble',
+    Tenor = 'tenor',
+    Alto = 'alto',
+    Soprano = 'soprano',
+    Percussion = 'percussion',
+    MezzoSoprano = 'mezzo-soprano',
+    BaritoneC = 'baritone-c',
+    BaritoneF = 'baritone-f',
+    SubBass = 'subbass',
+    French = 'french',
 }
 
 export interface Size { // number of beats per measure = Count/Per
@@ -47,17 +47,17 @@ export enum Touch {
 }
 
 export enum NoteName {
-    'C',
-    'C#',
-    'D',
-    'D#',
-    'E',
-    'F',
-    'F#',
-    'G',
-    'G#',
-    'A',
-    'A#',
-    'B',
-    'B#'
+    C = 'C',
+    D = 'D',
+    E = 'E',
+    F = 'F',
+    G = 'G',
+    A = 'A',
+    B = 'B',
+}
+
+export enum Alteration {
+    '#' = '#',
+    'b' = 'b',
+    'n'= 'n',
 }
