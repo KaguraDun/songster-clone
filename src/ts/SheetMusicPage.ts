@@ -1,6 +1,6 @@
 import Vex from 'vexflow';
-import { track } from '../../public/songs/Intertainer';
-import { NoteName, Touch, Clef } from '../models/Notations';
+import track from '../../public/songs/4.json';
+import { Touch, Alteration } from '../models/Notations';
 
 const SECTION_SIZE = {
   width: 400,
@@ -24,6 +24,7 @@ export default class SheetMusicPage {
   getTies(notesList) {
     let tiesList = [];
     //Нужно подумать как сделать последовательность если связь будет у нескольких нот подряд
+    //Но может и не понадобится ^_^
     for (let i = 0; i < notesList.ties.length; i = i + 2) {
       const tieObj = new this.VF.StaveTie({
         first_note: notesList.notes[notesList.ties[i]],
@@ -36,12 +37,11 @@ export default class SheetMusicPage {
     return tiesList;
   }
 
-  drawStaveMeasure(section) {
-    const timeSignature = `${section.Size.Count}/${section.Size.Per}`;
+  drawStaveMeasure(measure) {
+    const timeSignature = `${track.Size.Count}/${track.Size.Per}`;
 
-    section.Measures.forEach((measure, index: number) => {
+    measure.forEach((part, index: number) => {
       const renderer = new this.VF.Renderer(this.renderElement, this.VF.Renderer.Backends.SVG);
-
       // Size our SVG:
       renderer.resize(SECTION_SIZE.width, SECTION_SIZE.height);
 
@@ -56,11 +56,11 @@ export default class SheetMusicPage {
 
       const stave = new this.VF.Stave(SECTION_SIZE.width * index, 0, SECTION_SIZE.width);
 
-      if (index === 0) stave.addClef(Clef[section.Clef]).addTimeSignature(timeSignature);
+      if (index === 0) stave.addClef(track.Clef).addTimeSignature(timeSignature);
 
       stave.setContext(this.context).draw();
 
-      const notesList = this.getNotesArray(measure.Notes);
+      const notesList = this.getNotesArray(part.Chords);
       const beams = this.VF.Beam.generateBeams(notesList.notes);
 
       this.VF.Formatter.FormatAndDraw(this.context, stave, notesList.notes);
@@ -77,25 +77,29 @@ export default class SheetMusicPage {
     });
   }
 
-  getNotesArray(notes) {
+  getNotesArray(chord) {
     const notesList = {
       notes: <any>[],
       ties: <any>[],
     };
 
-    notes.forEach((notes, index: number) => {
-      let note = notes.Notes[0];
+    chord.forEach((notes, index: number) => {
+      const note = notes.Notes[0];
+      const сhord = notes.Notes.map((note) => `${note.Name}/${note.Octave}`);
 
       if (typeof note.Name === 'undefined') return;
 
+      const noteAlteration = Object.values(Alteration)[note.Alteration];
+      const noteDuration = note.IsPause ? note.Duration + 'r' : note.Duration;
       const noteObj = new this.VF.StaveNote({
-        clef: 'treble',
-        keys: [`${NoteName[note.Name]}/${note.Octave}`],
-        duration: note.Duration,
+        clef: track.Clef,
+        keys: сhord,
+        duration: noteDuration,
         auto_stem: true,
       });
 
-      //noteObj.addAccidental(0, new this.VF.Accidental("b"));
+      if (noteAlteration) noteObj.addAccidental(0, new this.VF.Accidental(noteAlteration));
+
       if (note.IsDotted) noteObj.addDot(0);
 
       notesList.notes.push(noteObj);
@@ -117,21 +121,17 @@ export default class SheetMusicPage {
   addBitrate(renderElement: HTMLDivElement) {
     const bitrateContainer = document.createElement('div');
     bitrateContainer.classList.add('sheet-music__bitrate');
-    bitrateContainer.textContent = `Bpm = ${track.Sections[0].Bpm}`;
+    bitrateContainer.textContent = `Bpm = ${Math.trunc(track.Bpm)}`;
     renderElement.append(bitrateContainer);
   }
 
   render() {
-    console.log(track);
-
     this.addBitrate(this.parentElement);
 
     this.renderElement = document.createElement('div');
     this.renderElement.classList.add('sheet-music__render');
     this.parentElement.append(this.renderElement);
 
-    track.Sections.forEach((section) => {
-      this.drawStaveMeasure(section);
-    });
+    this.drawStaveMeasure(track.Measures);
   }
 }
