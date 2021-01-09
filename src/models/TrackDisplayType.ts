@@ -22,7 +22,7 @@ export interface Track {
 export interface Measure {
     Id: number;
     Time: number;
-    Notes: Chord[];  // sum of all notes durations must be equal to size!!!
+    Chords: Chord[];  // sum of all notes durations must be equal to size!!!
 }
 
 export interface Chord {
