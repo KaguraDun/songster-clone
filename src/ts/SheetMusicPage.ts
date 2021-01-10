@@ -187,10 +187,14 @@ export default class SheetMusicPage {
 
   changeTimeMarkerPosition(event: MouseEvent) {
     const target = event.target as HTMLElement;
+    const closestToSvg = target.closest('svg');
 
-    if (target.tagName !== 'svg') return;
-    console.log(event.clientY);
+    if (!closestToSvg) return;
+
+    const newTimeMarkerPosition = Math.floor((event.clientY + pageYOffset) / SECTION_SIZE.height);
+
     this.timeMarker.style.left = `${event.clientX}px`;
+    this.timeMarker.style.top = `${newTimeMarkerPosition * SECTION_SIZE.height}px`;
   }
 
   render() {
@@ -203,6 +207,7 @@ export default class SheetMusicPage {
 
     this.renderElement = document.createElement('div');
     this.renderElement.classList.add('sheet-music__render');
+
     this.parentElement.append(this.renderElement);
 
     this.drawStaveMeasures(track.Measures);
