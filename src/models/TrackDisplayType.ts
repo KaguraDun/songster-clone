@@ -1,4 +1,5 @@
 import { Duration, Clef, Size, Touch, NoteName, Alteration } from './Notations';
+import Vex from 'vexflow';
 
 export interface Song {
     Tracks: Track[];
@@ -31,11 +32,16 @@ export interface Chord {
 }
 
 export interface Note {
-    Name?: NoteName;
-    Alteration?: Alteration;
+    Name?: string;
+    Alteration?: number;
     Octave?: number;
-    Duration: Duration;
+    Duration: string;
     IsDotted: boolean;
     IsPause: boolean;
     Touch?: Touch;
+}
+
+export interface NoteTie {
+    notes: Vex.Flow.StaveNote[];
+    ties: number[];
 }

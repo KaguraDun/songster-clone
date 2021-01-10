@@ -57,7 +57,7 @@ export enum NoteName {
 }
 
 export enum Alteration {
-    '#' = '#',
     'b' = 'b',
+    '#' = '#',
     'n'= 'n',
 }
