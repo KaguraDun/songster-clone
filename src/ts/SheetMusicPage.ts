@@ -12,7 +12,7 @@ export default class SheetMusicPage {
   parentElement: HTMLDivElement;
   renderElement: HTMLDivElement;
   timeMarker: HTMLDivElement;
-  timeMarkerTimer: any; // dfdf
+  timeMarkerTimer: NodeJS.Timer;
   playMusic: boolean;
 
   constructor(parentElement: HTMLDivElement) {
