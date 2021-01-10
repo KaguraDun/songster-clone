@@ -1,16 +1,33 @@
-.sheet-music__container{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.sheet-music{
+    &__container{
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    &__bitrate{
+        margin: 0 50px;
+    }
+
+    &__render{
+        position: relative;
+        display: grid;
+        grid-gap: 0;
+        grid-template-columns: repeat(auto-fit, 400px);
+        grid-auto-rows: minmax(min-content, max-content);
+        justify-content: center;
+    }
+
+    &__time-marker{
+        width: 10px;
+        background-color: rgba($color: #4dc20a, $alpha: 0.6);
+        position: absolute;
+        border-radius: 30%;
+    }
+    
 }
 
-.sheet-music__bitrate{
-    margin: 0 50px;
-}
-
-.sheet-music__render{
-    display: grid;
-    grid-gap: 0;
-    grid-template-columns: repeat(auto-fit, 400px);
-    justify-content: center;
+.button-play{
+    width: 100px;
+    margin:  0 auto;
 }
