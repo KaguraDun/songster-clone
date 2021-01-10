@@ -76,9 +76,9 @@ export default class SheetMusicPage {
         tie.setContext(context).draw();
       });
 
-      const svgElement: HTMLElement = this.renderElement.children[index];
-      svgElement.dataset.time = measure.Time;
-      svgElement.dataset.markerSpeed = timeMarkerSpeed;
+      const svgElement = this.renderElement.children[index] as HTMLElement;
+      svgElement.dataset.time = `${measure.Time}`;
+      svgElement.dataset.markerSpeed = `${timeMarkerSpeed}`;
     });
   }
 
@@ -123,16 +123,20 @@ export default class SheetMusicPage {
 
   addBitrate(parentElement: HTMLDivElement) {
     const bitrateContainer = document.createElement('div');
+
     bitrateContainer.classList.add('sheet-music__bitrate');
     bitrateContainer.textContent = `Bpm = ${Math.trunc(track.Bpm)}`;
+
     parentElement.append(bitrateContainer);
   }
 
   addButtonPlay(parentElement: HTMLDivElement): HTMLButtonElement {
     const buttonContainer = document.createElement('button');
+
     buttonContainer.classList.add('button-play');
     buttonContainer.textContent = `play`;
     parentElement.append(buttonContainer);
+
     return buttonContainer;
   }
 
@@ -146,21 +150,23 @@ export default class SheetMusicPage {
     if (timeMarker.offsetLeft > firstRowEndPosition) {
       timeMarker.style.left = `${firstRowStartPosition.x}px`;
       timeMarker.style.top = `${timeMarker.offsetTop + SECTION_SIZE.height}px`;
-      timeMarker.scrollIntoView();
+      timeMarker.scrollIntoView({ block: 'center', behavior: 'smooth' });
       return;
     }
 
     timeMarker.style.left = `${timeMarker.offsetLeft + shiftOffset}px`;
   }
 
-  playMusicTrack(event) {
+  playMusicTrack(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+
     this.playMusic = !this.playMusic;
 
     if (this.playMusic) {
-      event.target.textContent = 'stop';
+      target.textContent = 'stop';
       this.timeMarkerTimer = setInterval(() => this.moveTimeMarker(this.timeMarker), 1);
     } else {
-      event.target.textContent = 'play';
+      target.textContent = 'play';
       clearInterval(this.timeMarkerTimer);
     }
   }
@@ -179,11 +185,12 @@ export default class SheetMusicPage {
     return timeMarker;
   }
 
-  changeTimeMarkerPosition(event) {
-    if (event.target.tagName !== 'svg') return;
+  changeTimeMarkerPosition(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+
+    if (target.tagName !== 'svg') return;
     console.log(event.clientY);
     this.timeMarker.style.left = `${event.clientX}px`;
-
   }
 
   render() {
