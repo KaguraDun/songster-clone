@@ -1,5 +1,3 @@
-//import { Vex } from 'vexflow';
-//import { Flow } from 'vexflow';
 import Vex from 'vexflow';
 import * as track from '../../public/songs/4.json';
 import { Touch, Alteration } from '../models/Notations';
@@ -13,17 +11,14 @@ const SECTION_SIZE = {
 export default class SheetMusicPage {
   parentElement: HTMLDivElement;
   renderElement: HTMLDivElement;
-  context: Vex.Flow.SVGContext;
-  sectionSize: { width: number; height: number };
 
   constructor(parentElement: HTMLDivElement) {
     this.parentElement = parentElement;
-    this.context = null;
     this.renderElement = null;
   }
 
-  getTies(notesList : NoteTie) {
-    let tiesList : Vex.Flow.StaveTie[] = [];
+  getTies(notesList: NoteTie) {
+    let tiesList: Vex.Flow.StaveTie[] = [];
     //Нужно подумать как сделать последовательность если связь будет у нескольких нот подряд
     //Но может и не понадобится ^_^
     for (let i = 0; i < notesList.ties.length; i = i + 2) {
@@ -38,18 +33,16 @@ export default class SheetMusicPage {
     return tiesList;
   }
 
-  drawStaveMeasure(measures : Measure[]) {
+  drawStaveMeasures(measures: Measure[]) {
     const timeSignature = `${track.Size.Count}/${track.Size.Per}`;
 
     measures.forEach((measure, index: number) => {
-      //const renderer = new Vex.Vex.Flow.Renderer(this.renderElement, Vex.Flow.Renderer.Backends.SVG);
-      // Size our SVG:
-      //renderer.resize(SECTION_SIZE.width, SECTION_SIZE.height);
+      const context = Vex.Flow.Renderer.getSVGContext(
+        this.renderElement,
+        Vex.Flow.Renderer.Backends.SVG,
+      );
 
-      // And get a drawing context:
-      //this.context = renderer.getContext();
-      this.context = Vex.Flow.Renderer.getSVGContext(this.renderElement,Vex.Flow.Renderer.Backends.SVG);
-      this.context.setViewBox(
+      context.setViewBox(
         SECTION_SIZE.width * index,
         0,
         SECTION_SIZE.width,
@@ -60,32 +53,28 @@ export default class SheetMusicPage {
 
       if (index === 0) stave.addClef(track.Clef).addTimeSignature(timeSignature);
 
-      stave.setContext(this.context).draw();
+      stave.setContext(context).draw();
 
       const notesList = this.getNotesArray(measure.Chords);
       const beams = Vex.Flow.Beam.generateBeams(notesList.notes);
 
-      Vex.Flow.Formatter.FormatAndDraw(this.context, stave, notesList.notes);
+      Vex.Flow.Formatter.FormatAndDraw(context, stave, notesList.notes);
 
       beams.forEach((beam) => {
-        beam.setContext(this.context).draw();
+        beam.setContext(context).draw();
       });
 
       const ties = this.getTies(notesList);
 
       ties.forEach((tie) => {
-        tie.setContext(this.context).draw();
+        tie.setContext(context).draw();
       });
     });
   }
 
-  getNotesArray(chords : Chord[]) : NoteTie {
-    // const notesList = {
-    //   notes: <any>[],
-    //   ties: <any>[],
-    // };
-    const notes : Vex.Flow.StaveNote[] = [];
-    const ties : number[] = [];
+  getNotesArray(chords: Chord[]): NoteTie {
+    const notes: Vex.Flow.StaveNote[] = [];
+    const ties: number[] = [];
 
     chords.forEach((chord, index: number) => {
       const note = chord.Notes[0];
@@ -109,7 +98,7 @@ export default class SheetMusicPage {
       notes.push(noteObj);
 
       if (note.Touch === Touch.Legato) {
-       ties.push(index);
+        ties.push(index);
         return;
       }
 
@@ -136,6 +125,6 @@ export default class SheetMusicPage {
     this.renderElement.classList.add('sheet-music__render');
     this.parentElement.append(this.renderElement);
 
-    this.drawStaveMeasure(track.Measures);
+    this.drawStaveMeasures(track.Measures);
   }
 }
