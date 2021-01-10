@@ -1,6 +1,9 @@
+//import { Vex } from 'vexflow';
+//import { Flow } from 'vexflow';
 import Vex from 'vexflow';
-import track from '../../public/songs/4.json';
+import * as track from '../../public/songs/4.json';
 import { Touch, Alteration } from '../models/Notations';
+import { Chord, Measure, Note, NoteTie, Track } from '../models/TrackDisplayType';
 
 const SECTION_SIZE = {
   width: 400,
@@ -10,23 +13,21 @@ const SECTION_SIZE = {
 export default class SheetMusicPage {
   parentElement: HTMLDivElement;
   renderElement: HTMLDivElement;
-  VF: any;
-  context: any;
+  context: Vex.Flow.SVGContext;
   sectionSize: { width: number; height: number };
 
   constructor(parentElement: HTMLDivElement) {
     this.parentElement = parentElement;
-    this.VF = Vex.Flow;
     this.context = null;
     this.renderElement = null;
   }
 
-  getTies(notesList) {
-    let tiesList = [];
+  getTies(notesList : NoteTie) {
+    let tiesList : Vex.Flow.StaveTie[] = [];
     //Нужно подумать как сделать последовательность если связь будет у нескольких нот подряд
     //Но может и не понадобится ^_^
     for (let i = 0; i < notesList.ties.length; i = i + 2) {
-      const tieObj = new this.VF.StaveTie({
+      const tieObj = new Vex.Flow.StaveTie({
         first_note: notesList.notes[notesList.ties[i]],
         last_note: notesList.notes[notesList.ties[i + 1]],
       });
@@ -37,16 +38,17 @@ export default class SheetMusicPage {
     return tiesList;
   }
 
-  drawStaveMeasure(measure) {
+  drawStaveMeasure(measures : Measure[]) {
     const timeSignature = `${track.Size.Count}/${track.Size.Per}`;
 
-    measure.forEach((part, index: number) => {
-      const renderer = new this.VF.Renderer(this.renderElement, this.VF.Renderer.Backends.SVG);
+    measures.forEach((measure, index: number) => {
+      //const renderer = new Vex.Vex.Flow.Renderer(this.renderElement, Vex.Flow.Renderer.Backends.SVG);
       // Size our SVG:
-      renderer.resize(SECTION_SIZE.width, SECTION_SIZE.height);
+      //renderer.resize(SECTION_SIZE.width, SECTION_SIZE.height);
 
       // And get a drawing context:
-      this.context = renderer.getContext();
+      //this.context = renderer.getContext();
+      this.context = Vex.Flow.Renderer.getSVGContext(this.renderElement,Vex.Flow.Renderer.Backends.SVG);
       this.context.setViewBox(
         SECTION_SIZE.width * index,
         0,
@@ -54,16 +56,16 @@ export default class SheetMusicPage {
         SECTION_SIZE.height,
       );
 
-      const stave = new this.VF.Stave(SECTION_SIZE.width * index, 0, SECTION_SIZE.width);
+      const stave = new Vex.Flow.Stave(SECTION_SIZE.width * index, 0, SECTION_SIZE.width);
 
       if (index === 0) stave.addClef(track.Clef).addTimeSignature(timeSignature);
 
       stave.setContext(this.context).draw();
 
-      const notesList = this.getNotesArray(part.Chords);
-      const beams = this.VF.Beam.generateBeams(notesList.notes);
+      const notesList = this.getNotesArray(measure.Chords);
+      const beams = Vex.Flow.Beam.generateBeams(notesList.notes);
 
-      this.VF.Formatter.FormatAndDraw(this.context, stave, notesList.notes);
+      Vex.Flow.Formatter.FormatAndDraw(this.context, stave, notesList.notes);
 
       beams.forEach((beam) => {
         beam.setContext(this.context).draw();
@@ -77,45 +79,47 @@ export default class SheetMusicPage {
     });
   }
 
-  getNotesArray(chord) {
-    const notesList = {
-      notes: <any>[],
-      ties: <any>[],
-    };
+  getNotesArray(chords : Chord[]) : NoteTie {
+    // const notesList = {
+    //   notes: <any>[],
+    //   ties: <any>[],
+    // };
+    const notes : Vex.Flow.StaveNote[] = [];
+    const ties : number[] = [];
 
-    chord.forEach((notes, index: number) => {
-      const note = notes.Notes[0];
-      const сhord = notes.Notes.map((note) => `${note.Name}/${note.Octave}`);
+    chords.forEach((chord, index: number) => {
+      const note = chord.Notes[0];
+      const notesArr = chord.Notes.map((note) => `${note.Name}/${note.Octave}`);
 
       if (typeof note.Name === 'undefined') return;
 
       const noteAlteration = Object.values(Alteration)[note.Alteration];
       const noteDuration = note.IsPause ? note.Duration + 'r' : note.Duration;
-      const noteObj = new this.VF.StaveNote({
+      const noteObj = new Vex.Flow.StaveNote({
         clef: track.Clef,
-        keys: сhord,
+        keys: notesArr,
         duration: noteDuration,
         auto_stem: true,
       });
 
-      if (noteAlteration) noteObj.addAccidental(0, new this.VF.Accidental(noteAlteration));
+      if (noteAlteration) noteObj.addAccidental(0, new Vex.Flow.Accidental(noteAlteration));
 
       if (note.IsDotted) noteObj.addDot(0);
 
-      notesList.notes.push(noteObj);
+      notes.push(noteObj);
 
       if (note.Touch === Touch.Legato) {
-        notesList.ties.push(index);
+       ties.push(index);
         return;
       }
 
       if (note.Touch === Touch.Staccato) {
-        noteObj.addModifier(0, new this.VF.Dot());
+        noteObj.addModifier(0, new Vex.Flow.Dot());
         return;
       }
     });
 
-    return notesList;
+    return { notes, ties };
   }
 
   addBitrate(renderElement: HTMLDivElement) {
