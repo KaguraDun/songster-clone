@@ -1,4 +1,6 @@
 .sheet-music{
+    position: relative;
+
     &__container{
         display: flex;
         flex-direction: column;
@@ -28,6 +30,9 @@
 }
 
 .button-play{
+    position: fixed;
     width: 100px;
-    margin:  0 auto;
+    top: 50%;
+    left:10px;
+    z-index: 100;
 }

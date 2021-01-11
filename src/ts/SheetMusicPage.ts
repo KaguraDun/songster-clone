@@ -8,12 +8,15 @@ const SECTION_SIZE = {
   height: 150,
 };
 
+const timeMarkerStartOffset: number = 100;
+
 export default class SheetMusicPage {
   parentElement: HTMLDivElement;
   renderElement: HTMLDivElement;
   timeMarker: HTMLDivElement;
   timeMarkerTimer: NodeJS.Timer;
   playMusic: boolean;
+  buttonPlay: HTMLButtonElement;
 
   constructor(parentElement: HTMLDivElement) {
     this.parentElement = parentElement;
@@ -21,6 +24,7 @@ export default class SheetMusicPage {
     this.timeMarker = null;
     this.timeMarkerTimer = null;
     this.playMusic = false;
+    this.buttonPlay = null;
     this.playMusicTrack = this.playMusicTrack.bind(this);
     this.changeTimeMarkerPosition = this.changeTimeMarkerPosition.bind(this);
   }
@@ -143,37 +147,49 @@ export default class SheetMusicPage {
   moveTimeMarker(timeMarker: HTMLDivElement) {
     const shiftOffset: number = 1;
     const firstMeasure = this.renderElement.children[1];
-    const numberElementPerRow = Math.floor(document.body.clientWidth / firstMeasure.clientWidth);
-    const firstRowStartPosition = firstMeasure.getBoundingClientRect();
-    const firstRowEndPosition = firstRowStartPosition.x + numberElementPerRow * SECTION_SIZE.width;
-
-    if (timeMarker.offsetLeft > firstRowEndPosition) {
-      timeMarker.style.left = `${firstRowStartPosition.x}px`;
-      timeMarker.style.top = `${timeMarker.offsetTop + SECTION_SIZE.height}px`;
-      timeMarker.scrollIntoView({ block: 'center', behavior: 'smooth' });
-      return;
-    }
+    const lastMeasure = this.renderElement.lastElementChild;
+    const lastRowPosition = lastMeasure.getBoundingClientRect();
+    const numberElementsPerRow = Math.floor(document.body.clientWidth / firstMeasure.clientWidth);
+    const firstRowPosition = firstMeasure.getBoundingClientRect();
+    const firstRowEndPosition = firstRowPosition.x + numberElementsPerRow * SECTION_SIZE.width;
 
     timeMarker.style.left = `${timeMarker.offsetLeft + shiftOffset}px`;
+
+    if (timeMarker.offsetLeft > firstRowEndPosition) {
+      timeMarker.style.left = `${firstRowPosition.x}px`;
+      timeMarker.style.top = `${timeMarker.offsetTop + SECTION_SIZE.height}px`;
+      timeMarker.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
+
+    if (
+      timeMarker.offsetLeft > lastRowPosition.x + SECTION_SIZE.width &&
+      timeMarker.offsetTop >= lastRowPosition.y + window.scrollY - SECTION_SIZE.height
+    ) {
+      timeMarker.style.left = `${firstRowPosition.x + timeMarkerStartOffset}px`;
+      timeMarker.style.top = '0';
+
+      this.playMusic = !this.playMusic;
+      this.buttonPlay.textContent = 'play';
+      
+      clearInterval(this.timeMarkerTimer);
+    }
   }
 
-  playMusicTrack(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-
+  playMusicTrack() {
     this.playMusic = !this.playMusic;
 
     if (this.playMusic) {
-      target.textContent = 'stop';
+      this.buttonPlay.textContent = 'stop';
       this.timeMarkerTimer = setInterval(() => this.moveTimeMarker(this.timeMarker), 1);
+      this.timeMarker.scrollIntoView({ block: 'center', behavior: 'smooth' });
     } else {
-      target.textContent = 'play';
+      this.buttonPlay.textContent = 'play';
       clearInterval(this.timeMarkerTimer);
     }
   }
 
   addTimeMarker(parentElement: HTMLDivElement): HTMLDivElement {
     const timeMarker = document.createElement('div');
-    const timeMarkerStartOffset: number = 100;
     const firstElementPosition = parentElement.children[0].getBoundingClientRect();
 
     timeMarker.classList.add('sheet-music__time-marker');
@@ -195,6 +211,8 @@ export default class SheetMusicPage {
 
     this.timeMarker.style.left = `${event.clientX}px`;
     this.timeMarker.style.top = `${newTimeMarkerPosition * SECTION_SIZE.height}px`;
+
+    this.timeMarker.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 
   render() {
@@ -202,8 +220,8 @@ export default class SheetMusicPage {
     this.addBitrate(this.parentElement);
 
     // for testing!
-    const buttonPlay = this.addButtonPlay(this.parentElement);
-    buttonPlay.addEventListener('click', this.playMusicTrack);
+    this.buttonPlay = this.addButtonPlay(this.parentElement);
+    this.buttonPlay.addEventListener('click', this.playMusicTrack);
 
     this.renderElement = document.createElement('div');
     this.renderElement.classList.add('sheet-music__render');
