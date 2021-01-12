@@ -1,5 +1,5 @@
 import Vex from 'vexflow';
-import * as track from '../../public/songs/2.json';
+//import * as track from '../../public/songs/2.json';
 import { Touch, Alteration } from '../models/Notations';
 import { Chord, Measure, Note, NoteTie, Track } from '../models/TrackDisplayType';
 import renderElement from './helpers/renderElements';
@@ -20,8 +20,10 @@ export default class SheetMusicPage {
   buttonPlay: HTMLButtonElement;
   selectTrack: HTMLSelectElement;
   buttonChangeTrack: HTMLButtonElement;
+  track: Track;
 
-  constructor(parentElement: HTMLDivElement) {
+  constructor(parentElement: HTMLDivElement,track: Track) {
+    this.track = track;
     this.parentElement = parentElement;
     this.sheetMusicRender = null;
     this.timeMarker = null;
@@ -51,9 +53,9 @@ export default class SheetMusicPage {
   }
 
   drawStaveMeasures(measures: Measure[]) {
-    const timeSignature = `${track.Size.Count}/${track.Size.Per}`;
-    const quarter = 60 / track.Bpm;
-    const measureDuration = (4 * quarter * track.Size.Count) / track.Size.Per;
+    const timeSignature = `${this.track.Size.Count}/${this.track.Size.Per}`;
+    const quarter = 60 / this.track.Bpm;
+    const measureDuration = (4 * quarter * this.track.Size.Count) / this.track.Size.Per;
     const timeMarkerSpeed = SECTION_SIZE.width / measureDuration;
 
     measures.forEach((measure, index: number) => {
@@ -66,7 +68,7 @@ export default class SheetMusicPage {
 
       const stave = new Vex.Flow.Stave(SECTION_SIZE.width * index, 0, SECTION_SIZE.width);
 
-      if (index === 0) stave.addClef(track.Clef).addTimeSignature(timeSignature);
+      if (index === 0) stave.addClef(this.track.Clef).addTimeSignature(timeSignature);
 
       stave.setContext(context).draw();
 
@@ -101,10 +103,11 @@ export default class SheetMusicPage {
 
       if (typeof note.Name === 'undefined') return;
 
-      const noteAlteration = Object.values(Alteration)[note.Alteration];
+      const noteAlteration = note.Alteration;
+      //const noteAlteration = Object.values(Alteration)[note.Alteration];
       const noteDuration = note.IsPause ? note.Duration + 'r' : note.Duration;
       const noteObj = new Vex.Flow.StaveNote({
-        clef: track.Clef,
+        clef: this.track.Clef,
         keys: notesArr,
         duration: noteDuration,
         auto_stem: true,
@@ -134,7 +137,7 @@ export default class SheetMusicPage {
     const bitrateContainer = document.createElement('div');
 
     bitrateContainer.classList.add('sheet-music__bitrate');
-    bitrateContainer.textContent = `Bpm = ${Math.trunc(track.Bpm)}`;
+    bitrateContainer.textContent = `Bpm = ${Math.trunc(this.track.Bpm)}`;
 
     parentElement.append(bitrateContainer);
   }
@@ -216,7 +219,7 @@ export default class SheetMusicPage {
     // Добавить элемент переключения треков
     // Подумать как лучше сделать адаптив
     // Синхронизировать ползунок с песней
-    console.log(track.Measures);
+    console.log(this.track.Measures);
     this.addBitrate(this.parentElement);
 
     // for testing!
@@ -232,14 +235,14 @@ export default class SheetMusicPage {
     this.buttonChangeTrack = renderElement(
       this.parentElement,
       'button',
-      ['button-change-track'],
+      ['button-change-this.track'],
       '🎹',
     ) as HTMLButtonElement;
 
     this.buttonChangeTrack.addEventListener('click', this.showTracks);
 
     this.selectTrack = renderElement(this.parentElement, 'ul', [
-      'sheet-music__track-selector',
+      'sheet-music__this.track-selector',
     ]) as HTMLSelectElement;
 
     this.sheetMusicRender = document.createElement('div');
@@ -247,7 +250,7 @@ export default class SheetMusicPage {
 
     this.parentElement.append(this.sheetMusicRender);
 
-    this.drawStaveMeasures(track.Measures);
+    this.drawStaveMeasures(this.track.Measures);
 
     this.timeMarker = this.addTimeMarker(this.sheetMusicRender);
 

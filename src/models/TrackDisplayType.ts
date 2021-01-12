@@ -14,8 +14,8 @@ export interface Track {
     Author?: string;
 
     Bpm: number;
-    Key: NoteName;
-    Clef: Clef;
+    Key: string;
+    Clef: string;
     Size: Size;  //number of beats per measure
     Measures: Measure[];
 }
@@ -33,7 +33,7 @@ export interface Chord {
 
 export interface Note {
     Name?: string;
-    Alteration?: number;
+    Alteration?: string;
     Octave?: number;
     Duration: string;
     IsDotted: boolean;
