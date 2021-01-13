@@ -2,6 +2,7 @@ import Header from './Header';
 import Footer from './Footer';
 import Sidebar from './Sidebar';
 import DisplayTab from './DisplayTab';
+import SearchBar from './SearchBar';
 
 
 
@@ -15,13 +16,14 @@ export default class Page {
 }
 
 
-
   render() {
   const header = document.createElement('header');
   const headerWrapper = document.createElement('div');
   headerWrapper.className = 'header__wrapper';
   header.appendChild(headerWrapper);
   new Header(headerWrapper).render(); //create div and push it as a parent elem
+  new SearchBar(headerWrapper).render();
+
   const main = document.createElement('main');
   const mainWrapper = document.createElement('div');
   mainWrapper.className = 'main__wrapper';

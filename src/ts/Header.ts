@@ -1,3 +1,4 @@
+
 export default class Header {
   parentElement : HTMLElement;
 
@@ -10,7 +11,7 @@ export default class Header {
 
     const headerContent = document.createElement('div');
     const headerTitle = document.createElement('span');
-    headerContent.style.background= 'pink';
+  
     headerTitle.className = 'header__title';
     headerTitle.textContent = 'Songster-Clone';
     headerContent.appendChild(headerTitle);

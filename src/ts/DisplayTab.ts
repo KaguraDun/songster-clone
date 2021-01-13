@@ -9,8 +9,6 @@ export default class DisplayTab{
     render(){
         const displayContent = document.createElement('section');
         displayContent.className = "display__tab";
-        displayContent.style.background = 'orange';
-        displayContent.style.height = '100px';
         displayContent.textContent = 'THERE WILL BE TABS';
         this.parentElement.appendChild(displayContent);
     }

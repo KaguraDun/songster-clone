@@ -1,0 +1,8 @@
+.main__wrapper{
+    display: flex;
+    flex-direction: row-reverse;
+    background: $color-reverse-gradient;
+    padding: 0.5rem 3rem;
+        margin: 0 auto;
+        // height: 70vh;
+}
