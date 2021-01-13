@@ -13,37 +13,42 @@ export class AudioGenerator {
     }
 
     render() {
+        const input = document.createElement('input');
+        this.parentElement.appendChild(input);
+        input.type = 'text';
+
         const button = document.createElement('button');
         button.textContent = 'click';
-        button.onclick = () => {
-            this.recorder.start();
-            this.renderAudio();
-        }
         this.parentElement.appendChild(button);
+        button.onclick = () => {
+            const time = +input.value;
+            Tone.Transport.cancel(0);
+            this.playAudio(time);
+        }
 
         const stop = document.createElement('button');
         stop.textContent = 'stop';
+        this.parentElement.appendChild(stop);
         stop.onclick = async () => {
             Tone.Transport.stop();
         }
-        this.parentElement.appendChild(stop);
     }
 
-    renderAudio() {
+    playAudio(timeOffset: number) {
         Tone.Transport.bpm.value = this.midi.header.tempos[0].bpm;
         Tone.Transport.timeSignature = this.midi.header.timeSignatures[0].timeSignature;
 
         this.midi.tracks.forEach(track => {
-            this.renderTrack(track);
+            this.playTrack(track,timeOffset);
         });
-        Tone.Transport.start();
+        Tone.Transport.start(undefined,timeOffset);
     }
 
-    renderTrack(track: Track) {
+    playTrack(track: Track,timeOffset: number) {
         const synth = new Tone.Synth().toDestination();
         new Tone.Part((time,note) => {
             synth.triggerAttackRelease(note.name,note.duration,time,note.velocity);
-        },track.notes).start();
+        },track.notes).start(undefined,timeOffset);
     }
 
     createLink(url: string) {
