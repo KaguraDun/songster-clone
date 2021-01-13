@@ -8,6 +8,12 @@ const SECTION_SIZE = {
   height: 150,
 };
 
+interface timeMarkerParams {
+  shiftOffset: number;
+  firstMeasure: Element;
+  lastMeasure: Element;
+}
+
 const timeMarkerStartOffset: number = 100;
 
 // для теста
@@ -150,38 +156,30 @@ export default class SheetMusicPage {
     parentElement.append(bitrateContainer);
   }
 
-  moveTimeMarker(timeMarker: HTMLDivElement) {
-    const shiftOffset: number = this.timeMarkerSpeed / 100;
-    const firstMeasure = this.sheetMusicRender.children[1];
-    const lastMeasure = this.sheetMusicRender.lastElementChild;
-    const lastRowPosition = lastMeasure.getBoundingClientRect();
-    const numberElementsPerRow = Math.floor(document.body.clientWidth / firstMeasure.clientWidth);
-    const firstRowPosition = firstMeasure.getBoundingClientRect();
+  moveTimeMarker(timeMarker: HTMLDivElement, timeMarkerParams: timeMarkerParams) {
+    const lastRowPosition = timeMarkerParams.lastMeasure.getBoundingClientRect();
+    const numberElementsPerRow = Math.floor(
+      document.body.clientWidth / timeMarkerParams.firstMeasure.clientWidth,
+    );
+    const firstRowPosition = timeMarkerParams.firstMeasure.getBoundingClientRect();
     const firstRowEndPosition = firstRowPosition.x + numberElementsPerRow * SECTION_SIZE.width;
 
-    timeMarker.style.left = `${timeMarker.offsetLeft + shiftOffset}px`;
+    timeMarker.style.left = `${timeMarker.offsetLeft + timeMarkerParams.shiftOffset}px`;
 
     // Для тестирования ------------------------
     let elapsedTime = Date.now() - startTime;
     timeMarker.innerText = (elapsedTime / 1000).toFixed(3);
 
     if (Math.round(timeMarker.offsetLeft - firstRowPosition.x) % SECTION_SIZE.width === 0) {
-      console.log(shiftOffset, elapsedTime, this.measureDuration);
+      console.log(timeMarkerParams.shiftOffset, elapsedTime, this.measureDuration);
       startTime = Date.now();
     }
     //--------------------------------------
 
-    const isEndOfRow = timeMarker.offsetLeft > firstRowEndPosition;
-
-    if (isEndOfRow) {
-      timeMarker.style.left = `${firstRowPosition.x}px`;
-      timeMarker.style.top = `${timeMarker.offsetTop + SECTION_SIZE.height}px`;
-      timeMarker.scrollIntoView({ block: 'center', behavior: 'smooth' });
-    }
-
-    const isEndOfLastMeasure = timeMarker.offsetLeft > lastRowPosition.x + SECTION_SIZE.width;
+    const isEndOfLastMeasure = timeMarker.offsetLeft >= lastRowPosition.x + SECTION_SIZE.width;
     const isLastMeasure =
       timeMarker.offsetTop >= lastRowPosition.y + window.scrollY - SECTION_SIZE.height;
+    const isEndOfRow = timeMarker.offsetLeft > firstRowEndPosition;
 
     if (isEndOfLastMeasure && isLastMeasure) {
       timeMarker.style.left = `${firstRowPosition.x}px`;
@@ -190,10 +188,23 @@ export default class SheetMusicPage {
       this.playMusic = !this.playMusic;
       this.buttonPlay.textContent = 'play';
       clearInterval(this.timeMarkerTimer);
+      return;
+    }
+
+    if (isEndOfRow) {
+      timeMarker.style.left = `${firstRowPosition.x}px`;
+      timeMarker.style.top = `${timeMarker.offsetTop + SECTION_SIZE.height}px`;
+      timeMarker.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
   }
 
   playMusicTrack() {
+    const timeMarkerParams: timeMarkerParams = {
+      shiftOffset: this.timeMarkerSpeed / 100,
+      firstMeasure: this.sheetMusicRender.children[1],
+      lastMeasure: this.sheetMusicRender.lastElementChild,
+    };
+
     this.playMusic = !this.playMusic;
 
     if (this.playMusic) {
@@ -201,7 +212,10 @@ export default class SheetMusicPage {
       startTime = Date.now();
 
       this.buttonPlay.textContent = 'stop';
-      this.timeMarkerTimer = setInterval(() => this.moveTimeMarker(this.timeMarker), 10);
+      this.timeMarkerTimer = setInterval(
+        () => this.moveTimeMarker(this.timeMarker, timeMarkerParams),
+        10,
+      );
       this.timeMarker.scrollIntoView({ block: 'center', behavior: 'smooth' });
     } else {
       this.buttonPlay.textContent = 'play';
@@ -281,7 +295,8 @@ export default class SheetMusicPage {
 
     console.log(this.song);
     // Подумать как лучше сделать адаптив
-    // Синхронизировать ползунок с песней
+    // Синхронизировать ползунок с песней, протестировать
+    // Добавить event emitter
     this.addBitrate(this.parentElement);
 
     this.renderAside();
