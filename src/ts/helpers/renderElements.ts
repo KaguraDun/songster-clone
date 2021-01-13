@@ -1,5 +1,5 @@
 export default function renderElement(
-  parentName: HTMLDivElement,
+  parentName: HTMLElement,
   tagName: string,
   classList: string[],
   innerText?: string,

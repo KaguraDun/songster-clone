@@ -1,7 +1,6 @@
 import Vex from 'vexflow';
-//import * as track from '../../public/songs/2.json';
 import { Touch, Alteration } from '../models/Notations';
-import { Chord, Measure, Note, NoteTie, Track } from '../models/TrackDisplayType';
+import { Chord, Measure, Note, NoteTie, Track, Song } from '../models/TrackDisplayType';
 import renderElement from './helpers/renderElements';
 
 const SECTION_SIZE = {
@@ -18,12 +17,14 @@ export default class SheetMusicPage {
   timeMarkerTimer: NodeJS.Timer;
   playMusic: boolean;
   buttonPlay: HTMLButtonElement;
-  selectTrack: HTMLSelectElement;
   buttonChangeTrack: HTMLButtonElement;
+  trackList: HTMLUListElement;
   track: Track;
+  song: Song;
 
-  constructor(parentElement: HTMLDivElement,track: Track) {
-    this.track = track;
+  constructor(parentElement: HTMLDivElement, song: Song) {
+    this.song = song;
+    this.track = this.song.Tracks[0];
     this.parentElement = parentElement;
     this.sheetMusicRender = null;
     this.timeMarker = null;
@@ -31,8 +32,9 @@ export default class SheetMusicPage {
     this.playMusic = false;
     this.buttonPlay = null;
     this.buttonChangeTrack = null;
+    this.trackList = null;
     this.playMusicTrack = this.playMusicTrack.bind(this);
-    this.showTracks = this.showTracks.bind(this);
+    this.changeTrack = this.changeTrack.bind(this);
     this.changeTimeMarkerPosition = this.changeTimeMarkerPosition.bind(this);
   }
 
@@ -213,40 +215,59 @@ export default class SheetMusicPage {
     this.timeMarker.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 
-  showTracks() {}
+  changeTrack(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    const closestToList = target.closest('ul');
 
-  render() {
-    // Добавить элемент переключения треков
-    // Подумать как лучше сделать адаптив
-    // Синхронизировать ползунок с песней
-    console.log(this.track.Measures);
-    this.addBitrate(this.parentElement);
+    if (!closestToList) return;
 
-    // for testing!
-    this.buttonPlay = renderElement(
-      this.parentElement,
-      'button',
-      ['button-play'],
-      'play',
-    ) as HTMLButtonElement;
+    const trackID = Number(target.id);
 
+    this.track = this.song.Tracks[trackID];
+
+    this.render(); 
+  }
+
+  renderAside() {
+    const aside = renderElement(this.parentElement, 'aside', ['sheet-music__aside']);
+
+    this.buttonPlay = renderElement(aside, 'button', ['button-play'], 'play') as HTMLButtonElement;
     this.buttonPlay.addEventListener('click', this.playMusicTrack);
 
-    this.buttonChangeTrack = renderElement(
-      this.parentElement,
-      'button',
-      ['button-change-this.track'],
-      '🎹',
-    ) as HTMLButtonElement;
+    this.trackList = renderElement(aside, 'ul', ['sheet-music__track-list']) as HTMLUListElement;
 
-    this.buttonChangeTrack.addEventListener('click', this.showTracks);
+    this.song.Tracks.forEach((track, index) => {
+      const item = renderElement(this.trackList, 'li', [
+        'sheet-music__track-list-item',
+      ]) as HTMLLIElement;
 
-    this.selectTrack = renderElement(this.parentElement, 'ul', [
-      'sheet-music__this.track-selector',
-    ]) as HTMLSelectElement;
+      const button = renderElement(
+        item,
+        'button',
+        ['button-change-track'],
+        '🎸',
+      ) as HTMLButtonElement;
+
+      button.title = track.Instrument;
+      button.id = String(index);
+    });
+
+    this.trackList.addEventListener('click', this.changeTrack);
+  }
+
+  render() {
+    this.parentElement.innerHTML = '';
+
+    console.log(this.song);
+    // Подумать как лучше сделать адаптив
+    // Синхронизировать ползунок с песней
+    this.addBitrate(this.parentElement);
+
+    this.renderAside();
 
     this.sheetMusicRender = document.createElement('div');
     this.sheetMusicRender.classList.add('sheet-music__render');
+    this.sheetMusicRender.addEventListener('click', this.changeTimeMarkerPosition);
 
     this.parentElement.append(this.sheetMusicRender);
 
@@ -254,6 +275,6 @@ export default class SheetMusicPage {
 
     this.timeMarker = this.addTimeMarker(this.sheetMusicRender);
 
-    this.sheetMusicRender.addEventListener('click', this.changeTimeMarkerPosition);
+
   }
 }
