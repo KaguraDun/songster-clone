@@ -169,20 +169,22 @@ export default class SheetMusicPage {
       console.log(shiftOffset, elapsedTime, this.measureDuration);
       startTime = Date.now();
     }
-
     //--------------------------------------
 
-    if (timeMarker.offsetLeft > firstRowEndPosition) {
+    const isEndOfRow = timeMarker.offsetLeft > firstRowEndPosition;
+
+    if (isEndOfRow) {
       timeMarker.style.left = `${firstRowPosition.x}px`;
       timeMarker.style.top = `${timeMarker.offsetTop + SECTION_SIZE.height}px`;
       timeMarker.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
 
-    if (
-      timeMarker.offsetLeft > lastRowPosition.x + SECTION_SIZE.width &&
-      timeMarker.offsetTop >= lastRowPosition.y + window.scrollY - SECTION_SIZE.height
-    ) {
-      timeMarker.style.left = `${firstRowPosition.x + timeMarkerStartOffset}px`;
+    const isEndOfLastMeasure = timeMarker.offsetLeft > lastRowPosition.x + SECTION_SIZE.width;
+    const isLastMeasure =
+      timeMarker.offsetTop >= lastRowPosition.y + window.scrollY - SECTION_SIZE.height;
+
+    if (isEndOfLastMeasure && isLastMeasure) {
+      timeMarker.style.left = `${firstRowPosition.x}px`;
       timeMarker.style.top = '0';
 
       this.playMusic = !this.playMusic;
@@ -195,6 +197,7 @@ export default class SheetMusicPage {
     this.playMusic = !this.playMusic;
 
     if (this.playMusic) {
+      // для теста
       startTime = Date.now();
 
       this.buttonPlay.textContent = 'stop';
