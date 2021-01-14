@@ -2,20 +2,17 @@
     &__wrapper {
         background: $color-gradient;
     }
-    
+
     &__content {
-        max-width: 90%;
+        max-width: 95%;
         margin: 0 auto;
         height: 75px;
 
-      
-        // padding: 1rem 2rem;
 
         &-link {
             &-logo {
                 height: 50px;
                 padding-top: 5px;
-                // padding: 0.5rem;
                 margin: 10px;
 
             }

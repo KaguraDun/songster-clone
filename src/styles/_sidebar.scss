@@ -1,54 +1,73 @@
 .sidebar{
     display: flex;
     flex-direction: column;
-    padding-right: 2%;
+    justify-content: space-between;
+    height: calc(70px * 8) ;
+    padding: 10px;
+    padding-top: 50px;
+    
+        button{
+            background-color: transparent;
+            background-size: cover;
+            border: none;
+            outline: none;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            opacity: 0.8;
+            border-radius: 30px;
+            transition: 0.2s;
 
+        }
+        button:hover{
+            opacity: 1;
+            transform: scale(1.1);
+            box-shadow:0 0 10px $color-white;
+            transition: 0.2s;
+        }
     &__button{
        
         &-play{
-            // background-image: url('../images/sidebar_icon/play.svg');
+            background-image: url('../images/sidebar_icons/play.svg');
+                 
             
-       
-            background-color: rgb(21, 150, 150);
-            width: 3.5rem;
-            height: 3.5rem;
         }
+     
         &-speed{
-            background-color: rgb(29, 160, 160);
-            width: 3.5rem;
-            height: 3.5rem;
+            background-image: url('../images/sidebar_icons/speed.svg');
+           
+            
         }
         &-sound{
-            background-color: rgb(28, 180, 180);
-            width: 3.5rem;
-            height: 3.5rem;
+            background-image: url('../images/sidebar_icons/sound.svg');
+           
+            
         }
         &-metronom{
-            background-color: rgb(30, 197, 197);
-            width: 3.5rem;
-            height: 3.5rem;
+            background-image: url('../images/sidebar_icons/metronom.svg');
+         
+            
         }
         &-print{
-            background-color: rgb(34, 201, 201);
-            width: 3.5rem;
-            height: 3.5rem;
+            background-image: url('../images/sidebar_icons/printer.svg');
+         
+            
 
         }
         &-favorite{
-            background-color: rgb(35, 224, 224);
-            width: 3.5rem;
-            height: 3.5rem;
+            background-image: url('../images/sidebar_icons/favor.svg');
+           
+            
 
         }
         &-instrument{
-            background-color: rgb(39, 230, 230);
-            width: 3.5rem;
-            height: 3.5rem;
+            background-image: url('../images/sidebar_icons/instrument.svg');
+           
+            
         }
         &-gitHub{
-            background-color: rgb(82, 240, 240);
-            width: 3.5rem;
-            height: 3.5rem;
+            background-image: url('../images/sidebar_icons/copyright.svg');
+         
         }
     }
 }

@@ -1,8 +1,13 @@
-.main__wrapper{
+main {
+
+    background: $color-reverse-gradient;
+}
+
+.main__wrapper {
     display: flex;
     flex-direction: row-reverse;
-    background: $color-reverse-gradient;
-    // padding: 0.5rem 3rem;
-        margin: 0 auto;
-        height: calc(100vh - 160px);
+    max-width: 95%;
+
+    margin: 0 auto;
+    height: calc(100vh - 160px);
 }
