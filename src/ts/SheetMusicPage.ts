@@ -162,7 +162,7 @@ export default class SheetMusicPage {
     bitrateContainer.classList.add('sheet-music__bitrate');
     bitrateContainer.textContent = `Bpm = ${Math.trunc(this.track.Bpm)}`;
 
-    parentElement.append(bitrateContainer);
+    parentElement.appendChild(bitrateContainer);
   }
 
   moveTimeMarker(timeMarker: HTMLDivElement, timeMarkerParams: timeMarkerParams) {
@@ -208,6 +208,8 @@ export default class SheetMusicPage {
   }
 
   playMusicTrack() {
+    this.store.eventEmitter.emit(EVENTS.PLAY_BUTTON_CLICK);
+
     const timeMarkerParams: timeMarkerParams = {
       shiftOffset: this.timeMarkerSpeed / 100,
       firstMeasure: this.sheetMusicRender.children[1],
@@ -326,9 +328,7 @@ export default class SheetMusicPage {
   }
 
   render() {
-    this.parentElement.innerHTML = '';
-
-    console.log(this.song);
+    //console.log(this.song);
     // Подумать как лучше сделать адаптив
     // Синхронизировать ползунок с песней, протестировать
     this.addBitrate(this.parentElement);
@@ -339,7 +339,7 @@ export default class SheetMusicPage {
     this.sheetMusicRender.classList.add('sheet-music__render');
     this.sheetMusicRender.addEventListener('click', this.changeTimeMarkerPosition);
 
-    this.parentElement.append(this.sheetMusicRender);
+    this.parentElement.appendChild(this.sheetMusicRender);
 
     this.drawStaveMeasures(this.track.Measures);
 

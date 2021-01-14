@@ -1,18 +1,26 @@
 import { Midi, Track } from '@tonejs/midi';
 import * as Tone from 'tone';
+import Store, { EVENTS } from './Store';
 
 export class AudioGenerator {
     private midi: Midi;
     private parentElement: HTMLElement;
     private recorder: Tone.Recorder;
+    private store: Store;
 
-    constructor(parentElement: HTMLElement,midiData: ArrayBuffer) {
+    constructor(parentElement: HTMLElement,midiData: ArrayBuffer,store: Store) {
+        this.store = store;
         this.parentElement = parentElement;
         this.midi = new Midi(midiData);
         this.recorder = new Tone.Recorder();
+
+        this.playAudio = this.playAudio.bind(this);
     }
 
     render() {
+        this.store.eventEmitter.addEvent(EVENTS.PLAY_BUTTON_CLICK,() => this.playAudio(0));
+
+        console.log('im in audio generator');
         const input = document.createElement('input');
         this.parentElement.appendChild(input);
         input.type = 'text';
@@ -34,7 +42,8 @@ export class AudioGenerator {
         }
     }
 
-    playAudio(timeOffset: number) {
+    playAudio(timeOffset: number = 0) {
+        console.log(`play audio from ${timeOffset}`);
         Tone.Transport.bpm.value = this.midi.header.tempos[0].bpm;
         Tone.Transport.timeSignature = this.midi.header.timeSignatures[0].timeSignature;
 
