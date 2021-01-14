@@ -2,72 +2,73 @@ header {
     background-color: $color-purple;
     // margin: 0 auto;
     border-bottom: solid 1px $color-white;
+}
 
-    .header {
-        &__wrapper {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 95%;
-            margin: 0 auto;
-            height: 80px;
-
-
-
-            &-title {
-                font-size: 50px;
-                font-family: $font-family;
-                text-decoration: underline;
-                color: $color-white;
-                cursor: default;
-                transition: 5s;
+.header {
+    &__wrapper {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        max-width: 95%;
+        margin: 0 auto;
+        height: 80px;
 
 
-            }
-            &-title:hover{
-                color: $color-orange;
-                transform: scale(0.9);
-                transition: 0.5s;
-            }
 
-            &-user {
-                display: flex;
-                width: 130px;
-                height: 60px;
-                justify-content: space-between;
-                // background-color: transparent;
-                // background-size: cover;
-                // border: none;
-                // outline: none;
-                // width: 60px;
-                // height: 60px;
-                // cursor: pointer;
+        &-title {
+            font-size: 50px;
+            font-family: $font-family;
+            text-decoration: underline;
+            color: $color-white;
+            cursor: default;
+            transition: 5s;
 
 
-                &-login,
-                    &-signin {
-                        button{
-                        background-color: transparent;
-                        background-size: cover;
-                        border: none;
-                        outline: none;
-                        width: 60px;
-                        height: 60px;
-                        cursor: pointer;
-                        }
-                    }
-                    &-login {
-                    background-image: url('../images/login.svg');
-                    
-                  
-                }
-                &-signin {
-                    background-image: url('../images/user.svg');
-                  
-                }
-
-            }
         }
+
     }
+}
+
+.wrapper-user {
+    display: flex;
+    width: 130px;
+    height: 60px;
+    justify-content: space-between;
+    padding: 0 10px;
+
+
+    &-login,
+    &-signin {
+
+        background-color: transparent;
+        background-size: cover;
+        border: none;
+        outline: none;
+        width: 60px;
+        height: 60px;
+        cursor: pointer;
+        border-radius: 30px;
+
+    }
+
+    &-login:hover,
+    &-signin:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 10px $color-white;
+        transition: 0.2s;
+        background-color: rgba(240, 230, 230, 0.3);
+    }
+
+    &-login {
+        background-image: url('../images/login.svg');
+
+
+    }
+
+    &-signin {
+        background-image: url('../images/user.svg');
+
+    }
+
 }

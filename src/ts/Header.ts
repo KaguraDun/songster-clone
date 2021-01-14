@@ -19,7 +19,7 @@ export default class Header {
     headerTitle.textContent = 'Songster-Clone';
     headerWrapper.appendChild(headerTitle);
     const userDiv = document.createElement('div');
-    userDiv.className = 'header__wrapper-user'
+    userDiv.className = 'wrapper-user';
     headerWrapper.appendChild(userDiv);
     new Login(userDiv).render();
     new SignIn(userDiv).render();

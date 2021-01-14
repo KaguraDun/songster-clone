@@ -1,0 +1,21 @@
+.search__content {
+    &-button {
+        background-color: transparent;
+        background-size: cover;
+        border: none;
+        outline: none;
+        width: 60px;
+        height: 60px;
+        cursor: pointer;
+        border-radius: 30px;
+        transition: 0.2s;
+        background-image: url('../images/search.svg');
+    }
+
+    &-button:hover {
+
+        transform: scale(1.1);
+        transition: 0.2s;
+
+    }
+}
