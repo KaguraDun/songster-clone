@@ -1,19 +1,22 @@
 .footer {
     &__wrapper {
-
+        background: $color-gradient;
     }
-
+    
     &__content {
+        max-width: 90%;
+        margin: 0 auto;
+        height: 75px;
 
       
-        background: $color-gradient;
-        padding: 1rem 2rem;
+        // padding: 1rem 2rem;
 
         &-link {
             &-logo {
-                height: 5vh;
-                padding: 0.5rem;
-                margin: 0.5rem;
+                height: 50px;
+                padding-top: 5px;
+                // padding: 0.5rem;
+                margin: 10px;
 
             }
         }
