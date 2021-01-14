@@ -1,4 +1,6 @@
 .sheet-music{
+    position: relative;
+
     &__container{
         display: flex;
         flex-direction: column;
@@ -24,10 +26,35 @@
         position: absolute;
         border-radius: 30%;
     }
+
+    &__aside{
+        position: fixed;
+        top: 30%;
+        left: 3%;
+        z-index: 100;
+    }
+
+    &__track-list{
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
     
 }
 
+.button-play,
+.button-change-track{
+    padding: 0;
+    width: 50px;
+    height: 50px;
+    left: 10px;
+    z-index: 100;
+}
+
 .button-play{
-    width: 100px;
-    margin:  0 auto;
+    font-size: 20px; 
+}
+
+.button-change-track{
+    font-size: 30px;
 }

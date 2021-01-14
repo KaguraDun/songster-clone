@@ -1,28 +1,62 @@
 import Vex from 'vexflow';
-import * as track from '../../public/songs/2.json';
 import { Touch, Alteration } from '../models/Notations';
-import { Chord, Measure, Note, NoteTie, Track } from '../models/TrackDisplayType';
+import { Chord, Measure, Note, NoteTie, Track, Song } from '../models/TrackDisplayType';
+import EventEmitter from './EventEmitter';
+import renderElement from './helpers/renderElements';
+import Store, { EVENTS } from './Store';
 
 const SECTION_SIZE = {
   width: 400,
   height: 150,
 };
 
+interface timeMarkerParams {
+  shiftOffset: number;
+  firstMeasure: Element;
+  lastMeasure: Element;
+}
+
+const timeMarkerStartOffset: number = 100;
+
+// для теста
+let startTime = Date.now();
+
 export default class SheetMusicPage {
+  store: Store;
   parentElement: HTMLDivElement;
-  renderElement: HTMLDivElement;
+  sheetMusicRender: HTMLDivElement;
   timeMarker: HTMLDivElement;
   timeMarkerTimer: NodeJS.Timer;
+  timeMarkerSpeed: number;
+  measureDuration: number;
   playMusic: boolean;
+  buttonPlay: HTMLButtonElement;
+  buttonChangeTrack: HTMLButtonElement;
+  trackList: HTMLUListElement;
+  track: Track;
+  song: Song;
 
-  constructor(parentElement: HTMLDivElement) {
+  constructor(parentElement: HTMLDivElement, song: Song, store: Store) {
+    this.store = store;
+    this.song = song;
+    this.track = this.song.Tracks[0];
     this.parentElement = parentElement;
-    this.renderElement = null;
+    this.sheetMusicRender = null;
     this.timeMarker = null;
     this.timeMarkerTimer = null;
+    this.timeMarkerSpeed = null;
     this.playMusic = false;
+    this.buttonPlay = null;
+    this.buttonChangeTrack = null;
+    this.trackList = null;
+    this.measureDuration = null;
+    this.subscribe();
     this.playMusicTrack = this.playMusicTrack.bind(this);
+    this.changeTrack = this.changeTrack.bind(this);
     this.changeTimeMarkerPosition = this.changeTimeMarkerPosition.bind(this);
+  }
+
+  subscribe() {
   }
 
   getTies(notesList: NoteTie) {
@@ -42,14 +76,15 @@ export default class SheetMusicPage {
   }
 
   drawStaveMeasures(measures: Measure[]) {
-    const timeSignature = `${track.Size.Count}/${track.Size.Per}`;
-    const quarter = 60 / track.Bpm;
-    const measureDuration = (4 * quarter * track.Size.Count) / track.Size.Per;
-    const timeMarkerSpeed = SECTION_SIZE.width / measureDuration;
+    const timeSignature = `${this.track.Size.Count}/${this.track.Size.Per}`;
+    const quarter = 60 / this.track.Bpm;
+    const measureDuration = (4 * quarter * this.track.Size.Count) / this.track.Size.Per;
+    this.timeMarkerSpeed = SECTION_SIZE.width / measureDuration;
+    this.measureDuration = measureDuration;
 
     measures.forEach((measure, index: number) => {
       const context = Vex.Flow.Renderer.getSVGContext(
-        this.renderElement,
+        this.sheetMusicRender,
         Vex.Flow.Renderer.Backends.SVG,
       );
 
@@ -57,7 +92,7 @@ export default class SheetMusicPage {
 
       const stave = new Vex.Flow.Stave(SECTION_SIZE.width * index, 0, SECTION_SIZE.width);
 
-      if (index === 0) stave.addClef(track.Clef).addTimeSignature(timeSignature);
+      if (index === 0) stave.addClef(this.track.Clef).addTimeSignature(timeSignature);
 
       stave.setContext(context).draw();
 
@@ -76,9 +111,10 @@ export default class SheetMusicPage {
         tie.setContext(context).draw();
       });
 
-      const svgElement = this.renderElement.children[index] as HTMLElement;
+      const svgElement = this.sheetMusicRender.children[index] as HTMLElement;
       svgElement.dataset.time = `${measure.Time}`;
-      svgElement.dataset.markerSpeed = `${timeMarkerSpeed}`;
+      svgElement.dataset.markerSpeed = `${this.timeMarkerSpeed}`;
+      svgElement.dataset.id = `${index}`;
     });
   }
 
@@ -92,16 +128,15 @@ export default class SheetMusicPage {
 
       if (typeof note.Name === 'undefined') return;
 
-      const noteAlteration = Object.values(Alteration)[note.Alteration];
       const noteDuration = note.IsPause ? note.Duration + 'r' : note.Duration;
       const noteObj = new Vex.Flow.StaveNote({
-        clef: track.Clef,
+        clef: this.track.Clef,
         keys: notesArr,
         duration: noteDuration,
         auto_stem: true,
       });
 
-      if (noteAlteration) noteObj.addAccidental(0, new Vex.Flow.Accidental(noteAlteration));
+      if (note.Alteration) noteObj.addAccidental(0, new Vex.Flow.Accidental(note.Alteration));
 
       if (note.IsDotted) noteObj.addDot(0);
 
@@ -125,64 +160,114 @@ export default class SheetMusicPage {
     const bitrateContainer = document.createElement('div');
 
     bitrateContainer.classList.add('sheet-music__bitrate');
-    bitrateContainer.textContent = `Bpm = ${Math.trunc(track.Bpm)}`;
+    bitrateContainer.textContent = `Bpm = ${Math.trunc(this.track.Bpm)}`;
 
     parentElement.append(bitrateContainer);
   }
 
-  addButtonPlay(parentElement: HTMLDivElement): HTMLButtonElement {
-    const buttonContainer = document.createElement('button');
+  moveTimeMarker(timeMarker: HTMLDivElement, timeMarkerParams: timeMarkerParams) {
+    const lastRowPosition = timeMarkerParams.lastMeasure.getBoundingClientRect();
+    const numberElementsPerRow = Math.floor(
+      document.body.clientWidth / timeMarkerParams.firstMeasure.clientWidth,
+    );
+    const firstRowPosition = timeMarkerParams.firstMeasure.getBoundingClientRect();
+    const firstRowEndPosition = firstRowPosition.x + numberElementsPerRow * SECTION_SIZE.width;
 
-    buttonContainer.classList.add('button-play');
-    buttonContainer.textContent = `play`;
-    parentElement.append(buttonContainer);
+    timeMarker.style.left = `${timeMarker.offsetLeft + timeMarkerParams.shiftOffset}px`;
 
-    return buttonContainer;
-  }
+    // Для тестирования ------------------------
+    let elapsedTime = Date.now() - startTime;
+    timeMarker.innerText = (elapsedTime / 1000).toFixed(3);
 
-  moveTimeMarker(timeMarker: HTMLDivElement) {
-    const shiftOffset: number = 1;
-    const firstMeasure = this.renderElement.children[1];
-    const numberElementPerRow = Math.floor(document.body.clientWidth / firstMeasure.clientWidth);
-    const firstRowStartPosition = firstMeasure.getBoundingClientRect();
-    const firstRowEndPosition = firstRowStartPosition.x + numberElementPerRow * SECTION_SIZE.width;
+    if (Math.round(timeMarker.offsetLeft - firstRowPosition.x) % SECTION_SIZE.width === 0) {
+      console.log(timeMarkerParams.shiftOffset, elapsedTime, this.measureDuration);
+      startTime = Date.now();
+    }
+    //--------------------------------------
 
-    if (timeMarker.offsetLeft > firstRowEndPosition) {
-      timeMarker.style.left = `${firstRowStartPosition.x}px`;
-      timeMarker.style.top = `${timeMarker.offsetTop + SECTION_SIZE.height}px`;
-      timeMarker.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    const isEndOfLastMeasure = timeMarker.offsetLeft >= lastRowPosition.x + SECTION_SIZE.width;
+    const isLastMeasure =
+      timeMarker.offsetTop >= lastRowPosition.y + window.scrollY - SECTION_SIZE.height;
+    const isEndOfRow = timeMarker.offsetLeft > firstRowEndPosition;
+
+    if (isEndOfLastMeasure && isLastMeasure) {
+      timeMarker.style.left = `${firstRowPosition.x}px`;
+      timeMarker.style.top = '0';
+
+      this.playMusic = !this.playMusic;
+      this.buttonPlay.textContent = 'play';
+      clearInterval(this.timeMarkerTimer);
       return;
     }
 
-    timeMarker.style.left = `${timeMarker.offsetLeft + shiftOffset}px`;
+    if (isEndOfRow) {
+      timeMarker.style.left = `${firstRowPosition.x}px`;
+      timeMarker.style.top = `${timeMarker.offsetTop + SECTION_SIZE.height}px`;
+      timeMarker.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }
   }
 
-  playMusicTrack(event: MouseEvent) {
-    const target = event.target as HTMLElement;
+  playMusicTrack() {
+    const timeMarkerParams: timeMarkerParams = {
+      shiftOffset: this.timeMarkerSpeed / 100,
+      firstMeasure: this.sheetMusicRender.children[1],
+      lastMeasure: this.sheetMusicRender.lastElementChild,
+    };
 
     this.playMusic = !this.playMusic;
 
     if (this.playMusic) {
-      target.textContent = 'stop';
-      this.timeMarkerTimer = setInterval(() => this.moveTimeMarker(this.timeMarker), 1);
+      // для теста
+      startTime = Date.now();
+
+      this.buttonPlay.textContent = 'stop';
+      this.timeMarkerTimer = setInterval(
+        () => this.moveTimeMarker(this.timeMarker, timeMarkerParams),
+        10,
+      );
+      this.timeMarker.scrollIntoView({ block: 'center', behavior: 'smooth' });
     } else {
-      target.textContent = 'play';
+      this.buttonPlay.textContent = 'play';
+
       clearInterval(this.timeMarkerTimer);
     }
   }
 
   addTimeMarker(parentElement: HTMLDivElement): HTMLDivElement {
     const timeMarker = document.createElement('div');
-    const timeMarkerStartOffset: number = 100;
-    const firstElementPosition = parentElement.children[0].getBoundingClientRect();
+    const firstElementPosition = parentElement.firstElementChild.getBoundingClientRect();
 
     timeMarker.classList.add('sheet-music__time-marker');
     timeMarker.style.height = `${SECTION_SIZE.height}px`;
-    timeMarker.style.left = `${firstElementPosition.x + timeMarkerStartOffset}px`;
+    timeMarker.style.left = `${firstElementPosition.x}px`;
 
     parentElement.prepend(timeMarker);
 
     return timeMarker;
+  }
+
+  getTimebyClickPosition(currentMeasure: SVGSVGElement, offsetX: number): number {
+    const nextMeasure = currentMeasure.nextElementSibling as HTMLElement;
+    const previousMeasure = currentMeasure.previousElementSibling as HTMLElement;
+    let measureTime: number;
+
+    if (nextMeasure) {
+      measureTime = Number(nextMeasure.dataset.time) - Number(currentMeasure.dataset.time);
+    } else {
+      measureTime = Number(currentMeasure.dataset.time) - Number(previousMeasure.dataset.time);
+    }
+
+    measureTime = Number(measureTime.toFixed(3));
+
+    let time = (offsetX * measureTime) / SECTION_SIZE.width;
+
+    if (time <= 0) {
+      time = Number(currentMeasure.dataset.time);
+      return time;
+    }
+
+    time = time + Number(currentMeasure.dataset.id) * measureTime;
+    return time;
   }
 
   changeTimeMarkerPosition(event: MouseEvent) {
@@ -191,29 +276,73 @@ export default class SheetMusicPage {
 
     if (!closestToSvg) return;
 
+    const currentTime = this.getTimebyClickPosition(closestToSvg, event.offsetX);
+    this.store.setSongTime(currentTime);
     const newTimeMarkerPosition = Math.floor((event.clientY + pageYOffset) / SECTION_SIZE.height);
 
     this.timeMarker.style.left = `${event.clientX}px`;
     this.timeMarker.style.top = `${newTimeMarkerPosition * SECTION_SIZE.height}px`;
+
+    this.timeMarker.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+
+  changeTrack(event: MouseEvent) {
+    const target = event.target as HTMLElement;
+    const closestToList = target.closest('ul');
+
+    if (!closestToList) return;
+
+    const trackID = Number(target.id);
+
+    this.track = this.song.Tracks[trackID];
+
+    this.render();
+  }
+
+  renderAside() {
+    const aside = renderElement(this.parentElement, 'aside', ['sheet-music__aside']);
+
+    this.buttonPlay = renderElement(aside, 'button', ['button-play'], 'play') as HTMLButtonElement;
+    this.buttonPlay.addEventListener('click', this.playMusicTrack);
+
+    this.trackList = renderElement(aside, 'ul', ['sheet-music__track-list']) as HTMLUListElement;
+    this.trackList.addEventListener('click', this.changeTrack);
+
+    this.song.Tracks.forEach((track, index) => {
+      const item = renderElement(this.trackList, 'li', [
+        'sheet-music__track-list-item',
+      ]) as HTMLLIElement;
+
+      const button = renderElement(
+        item,
+        'button',
+        ['button-change-track'],
+        '🎸',
+      ) as HTMLButtonElement;
+
+      button.title = track.Instrument;
+      button.id = String(index);
+    });
   }
 
   render() {
-    console.log(track.Measures);
+    this.parentElement.innerHTML = '';
+
+    console.log(this.song);
+    // Подумать как лучше сделать адаптив
+    // Синхронизировать ползунок с песней, протестировать
     this.addBitrate(this.parentElement);
 
-    // for testing!
-    const buttonPlay = this.addButtonPlay(this.parentElement);
-    buttonPlay.addEventListener('click', this.playMusicTrack);
+    this.renderAside();
 
-    this.renderElement = document.createElement('div');
-    this.renderElement.classList.add('sheet-music__render');
+    this.sheetMusicRender = document.createElement('div');
+    this.sheetMusicRender.classList.add('sheet-music__render');
+    this.sheetMusicRender.addEventListener('click', this.changeTimeMarkerPosition);
 
-    this.parentElement.append(this.renderElement);
+    this.parentElement.append(this.sheetMusicRender);
 
-    this.drawStaveMeasures(track.Measures);
+    this.drawStaveMeasures(this.track.Measures);
 
-    this.timeMarker = this.addTimeMarker(this.renderElement);
-
-    this.renderElement.addEventListener('click', this.changeTimeMarkerPosition);
+    this.timeMarker = this.addTimeMarker(this.sheetMusicRender);
   }
 }
