@@ -3,6 +3,7 @@ import { Touch, Alteration } from '../models/Notations';
 import { Chord, Measure, Note, NoteTie, Track, Song } from '../models/TrackDisplayType';
 import EventEmitter from './EventEmitter';
 import renderElement from './helpers/renderElements';
+import Store, { EVENTS } from './Store';
 
 const SECTION_SIZE = {
   width: 400,
@@ -21,7 +22,7 @@ const timeMarkerStartOffset: number = 100;
 let startTime = Date.now();
 
 export default class SheetMusicPage {
-  eventEmitter: EventEmitter;
+  store: Store;
   parentElement: HTMLDivElement;
   sheetMusicRender: HTMLDivElement;
   timeMarker: HTMLDivElement;
@@ -35,8 +36,8 @@ export default class SheetMusicPage {
   track: Track;
   song: Song;
 
-  constructor(parentElement: HTMLDivElement, song: Song, eventEmitter: EventEmitter) {
-    this.eventEmitter = eventEmitter;
+  constructor(parentElement: HTMLDivElement, song: Song, store: Store) {
+    this.store = store;
     this.song = song;
     this.track = this.song.Tracks[0];
     this.parentElement = parentElement;
@@ -49,9 +50,13 @@ export default class SheetMusicPage {
     this.buttonChangeTrack = null;
     this.trackList = null;
     this.measureDuration = null;
+    this.subscribe();
     this.playMusicTrack = this.playMusicTrack.bind(this);
     this.changeTrack = this.changeTrack.bind(this);
     this.changeTimeMarkerPosition = this.changeTimeMarkerPosition.bind(this);
+  }
+
+  subscribe() {
   }
 
   getTies(notesList: NoteTie) {
@@ -109,6 +114,7 @@ export default class SheetMusicPage {
       const svgElement = this.sheetMusicRender.children[index] as HTMLElement;
       svgElement.dataset.time = `${measure.Time}`;
       svgElement.dataset.markerSpeed = `${this.timeMarkerSpeed}`;
+      svgElement.dataset.id = `${index}`;
     });
   }
 
@@ -240,12 +246,38 @@ export default class SheetMusicPage {
     return timeMarker;
   }
 
+  getTimebyClickPosition(currentMeasure: SVGSVGElement, offsetX: number): number {
+    const nextMeasure = currentMeasure.nextElementSibling as HTMLElement;
+    const previousMeasure = currentMeasure.previousElementSibling as HTMLElement;
+    let measureTime: number;
+
+    if (nextMeasure) {
+      measureTime = Number(nextMeasure.dataset.time) - Number(currentMeasure.dataset.time);
+    } else {
+      measureTime = Number(currentMeasure.dataset.time) - Number(previousMeasure.dataset.time);
+    }
+
+    measureTime = Number(measureTime.toFixed(3));
+
+    let time = (offsetX * measureTime) / SECTION_SIZE.width;
+
+    if (time <= 0) {
+      time = Number(currentMeasure.dataset.time);
+      return time;
+    }
+
+    time = time + Number(currentMeasure.dataset.id) * measureTime;
+    return time;
+  }
+
   changeTimeMarkerPosition(event: MouseEvent) {
     const target = event.target as HTMLElement;
     const closestToSvg = target.closest('svg');
 
     if (!closestToSvg) return;
 
+    const currentTime = this.getTimebyClickPosition(closestToSvg, event.offsetX);
+    this.store.setSongTime(currentTime);
     const newTimeMarkerPosition = Math.floor((event.clientY + pageYOffset) / SECTION_SIZE.height);
 
     this.timeMarker.style.left = `${event.clientX}px`;
