@@ -1,6 +1,7 @@
 import Vex from 'vexflow';
 import { Touch, Alteration } from '../models/Notations';
 import { Chord, Measure, Note, NoteTie, Track, Song } from '../models/TrackDisplayType';
+import EventEmitter from './EventEmitter';
 import renderElement from './helpers/renderElements';
 
 const SECTION_SIZE = {
@@ -20,6 +21,7 @@ const timeMarkerStartOffset: number = 100;
 let startTime = Date.now();
 
 export default class SheetMusicPage {
+  eventEmitter: EventEmitter;
   parentElement: HTMLDivElement;
   sheetMusicRender: HTMLDivElement;
   timeMarker: HTMLDivElement;
@@ -33,7 +35,8 @@ export default class SheetMusicPage {
   track: Track;
   song: Song;
 
-  constructor(parentElement: HTMLDivElement, song: Song) {
+  constructor(parentElement: HTMLDivElement, song: Song, eventEmitter: EventEmitter) {
+    this.eventEmitter = eventEmitter;
     this.song = song;
     this.track = this.song.Tracks[0];
     this.parentElement = parentElement;
@@ -296,7 +299,6 @@ export default class SheetMusicPage {
     console.log(this.song);
     // Подумать как лучше сделать адаптив
     // Синхронизировать ползунок с песней, протестировать
-    // Добавить event emitter
     this.addBitrate(this.parentElement);
 
     this.renderAside();
