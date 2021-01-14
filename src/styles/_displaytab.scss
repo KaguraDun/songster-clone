@@ -1,5 +1,80 @@
-.display__tab{
-    width:90%;
+.display__tab {
+    width: 70%;
     text-align: center;
     padding: 10px;
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+}
+
+.title {
+    display: flex;
+    justify-content: space-between;
+    border: solid 1px $color-white;
+    border-radius: 30px 30px 0 0;
+    padding: 15px;
+    background-color: rgba(240, 230, 230, 0.3);
+
+    &__tab {
+        &-artist {
+            width: 200px;
+            text-decoration: underline;
+            margin: 10px 20px;
+            color: $color-white;
+            font-size: 40px;
+        }
+
+        &-track {
+            font: "Roboto";
+            font-weight: 300;
+            color: $color-white;
+            font-size: 40px;
+        }
+
+        &-instrument {
+            width: 60px;
+            height: 60px;
+            background-image: url('../images/guitar.svg');
+        }
+
+        &-icons {
+            display: flex;
+            margin-right: 20px;
+
+        }
+
+        &-fav {
+            background-image: url('../images/star.svg');
+            background-color: transparent;
+            background-size: cover;
+            border: none;
+            outline: none;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: 0.2s;
+        }
+
+        &-fav:hover {
+
+            transform: scale(1.1);
+            // box-shadow: 0 0 10px $color-white;
+            transition: 0.2s;
+            // background-color: rgba(240, 230, 230, 0.3);
+            background-image: url('../images/star.svg');
+
+        }
+    }
+}
+
+.tab__content {
+    display: flex;
+    justify-content: space-between;
+    border: solid 1px $color-white;
+    border-radius: 0 0 30px 30px;
+    padding: 20px;
+    margin-top: 20px;
+    background-color: rgba(240, 230, 230, 0.3);
+    height: 100%;
 }
