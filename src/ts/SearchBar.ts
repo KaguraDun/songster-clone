@@ -14,4 +14,10 @@ export default class SearchBar{
         searchBarContent.appendChild(searchButton);
         this.parentElement.appendChild(searchBarContent);
     }
+
+
+    showSearchBar(){
+        
+    }
+
 }

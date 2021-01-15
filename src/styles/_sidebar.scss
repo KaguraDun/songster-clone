@@ -29,6 +29,12 @@
 
 
     }
+    button:active{
+        transform: scale(0.9);
+        box-shadow: 0 0 10px $color-white;
+        transition: 0.2s;
+        background-color: rgba(240, 230, 230, 0.5);
+    }
 
     &__button {
 
