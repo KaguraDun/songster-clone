@@ -2,69 +2,70 @@ import { Midi, Track } from '@tonejs/midi';
 import * as Tone from 'tone';
 import Store, { EVENTS } from './Store';
 
+enum Volume {
+    SelectedTrack = 0,
+    DefaultTrack = -10,
+}
+
 export class AudioGenerator {
     private midi: Midi;
     private parentElement: HTMLElement;
-    private recorder: Tone.Recorder;
     private store: Store;
+    private toneTracks: Tone.Part[];
+    private currentTrackId: number;
 
     constructor(parentElement: HTMLElement,midiData: ArrayBuffer,store: Store) {
         this.store = store;
         this.parentElement = parentElement;
         this.midi = new Midi(midiData);
-        this.recorder = new Tone.Recorder();
-
-        this.playAudio = this.playAudio.bind(this);
+        this.toneTracks = [];
+        this.currentTrackId = 0;
     }
 
     render() {
-        this.store.eventEmitter.addEvent(EVENTS.PLAY_BUTTON_CLICK,() => this.playAudio(0));
-
-        console.log('im in audio generator');
-        const input = document.createElement('input');
-        this.parentElement.appendChild(input);
-        input.type = 'text';
+        this.init();
+        this.store.eventEmitter.addEvent(EVENTS.PLAY_BUTTON_CLICK,() => this.play());
 
         const button = document.createElement('button');
         button.textContent = 'click';
         this.parentElement.appendChild(button);
-        button.onclick = () => {
-            const time = +input.value;
-            Tone.Transport.cancel(0);
-            this.playAudio(time);
-        }
+        button.onclick = () => this.play();
 
         const stop = document.createElement('button');
         stop.textContent = 'stop';
         this.parentElement.appendChild(stop);
-        stop.onclick = async () => {
-            Tone.Transport.stop();
-        }
+        stop.onclick = () => Tone.Transport.stop();
     }
 
-    playAudio(timeOffset: number = 0) {
-        console.log(`play audio from ${timeOffset}`);
+    init() {
         Tone.Transport.bpm.value = this.midi.header.tempos[0].bpm;
+        console.log(`bpm = ${Tone.Transport.bpm.value}`);
         Tone.Transport.timeSignature = this.midi.header.timeSignatures[0].timeSignature;
 
-        this.midi.tracks.forEach(track => {
-            this.playTrack(track,timeOffset);
+        this.midi.tracks.forEach( (track,i) => {
+            const volume = i === this.currentTrackId ? +Volume.SelectedTrack : +Volume.DefaultTrack;
+            this.initTonePart(track,volume);
+        })
+    }
+
+    initTonePart(track: Track, volumeLevel: number) {
+        const volume = new Tone.Volume(volumeLevel).toDestination();
+        const synth = new Tone.Synth().connect(volume);
+
+        const part = new Tone.Part((time,note) => {
+            synth.triggerAttackRelease(note.name,note.duration,time,note.velocity);
+        },track.notes);
+        this.toneTracks.push(part);
+    }
+
+    play(timeOffset: number = 0) {
+        this.toneTracks.forEach(part => {
+            part.start(undefined,timeOffset);
         });
         Tone.Transport.start(undefined,timeOffset);
     }
 
-    playTrack(track: Track,timeOffset: number) {
-        const synth = new Tone.Synth().toDestination();
-        new Tone.Part((time,note) => {
-            synth.triggerAttackRelease(note.name,note.duration,time,note.velocity);
-        },track.notes).start(undefined,timeOffset);
-    }
-
-    createLink(url: string) {
-        const link = document.createElement('a');
-        link.style.margin = '50px';
-        link.href = url;
-        link.textContent = 'Audio';
-        this.parentElement.appendChild(link);
+    setCurrentTrack(id: number) {
+        this.currentTrackId = id;
     }
 }
