@@ -1,5 +1,4 @@
 main {
-
     background: $color-reverse-gradient;
 }
 
@@ -7,7 +6,6 @@ main {
     display: flex;
     flex-direction: row-reverse;
     max-width: 95%;
-
     margin: 0 auto;
-    height: calc(100vh - 160px);
+    //height: calc(100vh - 160px);
 }

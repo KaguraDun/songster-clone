@@ -1,9 +1,17 @@
+import { AudioGenerator } from "./AudioGenerator";
+import SheetMusicPage from "./SheetMusicPage";
+import Store from "./Store";
+
+
 export default class DisplayTab {
   parentElement: HTMLElement;
   displayContent: HTMLElement;
+  notesContent: HTMLElement;
+  store: Store;
 
-  constructor(parentElement: HTMLElement) {
+  constructor(parentElement: HTMLElement,store: Store) {
     this.parentElement = parentElement;
+    this.store = store;
   }
 
   render() {
@@ -11,13 +19,15 @@ export default class DisplayTab {
     this.displayContent.className = 'display__tab';
     this.displayContent.setAttribute('id', 'printable');
     this.parentElement.appendChild(this.displayContent);
-    this.createTabTitle();
-    const tabContent = document.createElement('div');
-    tabContent.className = 'tab__content';
-    this.displayContent.appendChild(tabContent);
+    this.renderSongTitle();
+
+    this.notesContent = document.createElement('div');
+    this.notesContent.className = 'tab__content';
+    this.displayContent.appendChild(this.notesContent);
+    this.renderSongContent();
   }
 
-  createTabTitle() {
+  renderSongTitle() {
     const titleComponents = document.createElement('div');
     titleComponents.className = 'title';
     const artistName = document.createElement('div');
@@ -34,6 +44,19 @@ export default class DisplayTab {
     favButton.className = 'title__tab-fav';
     iconBox.append(instrumentIcon, favButton);
     titleComponents.append(artistName, trackTitle, iconBox);
-    this.displayContent.appendChild(titleComponents); // коробка загловка
+    this.displayContent.appendChild(titleComponents); // коробка заголовка
+  }
+
+  async renderSongContent() {
+    const responce = await fetch('http://localhost:3000/songs/:id/?name=Enter%20Sandman');
+    const {midiData, converted} = await responce.json();
+
+    //const arrayBuffer = new ArrayBuffer(midiData.data);
+    //const midi = new Midi(arrayBuffer);
+    const audio = new AudioGenerator(this.notesContent,midiData.data,this.store);
+    audio.init();
+
+    const page = new SheetMusicPage(this.notesContent,converted,this.store);
+    page.render();
   }
 }

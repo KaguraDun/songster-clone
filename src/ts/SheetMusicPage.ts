@@ -7,7 +7,7 @@ import Store, { EVENTS } from './Store';
 
 const SECTION_SIZE = {
   width: 400,
-  height: 150,
+  height: 100,
 };
 
 interface timeMarkerParams {
@@ -23,7 +23,7 @@ let startTime = Date.now();
 
 export default class SheetMusicPage {
   store: Store;
-  parentElement: HTMLDivElement;
+  parentElement: HTMLElement;
   sheetMusicRender: HTMLDivElement;
   timeMarker: HTMLDivElement;
   timeMarkerTimer: NodeJS.Timer;
@@ -36,7 +36,7 @@ export default class SheetMusicPage {
   track: Track;
   song: Song;
 
-  constructor(parentElement: HTMLDivElement, song: Song, store: Store) {
+  constructor(parentElement: HTMLElement, song: Song, store: Store) {
     this.store = store;
     this.song = song;
     this.track = this.song.Tracks[0];
@@ -77,10 +77,9 @@ export default class SheetMusicPage {
 
   drawStaveMeasures(measures: Measure[]) {
     const timeSignature = `${this.track.Size.Count}/${this.track.Size.Per}`;
-    const quarter = 60 / this.track.Bpm;
-    const measureDuration = (4 * quarter * this.track.Size.Count) / this.track.Size.Per;
-    this.timeMarkerSpeed = SECTION_SIZE.width / measureDuration;
-    this.measureDuration = measureDuration;
+    const quarterDuration = 60 / this.track.Bpm;
+    this.measureDuration = (4 * quarterDuration * this.track.Size.Count) / this.track.Size.Per;
+    this.timeMarkerSpeed = SECTION_SIZE.width / this.measureDuration;
 
     measures.forEach((measure, index: number) => {
       const context = Vex.Flow.Renderer.getSVGContext(
@@ -156,7 +155,7 @@ export default class SheetMusicPage {
     return { notes, ties };
   }
 
-  addBitrate(parentElement: HTMLDivElement) {
+  addBitrate(parentElement: HTMLElement) {
     const bitrateContainer = document.createElement('div');
 
     bitrateContainer.classList.add('sheet-music__bitrate');
@@ -168,7 +167,7 @@ export default class SheetMusicPage {
   moveTimeMarker(timeMarker: HTMLDivElement, timeMarkerParams: timeMarkerParams) {
     const lastRowPosition = timeMarkerParams.lastMeasure.getBoundingClientRect();
     const numberElementsPerRow = Math.floor(
-      document.body.clientWidth / timeMarkerParams.firstMeasure.clientWidth,
+      this.parentElement.clientWidth / timeMarkerParams.firstMeasure.clientWidth,
     );
     const firstRowPosition = timeMarkerParams.firstMeasure.getBoundingClientRect();
     const firstRowEndPosition = firstRowPosition.x + numberElementsPerRow * SECTION_SIZE.width;
@@ -179,8 +178,9 @@ export default class SheetMusicPage {
     let elapsedTime = Date.now() - startTime;
     timeMarker.innerText = (elapsedTime / 1000).toFixed(3);
 
+    //elapsedTime / 1000 should be equal to measureDuration
     if (Math.round(timeMarker.offsetLeft - firstRowPosition.x) % SECTION_SIZE.width === 0) {
-      console.log(timeMarkerParams.shiftOffset, elapsedTime, this.measureDuration);
+      console.log(timeMarkerParams.shiftOffset, elapsedTime/1000, this.measureDuration);
       startTime = Date.now();
     }
     //--------------------------------------
@@ -211,7 +211,7 @@ export default class SheetMusicPage {
     this.store.eventEmitter.emit(EVENTS.PLAY_BUTTON_CLICK);
 
     const timeMarkerParams: timeMarkerParams = {
-      shiftOffset: this.timeMarkerSpeed / 100,
+      shiftOffset: this.timeMarkerSpeed / 20,
       firstMeasure: this.sheetMusicRender.children[1],
       lastMeasure: this.sheetMusicRender.lastElementChild,
     };
@@ -225,7 +225,7 @@ export default class SheetMusicPage {
       this.buttonPlay.textContent = 'stop';
       this.timeMarkerTimer = setInterval(
         () => this.moveTimeMarker(this.timeMarker, timeMarkerParams),
-        10,
+        50,
       );
       this.timeMarker.scrollIntoView({ block: 'center', behavior: 'smooth' });
     } else {

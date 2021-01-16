@@ -38,8 +38,9 @@ export class AudioGenerator {
     }
 
     init() {
+        this.store.eventEmitter.addEvent(EVENTS.PLAY_BUTTON_CLICK,() => this.play());
+
         Tone.Transport.bpm.value = this.midi.header.tempos[0].bpm;
-        console.log(`bpm = ${Tone.Transport.bpm.value}`);
         Tone.Transport.timeSignature = this.midi.header.timeSignatures[0].timeSignature;
 
         this.midi.tracks.forEach( (track,i) => {

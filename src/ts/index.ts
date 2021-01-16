@@ -1,33 +1,32 @@
 import '../styles/index.scss';
 import { AudioGenerator } from './AudioGenerator';
 import SheetMusicPage from './SheetMusicPage';
-import * as path from 'path';
-import * as fs from 'fs';
 import song from '../../public/songs/1.json';
-import { Track } from '../models/TrackDisplayType';
-import { Midi } from '@tonejs/midi';
 import Store, { EVENTS } from './Store';
+import Page from './Page';
 
 const store = new Store();
 store.init();
 
-const sheetMusicContainer = document.createElement('div');
-sheetMusicContainer.classList.add('sheet-music__container');
-document.body.appendChild(sheetMusicContainer);
+new Page(document.body,store).render();
 
-async function start() {
-    const responce = await fetch('http://localhost:3000/songs/:id/?name=Enter%20Sandman');
-    const {midiData, converted} = await responce.json();
+// const sheetMusicContainer = document.createElement('div');
+// sheetMusicContainer.classList.add('sheet-music__container');
+// document.body.appendChild(sheetMusicContainer);
 
-    //const arrayBuffer = new ArrayBuffer(midiData.data);
-    //const midi = new Midi(arrayBuffer);
-    const audio = new AudioGenerator(sheetMusicContainer,midiData.data,store);
-    audio.render();
+// async function start() {
+//     const responce = await fetch('http://localhost:3000/songs/:id/?name=Enter%20Sandman');
+//     const {midiData, converted} = await responce.json();
 
-    const page = new SheetMusicPage(sheetMusicContainer,converted,store);
-    page.render();
-}
-start();
+//     //const arrayBuffer = new ArrayBuffer(midiData.data);
+//     //const midi = new Midi(arrayBuffer);
+//     const audio = new AudioGenerator(sheetMusicContainer,midiData.data,store);
+//     audio.render();
+
+//     const page = new SheetMusicPage(sheetMusicContainer,converted,store);
+//     page.render();
+// }
+// start();
 
 
 store.eventEmitter.addEvent(EVENTS.TIME_MARKER_POSITION_CHANGED, () => {
