@@ -48,7 +48,7 @@ export default class DisplayTab {
   }
 
   async renderSongContent() {
-    const responce = await fetch('http://localhost:3000/songs/:id/?name=Enter%20Sandman');
+    const responce = await fetch('http://localhost:3000/songs/id/?id=6000521b6a4f1508a4233e03');
     const {midiData, converted} = await responce.json();
 
     //const arrayBuffer = new ArrayBuffer(midiData.data);
