@@ -12,11 +12,9 @@ const SECTION_SIZE = {
 
 interface timeMarkerParams {
   shiftOffset: number;
-  firstMeasure: Element;
-  lastMeasure: Element;
+  firstMeasurePosition: DOMRect;
+  lastMeasurePosition: DOMRect;
 }
-
-const timeMarkerStartOffset: number = 100;
 
 // для теста
 let startTime = Date.now();
@@ -50,13 +48,9 @@ export default class SheetMusicPage {
     this.buttonChangeTrack = null;
     this.trackList = null;
     this.measureDuration = null;
-    this.subscribe();
     this.playMusicTrack = this.playMusicTrack.bind(this);
     this.changeTrack = this.changeTrack.bind(this);
     this.changeTimeMarkerPosition = this.changeTimeMarkerPosition.bind(this);
-  }
-
-  subscribe() {
   }
 
   getTies(notesList: NoteTie) {
@@ -164,34 +158,43 @@ export default class SheetMusicPage {
     parentElement.appendChild(bitrateContainer);
   }
 
-  moveTimeMarker(timeMarker: HTMLDivElement, timeMarkerParams: timeMarkerParams) {
-    const lastRowPosition = timeMarkerParams.lastMeasure.getBoundingClientRect();
-    const numberElementsPerRow = Math.floor(
-      this.parentElement.clientWidth / timeMarkerParams.firstMeasure.clientWidth,
-    );
-    const firstRowPosition = timeMarkerParams.firstMeasure.getBoundingClientRect();
-    const firstRowEndPosition = firstRowPosition.x + numberElementsPerRow * SECTION_SIZE.width;
+  moveTimeMarker(timeMarker: HTMLDivElement, params: timeMarkerParams) {
+    const numberElementsPerRow = Math.floor(this.parentElement.clientWidth / SECTION_SIZE.width);
 
-    timeMarker.style.left = `${timeMarker.offsetLeft + timeMarkerParams.shiftOffset}px`;
+    const rowStartX = params.firstMeasurePosition.x - this.parentElement.offsetLeft;
+    const firstRowEndPosition = rowStartX + numberElementsPerRow * SECTION_SIZE.width;
+
+    timeMarker.style.left = `${timeMarker.offsetLeft + params.shiftOffset}px`;
 
     // Для тестирования ------------------------
-    let elapsedTime = Date.now() - startTime;
-    timeMarker.innerText = (elapsedTime / 1000).toFixed(3);
+    // let elapsedTime = Date.now() - startTime;
+    // timeMarker.innerText = (elapsedTime / 1000).toFixed(3);
 
-    //elapsedTime / 1000 should be equal to measureDuration
-    if (Math.round(timeMarker.offsetLeft - firstRowPosition.x) % SECTION_SIZE.width === 0) {
-      console.log(timeMarkerParams.shiftOffset, elapsedTime/1000, this.measureDuration);
-      startTime = Date.now();
-    }
+    // //elapsedTime / 1000 should be equal to measureDuration
+    // if (
+    //   Math.round(timeMarker.offsetLeft - params.firstMeasurePosition.x) %
+    //     SECTION_SIZE.width ===
+    //   0
+    // ) {
+    //   console.log(params.shiftOffset, elapsedTime / 1000, this.measureDuration);
+    //   startTime = Date.now();
+    // }
     //--------------------------------------
+    const lastMesureEndX =
+      params.lastMeasurePosition.x - this.parentElement.offsetLeft + SECTION_SIZE.width;
 
-    const isEndOfLastMeasure = timeMarker.offsetLeft >= lastRowPosition.x + SECTION_SIZE.width;
-    const isLastMeasure =
-      timeMarker.offsetTop >= lastRowPosition.y + window.scrollY - SECTION_SIZE.height;
+    const lastMesureEndY =
+      params.lastMeasurePosition.y +
+      window.scrollY -
+      SECTION_SIZE.height -
+      this.parentElement.offsetTop;
+
+    const isEndOfLastMeasure = timeMarker.offsetLeft >= lastMesureEndX;
+    const isLastMeasure = timeMarker.offsetTop >= lastMesureEndY;
     const isEndOfRow = timeMarker.offsetLeft > firstRowEndPosition;
 
     if (isEndOfLastMeasure && isLastMeasure) {
-      timeMarker.style.left = `${firstRowPosition.x}px`;
+      timeMarker.style.left = `${rowStartX}px`;
       timeMarker.style.top = '0';
 
       this.playMusic = !this.playMusic;
@@ -201,7 +204,7 @@ export default class SheetMusicPage {
     }
 
     if (isEndOfRow) {
-      timeMarker.style.left = `${firstRowPosition.x}px`;
+      timeMarker.style.left = `${rowStartX}px`;
       timeMarker.style.top = `${timeMarker.offsetTop + SECTION_SIZE.height}px`;
       timeMarker.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
@@ -210,10 +213,10 @@ export default class SheetMusicPage {
   playMusicTrack() {
     this.store.eventEmitter.emit(EVENTS.PLAY_BUTTON_CLICK);
 
-    const timeMarkerParams: timeMarkerParams = {
+    const params: timeMarkerParams = {
       shiftOffset: this.timeMarkerSpeed / 20,
-      firstMeasure: this.sheetMusicRender.children[1],
-      lastMeasure: this.sheetMusicRender.lastElementChild,
+      firstMeasurePosition: this.sheetMusicRender.children[1].getBoundingClientRect(),
+      lastMeasurePosition: this.sheetMusicRender.lastElementChild.getBoundingClientRect(),
     };
 
     this.playMusic = !this.playMusic;
@@ -223,10 +226,7 @@ export default class SheetMusicPage {
       startTime = Date.now();
 
       this.buttonPlay.textContent = 'stop';
-      this.timeMarkerTimer = setInterval(
-        () => this.moveTimeMarker(this.timeMarker, timeMarkerParams),
-        50,
-      );
+      this.timeMarkerTimer = setInterval(() => this.moveTimeMarker(this.timeMarker, params), 50);
       this.timeMarker.scrollIntoView({ block: 'center', behavior: 'smooth' });
     } else {
       this.buttonPlay.textContent = 'play';
@@ -238,10 +238,10 @@ export default class SheetMusicPage {
   addTimeMarker(parentElement: HTMLDivElement): HTMLDivElement {
     const timeMarker = document.createElement('div');
     const firstElementPosition = parentElement.firstElementChild.getBoundingClientRect();
-
+  
     timeMarker.classList.add('sheet-music__time-marker');
     timeMarker.style.height = `${SECTION_SIZE.height}px`;
-    timeMarker.style.left = `${firstElementPosition.x}px`;
+    timeMarker.style.left = `${firstElementPosition.x - this.parentElement.offsetLeft}px`;
 
     parentElement.prepend(timeMarker);
 
@@ -278,13 +278,19 @@ export default class SheetMusicPage {
 
     if (!closestToSvg) return;
 
-    const currentTime = this.getTimebyClickPosition(closestToSvg, event.offsetX);
+    const currentTime = this.getTimebyClickPosition(
+      closestToSvg,
+      event.offsetX - this.parentElement.offsetLeft,
+    );
+
     this.store.setSongTime(currentTime);
-    const newTimeMarkerPosition = Math.floor((event.clientY + pageYOffset) / SECTION_SIZE.height);
 
-    this.timeMarker.style.left = `${event.clientX}px`;
-    this.timeMarker.style.top = `${newTimeMarkerPosition * SECTION_SIZE.height}px`;
+    const newTimeMarkerPositionY = Math.floor(
+      (event.y - Math.abs(this.parentElement.offsetTop) + scrollY) / SECTION_SIZE.height,
+    );
 
+    this.timeMarker.style.left = `${event.x - this.parentElement.offsetLeft}px`;
+    this.timeMarker.style.top = `${newTimeMarkerPositionY * SECTION_SIZE.height}px`;
     this.timeMarker.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 
@@ -327,10 +333,16 @@ export default class SheetMusicPage {
     });
   }
 
+  addResizeEvent() {
+    window.addEventListener('resize', () => {
+    });
+  }
+
   render() {
     //console.log(this.song);
     // Подумать как лучше сделать адаптив
     // Синхронизировать ползунок с песней, протестировать
+    this.parentElement.innerHTML = '';
     this.addBitrate(this.parentElement);
 
     this.renderAside();
@@ -344,5 +356,7 @@ export default class SheetMusicPage {
     this.drawStaveMeasures(this.track.Measures);
 
     this.timeMarker = this.addTimeMarker(this.sheetMusicRender);
+
+    this.addResizeEvent();
   }
 }
