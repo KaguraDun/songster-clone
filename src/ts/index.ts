@@ -29,10 +29,6 @@ async function start() {
 }
 start();
 
-// const sheetMusicPage = new SheetMusicPage(sheetMusicContainer);
-// const track: Track = song.Tracks[0];
-// const sheetMusicPage = new SheetMusicPage(sheetMusicContainer, song, store);
-// sheetMusicPage.render();
 
 store.eventEmitter.addEvent(EVENTS.TIME_MARKER_POSITION_CHANGED, () => {
   console.log(store.songTime);
