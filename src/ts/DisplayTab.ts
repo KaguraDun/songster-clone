@@ -1,7 +1,6 @@
-import { AudioGenerator } from "./AudioGenerator";
-import SheetMusicPage from "./SheetMusicPage";
-import Store from "./Store";
-
+import { AudioGenerator } from './AudioGenerator';
+import RenderSong from './RenderSong';
+import Store from './Store';
 
 export default class DisplayTab {
   parentElement: HTMLElement;
@@ -56,7 +55,7 @@ export default class DisplayTab {
     const audio = new AudioGenerator(this.notesContent,midiData.data,this.store);
     audio.init();
 
-    const page = new SheetMusicPage(this.notesContent,converted,this.store);
+    const page = new RenderSong(this.notesContent,converted,this.store);
     page.render();
   }
 }
