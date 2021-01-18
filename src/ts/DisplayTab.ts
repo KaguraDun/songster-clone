@@ -1,4 +1,4 @@
-import { AudioGenerator } from './AudioGenerator';
+import { AudioGenerator } from './audioGenerator/AudioGenerator';
 import RenderSong from './RenderSong';
 import Store from './Store';
 
