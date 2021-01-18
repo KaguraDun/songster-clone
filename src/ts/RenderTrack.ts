@@ -1,6 +1,6 @@
 import Vex from 'vexflow';
 import { Touch } from '../models/Notations';
-import { Chord, Measure, NoteTie, Track } from '../models/TrackDisplayType';
+import { Chord, Measure, NoteTie} from '../models/TrackDisplayType';
 import { SECTION_SIZE } from './Constants';
 import renderElement from './helpers/renderElements';
 
@@ -8,7 +8,6 @@ export default class renderTrack {
   measures: Measure[];
   timeSignature: string;
   sheetMusicRender: HTMLDivElement;
-  track: Track;
   clef: string;
 
   constructor(

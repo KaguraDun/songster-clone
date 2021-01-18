@@ -1,10 +1,14 @@
 import DisplayTab from './DisplayTab';
+import Store, { EVENTS } from './Store';
+
 export default class Sidebar {
   parentElement: HTMLElement;
   sideBarContent: HTMLElement;
+  store: Store;
 
-  constructor(parentElement: HTMLElement) {
+  constructor(parentElement: HTMLElement, store: Store) {
     this.parentElement = parentElement;
+    this.store = store;
   }
 
   render() {
@@ -25,6 +29,8 @@ export default class Sidebar {
     const playButton = document.createElement('button');
     playButton.className = 'sidebar__button-play';
     this.sideBarContent.appendChild(playButton);
+
+    playButton.addEventListener('click', () => this.store.playSong());
   }
 
   createSpeedButton() {
@@ -47,7 +53,6 @@ export default class Sidebar {
     const printButton = document.createElement('button');
     printButton.className = 'sidebar__button-print';
     this.sideBarContent.appendChild(printButton);
-    
   }
 
   createFavoriteButton() {
@@ -67,6 +72,4 @@ export default class Sidebar {
     gitHubButton.className = 'sidebar__button-gitHub';
     this.sideBarContent.appendChild(gitHubButton);
   }
-
- 
 }
