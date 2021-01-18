@@ -1,6 +1,5 @@
 import '../styles/index.scss';
-import { AudioGenerator } from './AudioGenerator';
-import song from '../../public/songs/1.json';
+//import song from '../../public/songs/1.json';
 import Store, { EVENTS } from './Store';
 import Page from './Page';
 

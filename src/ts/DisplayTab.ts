@@ -1,4 +1,4 @@
-import { AudioGenerator } from './AudioGenerator';
+import { AudioGenerator } from "./AudioGenerator/AudioGenerator";
 import RenderSong from './RenderSong';
 import Store from './Store';
 
@@ -47,7 +47,7 @@ export default class DisplayTab {
   }
 
   async renderSongContent() {
-    const responce = await fetch('http://localhost:3000/songs/:id/?name=Enter%20Sandman');
+    const responce = await fetch('http://localhost:3000/songs/id/?id=6004835e0bea8613c8a9fbe8');
     const {midiData, converted} = await responce.json();
 
     //const arrayBuffer = new ArrayBuffer(midiData.data);
