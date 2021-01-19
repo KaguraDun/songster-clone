@@ -23,7 +23,7 @@ export default class Page {
     mainWrapper.className = 'main__wrapper';
     main.appendChild(mainWrapper);
     
-    new Sidebar(mainWrapper).render();
+    // new Sidebar(mainWrapper).render();
     new DisplayTab(mainWrapper,this.store).render();
     const footer = document.createElement('footer');
     const footerWrapper = document.createElement('div');

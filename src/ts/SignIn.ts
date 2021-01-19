@@ -6,8 +6,8 @@ export default class SignnIn {
   }
 
   render() {
-    const signInButton = document.createElement('button');
-    signInButton.className = 'wrapper-user-signin';
-    this.parentElement.appendChild(signInButton);
+    // const signInButton = document.createElement('button');
+    // signInButton.className = 'wrapper-user-signin';
+    // this.parentElement.appendChild(signInButton);
   }
 }

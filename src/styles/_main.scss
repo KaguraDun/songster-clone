@@ -1,5 +1,9 @@
 main {
-    background: $color-reverse-gradient;
+    background: $dark-background;
+    
+    background-position: center;
+    background-size: cover;
+
 }
 
 .main__wrapper {
@@ -7,5 +11,5 @@ main {
     flex-direction: row-reverse;
     max-width: 95%;
     margin: 0 auto;
-    //height: calc(100vh - 160px);
+    height: calc(100vh - 155px);
 }

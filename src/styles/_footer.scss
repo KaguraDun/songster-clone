@@ -1,19 +1,31 @@
 .footer {
     &__wrapper {
-        background: $color-gradient;
+        background: $dark-background;
     }
 
     &__content {
-        max-width: 95%;
+        max-width: 85%;
         margin: 0 auto;
         height: 75px;
-
-
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        a{
+        color: $unnamed-color-f5f5f5;
+        opacity: 0.3;
+        text-decoration: none;
+        
+        }
         &-link {
+            
+            
+            
             &-logo {
                 height: 50px;
                 padding-top: 5px;
                 margin: 10px;
+
 
             }
         }

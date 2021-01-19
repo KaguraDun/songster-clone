@@ -1,6 +1,9 @@
+import { Player } from "tone";
 import { AudioGenerator } from "./AudioGenerator";
 import SheetMusicPage from "./SheetMusicPage";
+import Sidebar from "./Sidebar";
 import Store from "./Store";
+
 
 
 export default class DisplayTab {
@@ -17,14 +20,18 @@ export default class DisplayTab {
   render() {
     this.displayContent = document.createElement('section');
     this.displayContent.className = 'display__tab';
-    this.displayContent.setAttribute('id', 'printable');
+    // this.displayContent.setAttribute('id', 'printable');
     this.parentElement.appendChild(this.displayContent);
     this.renderSongTitle();
-
+    const dataWrapper = document.createElement('div');
+    dataWrapper.className = 'display__data';
     this.notesContent = document.createElement('div');
     this.notesContent.className = 'tab__content';
-    this.displayContent.appendChild(this.notesContent);
+    dataWrapper.appendChild(this.notesContent);
+    new Sidebar(dataWrapper).render();
+    this.displayContent.appendChild(dataWrapper);
     this.renderSongContent();
+    this.renderPlayer();
   }
 
   renderSongTitle() {
@@ -32,19 +39,49 @@ export default class DisplayTab {
     titleComponents.className = 'title';
     const artistName = document.createElement('div');
     artistName.className = 'title__tab-artist';
-    artistName.textContent = 'NIRVANA';
+    artistName.textContent = 'Nirvana';
     const trackTitle = document.createElement('div');
     trackTitle.className = 'title__tab-track';
     trackTitle.textContent = 'Smells like Teen Spirit';
-    const iconBox = document.createElement('div');
-    iconBox.className = 'title__tab-icons';
-    const instrumentIcon = document.createElement('div');
-    instrumentIcon.className = 'title__tab-instrument';
+    // const iconBox = document.createElement('div');
+    // iconBox.className = 'title__tab-icons';
+   
     const favButton = document.createElement('button');
     favButton.className = 'title__tab-fav';
-    iconBox.append(instrumentIcon, favButton);
-    titleComponents.append(artistName, trackTitle, iconBox);
+    // iconBox.appendChild(favButton);
+    const titleBox = document.createElement('div');
+    titleBox.className = 'title__box';
+    titleBox.append(trackTitle, favButton);
+    const subTitle = document.createElement('div');
+    subTitle.className = 'title__sub';
+    subTitle.textContent = 'Kurt Cobain - Intro/Verse Guitar - Electric Guitar (clean)';
+    titleComponents.append(artistName, titleBox, subTitle);
+   
+
+
     this.displayContent.appendChild(titleComponents); // коробка заголовка
+  }
+
+  renderPlayer(){
+    const player = document.createElement('div');
+    player.className = 'player';
+    const playerComponents = document.createElement('div');
+    playerComponents.className = 'player__components';
+    
+const speedButton = document.createElement('button');
+speedButton.className = 'player__btn';
+
+const playerButtons = document.createElement('div');
+playerButtons.className = 'player__buttons';
+
+const playerSound = document.createElement('div');
+playerSound.className= 'player__sound';
+
+playerComponents.append(speedButton, playerButtons, playerSound);
+
+// const playerProgress= document.createElement();
+
+    this.displayContent.appendChild(player);
   }
 
   async renderSongContent() {
