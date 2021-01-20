@@ -1,5 +1,7 @@
 import { DuoSynth } from 'tone';
 import DisplayTab from './DisplayTab';
+import Store, { EVENTS } from './Store';
+
 
 const SVG_SPRITE: any = {
   FULL_SCREEN: `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
@@ -109,9 +111,13 @@ export default class Sidebar {
   functionButtons: HTMLElement;
   extraButtons: HTMLElement;
   fullScreenBtn: HTMLButtonElement;
+  store: Store;
+  
+  
 
-  constructor(parentElement: HTMLElement) {
+  constructor(parentElement: HTMLElement, store: Store) {
     this.parentElement = parentElement;
+    this.store = store;
   }
 
   render() {
@@ -131,12 +137,22 @@ export default class Sidebar {
     this.createPrintButton();
   }
 
+
   createFullScreenButton() {
     const fullScreen = document.createElement('button');
     fullScreen.className = 'sidebar__button-fullscreen';
     fullScreen.innerHTML = SVG_SPRITE.FULL_SCREEN;
     console.log(fullScreen.innerHTML);
     return this.functionButtons.appendChild(fullScreen);
+  }
+
+  createPlayButton() {
+    const playButton = document.createElement('button');
+    playButton.className = 'sidebar__button-play';
+    this.sideBarContent.appendChild(playButton);
+
+    playButton.addEventListener('click', () => this.store.playSong());
+
   }
 
   createMetronomeButton() {
@@ -155,8 +171,11 @@ export default class Sidebar {
   createPrintButton() {
     const printButton = document.createElement('button');
     printButton.className = 'sidebar__button-print';
+
     printButton.innerHTML = SVG_SPRITE.PRINTER;
     this.extraButtons.appendChild(printButton);
+
+
   }
 
   openfullScreenMode() {
@@ -167,3 +186,4 @@ export default class Sidebar {
     }
   }
 }
+

@@ -12,20 +12,57 @@ header {
         align-items: center;
         max-width: 85%;
         margin: 0 auto;
+
         padding: 20px 20px;
 
 
+
+
+        // height: 80px;
 
         &-title {
             font-size: 32px;
             color: $unnamed-color-f5f5f5;
             cursor: default;
+
             font-family: 'Segoe UI';
             font-weight: 300;
 
-        }
 
+        }
     }
+}
+
+.search {
+    &__button {
+        padding: 22px 55px;
+        background-color: #ef5743;
+        border-radius: 35px;
+        &-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 0 auto;
+        }
+        &-content {
+            color: #f5f5f5;
+            font-size: 18px/24px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            letter-spacing: 0px;
+            text-align: center;
+        }
+        &-icon {
+            margin-right: 10px;
+            background-color: transparent;
+            background-size: cover;
+            width: 16px;
+            background-image: url(../../public/icons/search-icon.svg);
+        }
+    }
+}
+
+.search__button:hover {
+    cursor: pointer;
+    background-color: #da6556;
 }
 
 .wrapper-user {
@@ -35,14 +72,18 @@ header {
     padding: 0 10px;
 
 
+
     &-login {
 
+
+   
         background-size: cover;
         border: none;
         outline: none;
         width: 80px;
         height: 80px;
         cursor: pointer;
+
         border-radius: 50px;
         background-color: $shadow;
 
@@ -59,4 +100,6 @@ header {
     }
 
 
+
+  
 }
