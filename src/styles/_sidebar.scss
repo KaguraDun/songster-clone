@@ -1,90 +1,74 @@
 .sidebar {
+    // position: fixed;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    height: calc(70px * 8);
-    padding: 10px;
-    padding-top: 50px;
+    margin-left: 20px;
+
+    // padding: 0 15px 0 40px;
+
+    svg {
+        width: 30px;
+        height: 30px;
+        fill: $color-white;
+        opacity: 0.5;
+    }
+
+    // padding-top: 50px;
+    &__function {
+        height: 200px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    &__extra {
+        // height: 200px;
+        display: flex;
+        flex-direction: column;
+        // justify-content: space-between;
+    }
+
 
     button {
-        background-color: transparent;
+
         background-size: cover;
         border: none;
         outline: none;
-        width: 60px;
-        height: 60px;
+        width: 58px;
+        height: 58px;
         cursor: pointer;
-
-        border-radius: 30px;
+        background-color: $shadow;
+        border-radius: 10px;
         transition: 0.2s;
+        color: #ffff;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: 30px 30px;
+
+
 
     }
 
     button:hover {
 
-        transform: scale(1.1);
-        box-shadow: 0 0 10px $color-white;
+
         transition: 0.2s;
         background-color: rgba(240, 230, 230, 0.3);
 
+        svg {
+            opacity: 0.8;
+        }
+
 
     }
-    button:active{
-        transform: scale(0.9);
-        box-shadow: 0 0 10px $color-white;
+
+    button:active {
+        transform: scale(0.95);
         transition: 0.2s;
-        background-color: rgba(240, 230, 230, 0.5);
+        background-color: #353535;
     }
 
-    &__button {
-
-        &-play {
-            background-image: url('../images/sidebar_icons/play.svg');
 
 
-        }
-
-        &-speed {
-            background-image: url('../images/sidebar_icons/speed.svg');
-
-
-        }
-
-        &-sound {
-            background-image: url('../images/sidebar_icons/sound.svg');
-
-
-        }
-
-        &-metronom {
-            background-image: url('../images/sidebar_icons/metronom.svg');
-
-
-        }
-
-        &-print {
-            background-image: url('../images/sidebar_icons/printer.svg');
-
-
-
-        }
-
-        &-favorite {
-            background-image: url('../images/sidebar_icons/favor.svg');
-
-
-
-        }
-
-        &-instrument {
-            background-image: url('../images/sidebar_icons/instrument.svg');
-
-
-        }
-
-        &-gitHub {
-            background-image: url('../images/sidebar_icons/copyright.svg');
-
-        }
-    }
 }

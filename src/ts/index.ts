@@ -6,7 +6,9 @@ import Page from './Page';
 const store = new Store();
 store.init();
 
-new Page(document.body,store).render();
+const container = document.createElement('div');
+document.body.appendChild(container);
+new Page(container,store).render();
 
 // const sheetMusicContainer = document.createElement('div');
 // sheetMusicContainer.classList.add('sheet-music__container');
