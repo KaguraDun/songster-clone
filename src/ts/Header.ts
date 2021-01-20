@@ -22,6 +22,6 @@ export default class Header {
     userDiv.className = 'wrapper-user';
     headerWrapper.appendChild(userDiv);
     new Login(userDiv).render();
-    new SignIn(userDiv).render();
+    //new SignIn(userDiv).render();
   }
 }

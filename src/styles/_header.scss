@@ -39,8 +39,8 @@ header {
 
 
     &-login,
-    &-signin {
-
+    &-signin,
+    &__log-out {
         background-color: transparent;
         background-size: cover;
         border: none;
@@ -62,13 +62,26 @@ header {
 
     &-login {
         background-image: url('../images/login.svg');
-
-
     }
 
     &-signin {
         background-image: url('../images/user.svg');
+    }
+    
+    &__log-out{
+        background-image: url('../images/login.svg');
+    }
 
+    &__formContainer{
+        top:100px;
+        right: 150px;
+        width: 250px;
+        height: 250px;
+        padding: 25px;
+        display: none;
+        position: absolute;
+        background: white;
+        z-index: 100;
     }
 
 }
