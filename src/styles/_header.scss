@@ -39,8 +39,8 @@ header {
 
 
     &-login,
-    &-signin,
-    &__log-out {
+    &-signup,
+    &-log-out {
         background-color: transparent;
         background-size: cover;
         border: none;
@@ -49,11 +49,11 @@ header {
         height: 60px;
         cursor: pointer;
         border-radius: 30px;
-
     }
 
     &-login:hover,
-    &-signin:hover {
+    &-signup:hover,
+    &-log-out:hover {
         transform: scale(1.1);
         box-shadow: 0 0 10px $color-white;
         transition: 0.2s;
@@ -64,24 +64,40 @@ header {
         background-image: url('../images/login.svg');
     }
 
-    &-signin {
+    &-signup {
         background-image: url('../images/user.svg');
     }
     
-    &__log-out{
+    &-log-out{
         background-image: url('../images/login.svg');
     }
 
-    &__formContainer{
-        top:100px;
-        right: 150px;
+    &__form-container{
+        display: none;
+        position: fixed;
         width: 250px;
         height: 250px;
         padding: 25px;
-        display: none;
-        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
         background: white;
         z-index: 100;
     }
 
+    &__form-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom:0;
+        left: 0;
+        background: rgba(0,0,0,0.2);
+        z-index: 90;
+    }
 }
+
+.--show{
+    display: block;
+}
+

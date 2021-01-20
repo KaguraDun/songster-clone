@@ -1,162 +1,168 @@
 import renderElement from './helpers/renderElements';
-import request from './request';
+
+const LOGGED_IN = 'loggedIn';
+const SHOW = '--show';
 
 export default class Login {
   parentElement: HTMLElement;
   formContainer: HTMLElement;
-  login: HTMLElement;
-  user: string;
-  cookie: string;
+  formOverlay: HTMLElement;
 
   constructor(parentElement: HTMLElement) {
     this.parentElement = parentElement;
     this.renderFormLogin = this.renderFormLogin.bind(this);
     this.renderFormSingUp = this.renderFormSingUp.bind(this);
     this.logOut = this.logOut.bind(this);
-    this.cookie;
+    this.hideForm = this.hideForm.bind(this);
     this.formContainer;
-    this.login;
-    this.user;
+    this.formOverlay;
   }
 
-  // Нужно отрефакторить
+  renderInput(parentElement: HTMLElement, name: string, labelText: string, type?: string) {
+    const label = renderElement(parentElement, 'label', [], labelText) as HTMLLabelElement;
+    label.htmlFor = name;
+
+    const input = renderElement(parentElement, 'input', []) as HTMLInputElement;
+    input.name = name;
+    input.type = type;
+    input.required = true;
+
+    return input;
+  }
+
+  renderForm(name: string) {
+    this.formContainer.innerHTML = '';
+
+    const form = renderElement(this.formContainer, 'form', []) as HTMLFormElement;
+    form.action = '/signup';
+
+    const heading = renderElement(form, 'h2', [], name);
+
+    const email = this.renderInput(form, 'email', 'Email', 'text');
+    const emailError = renderElement(form, 'div', ['form_email-error']);
+
+    const password = this.renderInput(form, 'password', 'Password', 'password');
+    const passwordError = renderElement(form, 'div', ['form_password-error']);
+
+    const button = renderElement(form, 'button', [], name);
+
+    return { form, email, emailError, password, passwordError, button };
+  }
 
   renderFormLogin() {
-    this.formContainer.style.display = 'block';
+    this.formOverlay.classList.add(SHOW);
+    this.formContainer.classList.add(SHOW);
 
-    this.formContainer.innerHTML = `<form action="/signup">
-      <h2>Login</h2>
-      <label for="email">Email</label>
-      <input type="text" name="email" required />
-      <div class="email error"></div>
-      <label for="password">Password</label>
-      <input type="password" name="password" required />
-      <div class="password error"></div>
-      <button>login</button>
-    </form>`;
+    const form = this.renderForm('Log in');
 
-    const form = document.querySelector('form');
-    const emailError = document.querySelector('.email.error');
-    const passwordError = document.querySelector('.password.error');
-
-    form.addEventListener('submit', async (e) => {
+    form.form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       // reset errors
-      emailError.textContent = '';
-      passwordError.textContent = '';
+      form.emailError.textContent = '';
+      form.passwordError.textContent = '';
 
       // get values
       const email = form.email.value;
       const password = form.password.value;
 
-      try {
-        const res = await fetch('http://localhost:3000/login/', {
-          method: 'POST',
-          mode: 'cors',
-          body: JSON.stringify({ email, password }),
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        const data = await res.json();
+      const res = await fetch('http://localhost:3000/login/', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
 
-        if (data.errors) {
-          emailError.textContent = data.errors.email;
-          passwordError.textContent = data.errors.password;
-        }
+      const data = await res.json();
 
-        if (data.user) {
-          console.log(data);
-          this.user = data.user;
-          console.log(document.cookie);
-          //location.assign('/');
-        }
-      } catch (err) {
-        console.log(err);
+      if (data.errors) {
+        form.emailError.textContent = data.errors.email;
+        form.passwordError.textContent = data.errors.password;
+        return;
+      }
+
+      if (data.user) {
+        localStorage.setItem(LOGGED_IN, 'true');
+        localStorage.setItem('user', `${data.user}`);
+        location.assign('/');
       }
     });
   }
 
   renderFormSingUp() {
-    this.formContainer.innerHTML = `
-    <form action="/signup">
-      <h2>Sign up</h2>
-      <label for="email">Email</label>
-      <input type="text" name="email" required />
-      <div class="email error"></div>
-      <label for="password">Password</label>
-      <input type="password" name="password" required />
-      <div class="password error"></div>
-      <button>Sign up</button>
-    </form>`;
+    this.formOverlay.classList.add(SHOW);
+    this.formContainer.classList.add(SHOW);
 
-    const form = document.querySelector('form');
-    const emailError = document.querySelector('.email.error');
-    const passwordError = document.querySelector('.password.error');
+    const form = this.renderForm('Sign up');
 
-    form.addEventListener('submit', async (e) => {
+    form.form.addEventListener('submit', async (e) => {
       e.preventDefault();
 
       // reset errors
-      emailError.textContent = '';
-      passwordError.textContent = '';
+      form.emailError.textContent = '';
+      form.passwordError.textContent = '';
 
       // get values
       const email = form.email.value;
       const password = form.password.value;
 
-      try {
-        const res = await fetch('http://localhost:3000/', {
-          method: 'POST',
-          body: JSON.stringify({ email, password }),
-          headers: { 'Content-Type': 'application/json' },
-        });
-        const data = await res.json();
+      const res = await fetch('http://localhost:3000/', {
+        method: 'POST',
+        body: JSON.stringify({ email, password }),
+        headers: { 'Content-Type': 'application/json' },
+      });
+      const data = await res.json();
 
-        console.log(data);
+      console.log(data);
 
-        if (data.errors) {
-          emailError.textContent = data.errors.email;
-          passwordError.textContent = data.errors.password;
-        }
-        if (data.user) {
-          location.assign('/');
-        }
-      } catch (err) {
-        console.log(err);
+      if (data.errors) {
+        form.emailError.textContent = data.errors.email;
+        form.passwordError.textContent = data.errors.password;
+        return;
+      }
+
+      if (data.user) {
+        location.assign('/');
       }
     });
   }
 
   async logOut() {
-    // Починить logout
-    //document.cookie = this.cookie + '=;expires=Thu, 01 Jan 1970 00:00:01 GMT;';
     try {
       await fetch('http://localhost:3000/logout/', { method: 'GET', credentials: 'same-origin' });
     } catch (err) {
       console.log(err);
     }
+
+    localStorage.clear();
+    location.assign('/');
+  }
+
+  hideForm() {
+    this.formOverlay.classList.remove(SHOW);
+    this.formContainer.classList.remove(SHOW);
   }
 
   render() {
-    this.cookie = document.cookie;
-    this.formContainer = renderElement(this.parentElement, 'div', ['wrapper-user__formContainer']);
+    this.formContainer = renderElement(this.parentElement, 'div', ['wrapper-user__form-container']);
+    this.formOverlay = renderElement(this.parentElement, 'div', ['wrapper-user__form-overlay']);
 
-    console.log(this.user);
-    console.log(document.cookie);
+    this.formOverlay.addEventListener('click', this.hideForm);
 
-    if (this.cookie) {
-      const buttonLogOut = renderElement(this.parentElement, 'button', ['wrapper-user__log-out']);
-
+    if (localStorage.getItem(LOGGED_IN)) {
+      const buttonLogOut = renderElement(this.parentElement, 'button', ['wrapper-user-log-out']);
+      buttonLogOut.title = 'Log Out';
       buttonLogOut.addEventListener('click', this.logOut);
       return;
     }
 
     const buttonLogin = renderElement(this.parentElement, 'button', ['wrapper-user-login']);
     buttonLogin.addEventListener('click', this.renderFormLogin);
+    buttonLogin.title = 'Log in';
 
-    const buttonSingUp = renderElement(this.parentElement, 'button', [], 'Sing Up');
+    const buttonSingUp = renderElement(this.parentElement, 'button', ['wrapper-user-signup']);
     buttonSingUp.addEventListener('click', this.renderFormSingUp);
+    buttonSingUp.title = 'Sing up';
   }
 }
