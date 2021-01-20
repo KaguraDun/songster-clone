@@ -26,8 +26,15 @@ export default class Header {
     const headerTitle = document.createElement('span');
     headerTitle.className = 'header__wrapper-title';
     headerTitle.textContent = 'Songster-Clone';
-    this.wrapper.appendChild(headerTitle);
 
+    headerWrapper.appendChild(headerTitle);
+    const userDiv = document.createElement('div');
+    userDiv.className = 'wrapper-user';
+    headerWrapper.appendChild(userDiv);
+    new Login(userDiv).render();
+    //new SignIn(userDiv).render();
+
+    this.wrapper.appendChild(headerTitle);
     
     this.userDiv = document.createElement('div');
     this.userDiv.className = 'wrapper-user';
@@ -36,7 +43,6 @@ export default class Header {
 
     new Login(this.userDiv).render();
     
- 
   }
 
   renderSearchButton() {
