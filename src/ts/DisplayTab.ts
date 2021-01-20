@@ -26,6 +26,7 @@ export default class DisplayTab {
     const dataWrapper = document.createElement('div');
     dataWrapper.className = 'display__data';
     this.notesContent = document.createElement('div');
+    this.notesContent.setAttribute('id', 'data-wrapper');
     this.notesContent.className = 'tab__content';
     dataWrapper.appendChild(this.notesContent);
     new Sidebar(dataWrapper).render();

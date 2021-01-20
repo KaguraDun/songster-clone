@@ -4,21 +4,22 @@
     justify-content: space-between;
     padding: 0 15px 0 40px;
 
-    svg{
+    svg {
         width: 30px;
         height: 30px;
         fill: $color-white;
         opacity: 0.5;
     }
+
     // padding-top: 50px;
-    &__function   
-    {
+    &__function {
         height: 200px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
     }
-    &__extra{
+
+    &__extra {
         // height: 200px;
         display: flex;
         flex-direction: column;
@@ -41,65 +42,29 @@
         background-position: center;
         background-repeat: no-repeat;
         background-size: 30px 30px;
-        .icon{
-                fill: red;
+
+
+
+    }
+
+    button:hover {
+
+
+        transition: 0.2s;
+        background-color: rgba(240, 230, 230, 0.3);
+
+        svg {
+            opacity: 0.8;
         }
 
 
     }
 
-    // button:hover {
+    button:active {
+        transform: scale(0.95);
+        transition: 0.2s;
+        background-color: #353535;
+    }
 
-    //     transform: scale(1.1);
-    //     box-shadow: 0 0 10px $color-white;
-    //     transition: 0.2s;
-    //     background-color: rgba(240, 230, 230, 0.3);
 
-
-    // }
-    // button:active{
-    //     transform: scale(0.9);
-    //     box-shadow: 0 0 10px $color-white;
-    //     transition: 0.2s;
-    //     background-color: rgba(240, 230, 230, 0.5);
-    // }
-   
-    
 }
-
-
-
-
-//     &-play {
-//         background-image: url('../images/sidebar_icons/play.svg');
-
-
-//     }
-
-//     &-speed {
-//         background-image: url('../images/sidebar_icons/speed.svg');
-
-
-//     }
-
-//     &-sound {
-//         background-image: url('../images/sidebar_icons/sound.svg');
-
-
-//     }
-
-
-
-//     &-favorite {
-//         background-image: url('../images/sidebar_icons/favor.svg');
-
-
-
-//     }
-
-
-// &-gitHub {
-//     background-image: url('../images/sidebar_icons/copyright.svg');
-
-// }
-// }

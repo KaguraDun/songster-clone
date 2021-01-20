@@ -1,3 +1,4 @@
+import { DuoSynth } from 'tone';
 import DisplayTab from './DisplayTab';
 
 const SVG_SPRITE: any = {
@@ -107,6 +108,7 @@ export default class Sidebar {
   dropDownGithub: HTMLElement;
   functionButtons: HTMLElement;
   extraButtons: HTMLElement;
+  fullScreenBtn: HTMLButtonElement;
 
   constructor(parentElement: HTMLElement) {
     this.parentElement = parentElement;
@@ -121,14 +123,12 @@ export default class Sidebar {
     this.extraButtons = document.createElement('div');
     this.extraButtons.className = 'sidebar__extra';
     this.sideBarContent.append(this.functionButtons, this.extraButtons);
-    this.createFullScreenButton();
+    this.fullScreenBtn = this.createFullScreenButton();
+    this.fullScreenBtn.addEventListener('click', this.openfullScreenMode);
+
     this.createInstrumentButton();
     this.createMetronomeButton();
     this.createPrintButton();
-    // this.createPlayButton();
-    // this.createSpeedButton();
-    // this.createSoundButton();
-    // this.createFavoriteButton();
   }
 
   createFullScreenButton() {
@@ -136,7 +136,7 @@ export default class Sidebar {
     fullScreen.className = 'sidebar__button-fullscreen';
     fullScreen.innerHTML = SVG_SPRITE.FULL_SCREEN;
     console.log(fullScreen.innerHTML);
-    this.functionButtons.appendChild(fullScreen);
+    return this.functionButtons.appendChild(fullScreen);
   }
 
   createMetronomeButton() {
@@ -155,30 +155,15 @@ export default class Sidebar {
   createPrintButton() {
     const printButton = document.createElement('button');
     printButton.className = 'sidebar__button-print';
-    printButton.innerHTML=SVG_SPRITE.PRINTER;
+    printButton.innerHTML = SVG_SPRITE.PRINTER;
     this.extraButtons.appendChild(printButton);
   }
-  // createPlayButton() {
-  //   const playButton = document.createElement('button');
-  //   playButton.className = 'sidebar__button-play';
-  //   this.sideBarContent.appendChild(playButton);
-  // }
 
-  // createSpeedButton() {
-  //   const speedButton = document.createElement('button');
-  //   speedButton.className = 'sidebar__button-speed';
-  //   this.sideBarContent.appendChild(speedButton);
-  // }
-
-  // createSoundButton() {
-  //   const soundButton = document.createElement('button');
-  //   soundButton.className = 'sidebar__button-sound';
-  //   this.sideBarContent.appendChild(soundButton);
-  // }
-
-  // createFavoriteButton() {
-  //   const favoriteButton = document.createElement('button');
-  //   favoriteButton.className = 'sidebar__button-favorite';
-  //   this.sideBarContent.appendChild(favoriteButton);
-  // }
+  openfullScreenMode() {
+    const elem = document.getElementById('data-wrapper');
+    if (elem.requestFullscreen) {
+      elem.requestFullscreen();
+    
+    }
+  }
 }
