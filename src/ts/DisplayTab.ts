@@ -64,10 +64,10 @@ export default class DisplayTab {
   }
 
   renderPlayer(){
-    const player = document.createElement('div');
+    const player = document.createElement('div'); //container
     player.className = 'player';
     const playerComponents = document.createElement('div');
-    playerComponents.className = 'player__components';
+    playerComponents.className = 'player__components'; //butons
     
 const speedButton = document.createElement('button');
 speedButton.className = 'player__btn';
@@ -82,8 +82,15 @@ playerComponents.append(speedButton, playerButtons, playerSound);
 
 // const playerProgress= document.createElement();
 
+
+// <div class="container">
+//   <div class="progress" id="progress"></div>
+//   <audio id="audio" src="https://www.freesound.org/data/previews/338/338825_1648170-lq.mp3"></audio>
+//   <button class="togglePlay" onClick="togglePlay()">Play/Pause</button>
+// </div>
+
     this.displayContent.appendChild(player);
-  }
+  }                                                                                              
 
   async renderSongContent() {
     const responce = await fetch('http://localhost:3000/songs/id/?id=6000521b6a4f1508a4233e03');
