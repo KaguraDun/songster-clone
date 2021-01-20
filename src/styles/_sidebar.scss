@@ -1,11 +1,11 @@
 .sidebar {
+    position: fixed;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     height: calc(70px * 8);
     padding: 10px;
     padding-top: 50px;
-
     button {
         background-color: transparent;
         background-size: cover;
@@ -14,77 +14,45 @@
         width: 60px;
         height: 60px;
         cursor: pointer;
-
         border-radius: 30px;
         transition: 0.2s;
-
     }
-
     button:hover {
-
         transform: scale(1.1);
         box-shadow: 0 0 10px $color-white;
         transition: 0.2s;
         background-color: rgba(240, 230, 230, 0.3);
-
-
     }
-    button:active{
+    button:active {
         transform: scale(0.9);
         box-shadow: 0 0 10px $color-white;
         transition: 0.2s;
         background-color: rgba(240, 230, 230, 0.5);
     }
-
     &__button {
-
         &-play {
             background-image: url('../images/sidebar_icons/play.svg');
-
-
         }
-
         &-speed {
             background-image: url('../images/sidebar_icons/speed.svg');
-
-
         }
-
         &-sound {
             background-image: url('../images/sidebar_icons/sound.svg');
-
-
         }
-
         &-metronom {
             background-image: url('../images/sidebar_icons/metronom.svg');
-
-
         }
-
         &-print {
             background-image: url('../images/sidebar_icons/printer.svg');
-
-
-
         }
-
         &-favorite {
             background-image: url('../images/sidebar_icons/favor.svg');
-
-
-
         }
-
         &-instrument {
             background-image: url('../images/sidebar_icons/instrument.svg');
-
-
         }
-
         &-gitHub {
             background-image: url('../images/sidebar_icons/copyright.svg');
-
         }
     }
 }

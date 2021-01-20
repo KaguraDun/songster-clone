@@ -1,10 +1,10 @@
 export enum Genre {
-    Rock,
-    Rap,
-    Pop,
-    Metal,
-    Jazz,
-    Electronic,
-    Latin,
-    Country
+    Rock = 'Rock',
+    Rap = 'Rap',
+    Pop = 'Pop',
+    Metal = 'Metal',
+    Jazz = 'Jazz',
+    Electronic = 'Electronic',
+    Latin = 'Latin',
+    Country = 'Country'
 }

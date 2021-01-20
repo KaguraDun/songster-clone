@@ -1,113 +1,122 @@
 import renderElement from './helpers/renderElements';
+import { SearchOptions } from '../models/SearchOptions';
 import { Genre } from '../models/Genre';
 import { InstrumentType } from '../models/Instrument';
-import { SearchOptions } from '../models/SearchOptions';
-
-enum difficulty {
-  begginer = 'Beginner',
-  intermidiate = 'Intermidiate',
-  advanced = 'Advanced',
-}
+import { Difficulty } from '../models/Difficulty';
+import Store from './Store';
 
 export default class SearchBar {
   parentElement: HTMLElement;
+  wrapper: HTMLElement;
+  overlay: HTMLElement;
 
-  constructor(parentElement: HTMLElement) {
+  textInput: HTMLInputElement;
+  instrumentInput: HTMLSelectElement;
+  genreInput: HTMLSelectElement;
+  difficultyInput: HTMLSelectElement;
+
+  store: Store
+
+  constructor(parentElement: HTMLElement,store: Store) {
     this.parentElement = parentElement;
+    this.store = store;
+
+    this.dispose = this.dispose.bind(this);
+    this.search = this.search.bind(this);
   }
 
   render() {
-    const searchBarContent = document.createElement('div');
-    searchBarContent.className = 'search__content';
-    // searchBarContent.textContent='Search...';
-    const searchButton = document.createElement('button');
-    searchButton.className = 'search__content-button';
-    searchBarContent.appendChild(searchButton);
-    this.parentElement.appendChild(searchBarContent);
+    this.parentElement.style.filter = 'blur(0.3em)';
 
-    // Для теста!
-    // const searchForm = renderElement(this.parentElement, 'form', [
-    //   'search-form',
-    // ]) as HTMLFormElement;
+    this.overlay = document.createElement('div');
+    this.overlay.classList.add('overlay');
+    document.body.appendChild(this.overlay);
 
-    // searchForm.action = '';
-    // searchForm.method = 'get';
-    // searchForm.id = 'searchForm';
+    this.wrapper = document.createElement('div');
+    this.wrapper.classList.add('search__wrapper');
+    this.overlay.appendChild(this.wrapper);
 
-    const inputName = renderElement(this.parentElement, 'input', [
-      'searchForm__input',
-    ]) as HTMLInputElement;
-    inputName.type = 'search';
-    inputName.placeholder = 'Enter song name';
-    inputName.name = 'name';
+    this.renderCloseIcon();
+    this.renderTextInput();
+    this.renderOptionsInputs();
+    this.renderSearchButton();
+  }
 
-    const inputAuthor = renderElement(this.parentElement, 'input', [
-      'searchForm__input',
-    ]) as HTMLInputElement;
-    inputAuthor.type = 'search';
-    inputAuthor.placeholder = 'Enter song author';
-    inputAuthor.name = 'author';
+  renderCloseIcon() {
+    const close = document.createElement('div');
+    close.classList.add('search__close-icon');
+    this.wrapper.appendChild(close);
 
-    const button = renderElement(
-      this.parentElement,
-      'button',
-      ['button-search'],
-      'Search',
-    ) as HTMLButtonElement;
-
-    button.addEventListener('click', async () => {
-      const responce = await fetch(`http://localhost:3000/songs`);
-
-      const songs = await responce.json();
-
-      console.log(songs);
-
-      const songList = renderElement(this.parentElement, 'ul', []);
-
-      songs.forEach((song: any) => {
-        const item = renderElement(songList, 'li', []);
-        item.textContent = `${song.name} ${song.author} ${song.difficulty}`;
-      });
-    });
-
-    const selectGenre = renderElement(this.parentElement, 'select', [
-      'searchForm__select',
-    ]) as HTMLSelectElement;
-
-    Object.values(Genre)
-      .filter((k) => isNaN(Number(k)))
-      .forEach((param) => {
-        const option = renderElement(selectGenre, 'option', [
-          'searchForm__select-option',
-        ]) as HTMLOptionElement;
-        option.value = param as string;
-        option.textContent = param as string;
-      });
-
-    const selectInstrument = renderElement(this.parentElement, 'select', [
-      'searchForm__select',
-    ]) as HTMLSelectElement;
-
-    Object.values(InstrumentType).forEach((param) => {
-      const option = renderElement(selectInstrument, 'option', [
-        'searchForm__select-option',
-      ]) as HTMLOptionElement;
-      option.value = param as string;
-      option.textContent = param as string;
-    });
-
-    const selectDifficulty = renderElement(this.parentElement, 'select', [
-      'searchForm__select',
-    ]) as HTMLSelectElement;
-
-    Object.values(difficulty).forEach((param) => {
-      const option = renderElement(selectDifficulty, 'option', [
-        'searchForm__select-option',
-      ]) as HTMLOptionElement;
-      option.value = param as string;
-      option.textContent = param as string;
+    close.addEventListener('click',this.dispose);
+    this.overlay.addEventListener('click',this.dispose);
+    this.wrapper.addEventListener('click',(e:MouseEvent) => {
+      e.stopPropagation();
     });
   }
 
-  showSearchBar() {}
+  dispose() {
+    this.parentElement.style.filter = '';
+    document.body.removeChild(this.overlay);
+  }
+
+  renderTextInput() {
+      this.textInput = document.createElement('input');
+      this.textInput.classList.add('search__text-input');
+      this.textInput.placeholder = 'Enter a song...';
+      this.wrapper.appendChild(this.textInput);
+  }
+
+  renderOptionsInputs() {
+      const container = document.createElement('div');
+      container.classList.add('options-container');
+      this.wrapper.appendChild(container);
+
+      this.instrumentInput = this.renderOptionSelectAndGet(InstrumentType, 'Instrument', container);
+      this.genreInput = this.renderOptionSelectAndGet(Genre, 'Genre', container);
+      this.difficultyInput = this.renderOptionSelectAndGet(Difficulty,'Difficulty',container);
+  }
+
+  /**e is enum*/
+  renderOptionSelectAndGet(e:any, name:string, parentElement: HTMLElement) {
+      const select = document.createElement('select');
+      const option = document.createElement('option');
+      option.text = name;
+      option.selected = true;
+      option.disabled = true;
+      select.options.add(option);
+
+      for (const value of Object.keys(e)) {
+        const option = document.createElement('option');
+        option.text = value;
+        option.value = value;
+        select.options.add(option);
+      }
+      parentElement.appendChild(select);
+      return select;
+  }
+
+  renderSearchButton() {
+    const button = document.createElement('button');
+    button.textContent = 'Search';
+    this.wrapper.appendChild(button);
+    button.addEventListener('click',this.search);
+  }
+
+  search() {
+    const searchOption: any = {
+     name:  this.textInput.value,
+     instrument: this.instrumentInput.selectedOptions[0].value,
+     genre: this.genreInput.selectedOptions[0].value,
+     difficulty: this.difficultyInput.selectedOptions[0].value,
+    }
+
+    const quaryArray = [];
+    for (const key in searchOption) {
+        const quaryArg = searchOption[key];
+        if(!quaryArg || quaryArg.toLowerCase() === key) continue;
+        quaryArray.push(`${key}=${quaryArg}`);
+    }
+    const url = `http://localhost:3000/songs/?${quaryArray.join('&')}`;
+    console.log(url);
+  }
 }

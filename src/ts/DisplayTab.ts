@@ -1,7 +1,6 @@
-import { AudioGenerator } from "./AudioGenerator";
-import SheetMusicPage from "./SheetMusicPage";
-import Store from "./Store";
-
+import { AudioGenerator } from "./AudioGenerator/AudioGenerator";
+import RenderSong from './RenderSong';
+import Store from './Store';
 
 export default class DisplayTab {
   parentElement: HTMLElement;
@@ -24,7 +23,7 @@ export default class DisplayTab {
     this.notesContent = document.createElement('div');
     this.notesContent.className = 'tab__content';
     this.displayContent.appendChild(this.notesContent);
-    this.renderSongContent();
+    //this.renderSongContent();
   }
 
   renderSongTitle() {
@@ -49,6 +48,7 @@ export default class DisplayTab {
 
   async renderSongContent() {
     const responce = await fetch('http://localhost:3000/songs/id/?id=6000521b6a4f1508a4233e03');
+    //const responce = await fetch('http://localhost:3000/songs/id/?id=6000a2a200bb3e15e47d4d33');
     const {midiData, converted} = await responce.json();
 
     //const arrayBuffer = new ArrayBuffer(midiData.data);
@@ -56,7 +56,7 @@ export default class DisplayTab {
     const audio = new AudioGenerator(this.notesContent,midiData.data,this.store);
     audio.init();
 
-    const page = new SheetMusicPage(this.notesContent,converted,this.store);
+    const page = new RenderSong(this.notesContent,converted,this.store);
     page.render();
   }
 }
