@@ -2,7 +2,6 @@
     &__wrapper {
         background: $dark-background;
     }
-
     &__content {
         max-width: 85%;
         margin: 0 auto;
@@ -17,16 +16,11 @@
         text-decoration: none;
         
         }
-        &-link {
-            
-            
-            
+        &-link {    
             &-logo {
                 height: 50px;
                 padding-top: 5px;
                 margin: 10px;
-
-
             }
         }
     }

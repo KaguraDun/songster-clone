@@ -1,7 +1,6 @@
 header {
     background-color: $dark-background;
     height: 80px;
-
 }
 
 .header {
@@ -12,13 +11,7 @@ header {
         align-items: center;
         max-width: 85%;
         margin: 0 auto;
-
         padding: 20px 20px;
-
-
-
-
-        // height: 80px;
 
         &-title {
             font-size: 32px;
@@ -27,8 +20,6 @@ header {
 
             font-family: 'Segoe UI';
             font-weight: 300;
-
-
         }
     }
 }
@@ -73,33 +64,79 @@ header {
 
 
 
-    &-login {
-
-
-   
-        background-size: cover;
-        border: none;
-        outline: none;
-        width: 70px;
-        height: 70px;
-        cursor: pointer;
-            margin-left: 20px;
+    &-login,
+    &-signup,
+    &-log-out {
+        background-color: transparent;
+        margin-left: 20px;
         border-radius: 50px;
         background-color: $shadow;
 
-    
         // background-color: ;
         svg {
             width: 25px;
             height: 25px;
             fill: $color-white;
             opacity: 0.5;
-
         }
+    } 
 
+    &-login {
+        background-size: cover;
+        border: none;
+        outline: none;
+        width: 70px;
+        height: 70px;
+        cursor: pointer;
+        border-radius: 30px;
     }
 
+    &-login:hover,
+    &-signup:hover,
+    &-log-out:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 10px $color-white;
+        transition: 0.2s;
+        background-color: rgba(240, 230, 230, 0.3);
+    }
 
+    &-login {
+        background-image: green;
+    }
 
-  
+    &-signup {
+        background-image: green;
+    }
+    
+    &-log-out{
+        background-image: green;
+    }
+
+    &__form-container{
+        display: none;
+        position: fixed;
+        width: 250px;
+        height: 250px;
+        padding: 25px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        z-index: 100;
+    }
+
+    &__form-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom:0;
+        left: 0;
+        background: rgba(0,0,0,0.2);
+        z-index: 90;
+    }
+}
+
+.--show{
+    display: block;
 }

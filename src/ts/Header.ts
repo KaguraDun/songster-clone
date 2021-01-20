@@ -19,16 +19,34 @@ export default class Header {
   }
 
   render() {
-    this.wrapper = renderElement(this.parentElement, 'div', ['header__wrapper']);
-    const headerTitle = renderElement(
-      this.wrapper,
-      'span',
-      ['header__wrapper-title'],
-      'Songster-Clone',
-    );
-    this.userDiv = renderElement(this.wrapper, 'div', ['wrapper-user']);
+
+    // this.wrapper = renderElement(this.parentElement, 'div', ['header__wrapper']);
+    // const headerTitle = renderElement(
+    //   this.wrapper,
+    //   'span',
+    //   ['header__wrapper-title'],
+    //   'Songster-Clone',
+    // );
+    // this.userDiv = renderElement(this.wrapper, 'div', ['wrapper-user']);
+
+
+    this.wrapper = document.createElement('div');
+    this.wrapper.className = 'header__wrapper';
+    this.parentElement.appendChild(this.wrapper);
+
+    const headerTitle = document.createElement('span');
+    headerTitle.className = 'header__wrapper-title';
+    headerTitle.textContent = 'Songster-Clone';
+
+    this.wrapper.appendChild(headerTitle);
+    
+    this.userDiv = document.createElement('div');
+    this.userDiv.className = 'wrapper-user';
+    this.wrapper.appendChild(this.userDiv);
+
     this.renderSearchButton();
     new Login(this.userDiv).render();
+
   }
 
   renderSearchButton() {

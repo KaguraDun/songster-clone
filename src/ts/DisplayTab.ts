@@ -1,4 +1,5 @@
 import { Player } from 'tone';
+
 // import { AudioGenerator } from "./AudioGenerator";
 // import SheetMusicPage from "./SheetMusicPage";
 import Sidebar from './Sidebar';
@@ -7,6 +8,7 @@ import { AudioGenerator } from './AudioGenerator/AudioGenerator';
 import RenderSong from './RenderSong';
 import renderElement from './helpers/renderElements';
 import PlayerBox from './PlayerBox';
+
 
 export default class DisplayTab {
   parentElement: HTMLElement;
@@ -52,7 +54,10 @@ export default class DisplayTab {
   async renderSongContent() {
     const responce = await fetch('http://localhost:3000/songs/id/?id=6000521b6a4f1508a4233e03');
 
-    const { midiData, converted } = await responce.json();
+    //const responce = await fetch('http://localhost:3000/songs/id/?id=6000a2a200bb3e15e47d4d33');
+
+    const {midiData, converted} = await responce.json();
+
 
     //const arrayBuffer = new ArrayBuffer(midiData.data);
     //const midi = new Midi(arrayBuffer);
@@ -63,5 +68,5 @@ export default class DisplayTab {
     page.render();
   }
 
-  
+
 }

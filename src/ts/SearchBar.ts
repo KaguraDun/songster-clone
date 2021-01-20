@@ -1,14 +1,19 @@
 import renderElement from './helpers/renderElements';
-import { SearchOptions } from '../models/SearchOptions';
 import { Genre } from '../models/Genre';
 import { InstrumentType } from '../models/Instrument';
 import { Difficulty } from '../models/Difficulty';
 import Store from './Store';
+import { SongViewModel } from '../models/SongViewModel';
+
+//************* */
+const serverUrl = 'http://localhost:3000';
+//************* */
 
 export default class SearchBar {
   parentElement: HTMLElement;
   wrapper: HTMLElement;
   overlay: HTMLElement;
+  songsContainer: HTMLElement;
 
   textInput: HTMLInputElement;
   instrumentInput: HTMLSelectElement;
@@ -23,6 +28,7 @@ export default class SearchBar {
 
     this.dispose = this.dispose.bind(this);
     this.search = this.search.bind(this);
+    this.songClick = this.songClick.bind(this);
   }
 
   render() {
@@ -44,7 +50,7 @@ export default class SearchBar {
 
   renderCloseIcon() {
     const close = document.createElement('div');
-    close.classList.add('search__close-icon');
+    close.classList.add('search__close-icon','icon');
     this.wrapper.appendChild(close);
 
     close.addEventListener('click',this.dispose);
@@ -96,13 +102,16 @@ export default class SearchBar {
   }
 
   renderSearchButton() {
-    const button = document.createElement('button');
-    button.textContent = 'Search';
+    const button = document.createElement('div');
+    button.classList.add('search-button','icon');
     this.wrapper.appendChild(button);
     button.addEventListener('click',this.search);
+    this.wrapper.addEventListener('keypress',this.search)
   }
 
-  search() {
+  async search(e: MouseEvent | KeyboardEvent) {
+    if (e instanceof KeyboardEvent && e.key !== 'Enter') return;
+
     const searchOption: any = {
      name:  this.textInput.value,
      instrument: this.instrumentInput.selectedOptions[0].value,
@@ -116,7 +125,53 @@ export default class SearchBar {
         if(!quaryArg || quaryArg.toLowerCase() === key) continue;
         quaryArray.push(`${key}=${quaryArg}`);
     }
-    const url = `http://localhost:3000/songs/?${quaryArray.join('&')}`;
-    console.log(url);
+    const url = `${serverUrl}/songs/?${quaryArray.join('&')}`;
+    const response = await fetch(url);
+    const songs: SongViewModel[] = await response.json();
+    this.renderSongList(songs);
+  }
+
+  renderSongList(songs: SongViewModel[]) {
+    if (this.songsContainer) this.wrapper.removeChild(this.songsContainer);
+    this.songsContainer = document.createElement('div');
+    this.songsContainer.classList.add('songs-container');
+    this.wrapper.appendChild(this.songsContainer);
+
+    for (const song of songs) {
+      const songElement = document.createElement('div');
+      songElement.classList.add('song');
+      songElement.dataset.id = song._id;
+      this.songsContainer.appendChild(songElement);
+      songElement.addEventListener('click',this.songClick);
+
+      this.renderSongImage(songElement);
+      this.renderSongContent(song.name,song.author,songElement);
+    }
+  }
+
+  songClick(e: any) {
+    const id = e.target.dataset['id'];
+  }
+
+  renderSongImage(parentElement: HTMLElement) {
+    const img = document.createElement('div');
+    img.classList.add('image');
+    parentElement.appendChild(img);
+  }
+
+  renderSongContent(name: string,author: string, parentElement: HTMLElement) {
+    const content = document.createElement('div');
+    content.classList.add('content');
+    parentElement.appendChild(content);
+
+    const nameElement = document.createElement('div');
+    nameElement.classList.add('content-name');
+    nameElement.textContent = name;
+    content.appendChild(nameElement);
+
+    const authorElement = document.createElement('div');
+    authorElement.classList.add('content-author');
+    authorElement.textContent = author;
+    content.appendChild(authorElement);
   }
 }
