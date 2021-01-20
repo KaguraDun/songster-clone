@@ -8,6 +8,7 @@ export default class Header {
   wrapper: HTMLElement;
   store: Store;
   searchButton: HTMLElement;
+  userDiv : HTMLDivElement; 
 
   constructor(parentElement: HTMLElement,store: Store) {
     this.parentElement = parentElement;
@@ -18,15 +19,7 @@ export default class Header {
 
   render() {
 
-    // const headerWrapper = document.createElement('div');
-    // headerWrapper.className = 'header__wrapper';
-    // this.parentElement.appendChild(headerWrapper);
-    // const userDiv = document.createElement('div');
-    // userDiv.className = 'wrapper-user';
-    // headerWrapper.appendChild(userDiv);
-    // new SearchBar(userDiv).render();
-
-    this.wrapper = document.createElement('div');
+      this.wrapper = document.createElement('div');
     this.wrapper.className = 'header__wrapper';
     this.parentElement.appendChild(this.wrapper);
 
@@ -35,24 +28,21 @@ export default class Header {
     headerTitle.textContent = 'Songster-Clone';
     this.wrapper.appendChild(headerTitle);
 
+    
+    this.userDiv = document.createElement('div');
+    this.userDiv.className = 'wrapper-user';
+    this.wrapper.appendChild(this.userDiv);
     this.renderSearchButton();
 
-    const userDiv = document.createElement('div');
-    userDiv.className = 'wrapper-user';
-    this.wrapper.appendChild(userDiv);
-
-    new Login(userDiv).render();
-    new SignIn(userDiv).render();
-    // const headerTitle = document.createElement('span');
-    // headerTitle.className = 'header__wrapper-title';
-    // headerTitle.textContent = 'Songster-Clone';
-    // headerWrapper.appendChild(headerTitle);
+    new Login(this.userDiv).render();
+    
+ 
   }
 
   renderSearchButton() {
     this.searchButton = document.createElement('div');
     this.searchButton.classList.add('search__button');
-    this.wrapper.appendChild(this.searchButton);
+    this.userDiv.appendChild(this.searchButton);
     this.searchButton.addEventListener('click',this.renderSearchBar);
 
     const container = document.createElement('div');
@@ -70,6 +60,6 @@ export default class Header {
   }
 
   renderSearchBar() {
-    new SearchBar(this.parentElement.parentElement,this.store).render();
+    new SearchBar(this.parentElement.parentElement, this.store).render();
   }
 }
