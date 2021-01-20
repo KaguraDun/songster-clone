@@ -1,71 +1,104 @@
 .display__tab {
-    width: 70%;
+    // width: 70%;
     text-align: center;
     padding: 10px;
     display: flex;
     flex-direction: column;
     margin: 0 auto;
+    // height: 80vh;
 }
 
 .title {
     display: flex;
-    justify-content: space-between;
-    border: solid 1px $color-white;
+    flex-direction: column;
+    align-items: center;
+
     border-radius: 30px 30px 0 0;
     padding: 15px;
-    background-color: rgba(240, 230, 230, 0.3);
+
+    &__sub {
+        color: $unnamed-color-f5f5f5;
+        text-align: left;
+        font: normal normal normal 18px "Segoe UI";
+        letter-spacing: 0px;
+        // color: #F5F5F5;
+        opacity: 0.7;
+    }
+
+    // background-color: rgba(240, 230, 230, 0.3);
     &__tab {
         &-artist {
-            width: 200px;
-            text-decoration: underline;
-            margin: 10px 20px;
-            color: $color-white;
-            font-size: 40px;
-        }
-        &-track {
-            font: "Roboto";
+
+            font-size: 32px;
+            color: $unnamed-color-f5f5f5;
+
+
+            font-family: 'Segoe UI';
             font-weight: 300;
-            color: $color-white;
-            font-size: 40px;
         }
-        &-instrument {
-            width: 60px;
-            height: 60px;
-            background-image: url('../images/guitar.svg');
+
+        &-track {
+            font-size: 36px;
+            color: $unnamed-color-f5f5f5;
+
+
+            font-family: 'Segoe UI';
+            font-weight: bold;
         }
-        &-icons {
-            display: flex;
-            margin-right: 20px;
-        }
+
+
         &-fav {
             background-image: url('../images/star.svg');
             background-color: transparent;
             background-size: cover;
             border: none;
             outline: none;
-            width: 60px;
-            height: 60px;
+            width: 30px;
+            height: 30px;
             cursor: pointer;
-            border-radius: 30px;
+            margin-left: 30px;
+            opacity: 0.7;
+
             transition: 0.2s;
         }
-        &-fav:hover {
-            transform: scale(1.1);
-            // box-shadow: 0 0 10px $color-white;
-            transition: 0.2s;
-            // background-color: rgba(240, 230, 230, 0.3);
-            background-image: url('../images/star.svg');
-        }
+
+        // &-fav:hover {
+        //     transform: scale(1.1);
+        //     // box-shadow: 0 0 10px $color-white;
+        //     transition: 0.2s;
+        //     // background-color: rgba(240, 230, 230, 0.3);
+        //     background-image: url('../images/star1.svg');
+        // }
     }
+}
+
+.title__box {
+    display: flex;
+    align-items: center;
+    padding-bottom: 10px;
 }
 
 .tab__content {
     border: solid 1px $color-white;
-    border-radius: 0 0 30px 30px;
     background: white;
-    margin-top: 20px;
+
+    // margin-top: 10px;
+    overflow-y: scroll;
+    height: 100vh;
+    min-width: 1100px;
+    // padding: 15px;
 }
 
 .tab__content::-webkit-scrollbar {
     width: 0px;
+}
+
+.display__data {
+    display: flex;
+    
+    overflow: hidden;
+}
+
+.sheet-music__aside {
+    display: none;
 }
