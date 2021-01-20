@@ -225,6 +225,7 @@ export default class RenderSong {
 
     this.sheetMusicRender = document.createElement('div');
     this.sheetMusicRender.classList.add('sheet-music__render');
+    this.sheetMusicRender.setAttribute('id', 'print');
     this.sheetMusicRender.addEventListener('click', this.changeTimeMarkerPosition);
 
     this.parentElement.appendChild(this.sheetMusicRender);

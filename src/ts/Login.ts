@@ -1,6 +1,7 @@
 
 import { SVG_SPRITE } from "./helpers/svg_sprites";
 import renderElement from './helpers/renderElements';
+import { SingleEntryPlugin } from "webpack";
 
 const LOGGED_IN = 'loggedIn';
 const SHOW = '--show';
@@ -175,6 +176,7 @@ export default class Login {
     buttonSingUp.title = 'Sing up';
 
     buttonLogin.innerHTML= SVG_SPRITE.LOGIN;
+    buttonSingUp.innerHTML = SVG_SPRITE.SIGNIN;
 
   }
 }

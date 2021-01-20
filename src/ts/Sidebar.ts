@@ -26,7 +26,8 @@ export default class Sidebar {
     this.fullScreenBtn.addEventListener('click', this.openfullScreenMode);
     this.createInstrumentButton();
     this.createMetronomeButton();
-    this.createPrintButton();
+    const printBtn =this.createPrintButton();
+    printBtn.addEventListener('click', this.printDiv);
   }
 
   createFullScreenButton() {
@@ -70,4 +71,15 @@ export default class Sidebar {
       elem.requestFullscreen();
     }
   }
+  printDiv() { 
+    var divContents = document.getElementById("print").innerHTML; 
+    var a = window.open('', '', 'height=500, width=500'); 
+    a.document.write('<html>'); 
+    a.document.write('<body > <h1>Render Title here and Author <br>'); 
+    a.document.write(divContents); 
+    a.document.write('</body></html>'); 
+    a.document.close(); 
+    a.print(); 
+} 
+
 }

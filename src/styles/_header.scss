@@ -88,41 +88,51 @@ header {
         width: 70px;
         height: 70px;
         cursor: pointer;
-        border-radius: 30px;
+        border-radius: 50px;
+        // background-color: $shadow;
     }
-
-    &-login:hover,
-    &-signup:hover,
-    &-log-out:hover {
-        transform: scale(1.1);
-        box-shadow: 0 0 10px $color-white;
-        transition: 0.2s;
-        background-color: rgba(240, 230, 230, 0.3);
-    }
-
-    &-login {
-        background-image: green;
-    }
-
     &-signup {
-        background-image: green;
+        background-size: cover;
+        border: none;
+        outline: none;
+        width: 70px;
+        height: 70px;
+        cursor: pointer;
+        border-radius: 50px;
+        // background-color: $shadow;
+        svg {
+            width: 30px;
+            height: 35px;
+            fill: $color-white;
+            opacity: 0.5;
+        }
     }
+
+    // &-login {
+    //     background-image: green;
+    // }
+
+    // &-signup {
+    //     background-image: green;
+    // }
     
-    &-log-out{
-        background-image: green;
-    }
+    // &-log-out{
+    //     background-image: green;
+    // }
 
     &__form-container{
         display: none;
         position: fixed;
-        width: 250px;
-        height: 250px;
+        
+        width: 450px;
+        height: 600px;
         padding: 25px;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: white;
+        background: $login-bac;
         z-index: 100;
+        border-radius: 10px;
     }
 
     &__form-overlay {
