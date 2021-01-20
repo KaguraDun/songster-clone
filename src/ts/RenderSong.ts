@@ -22,8 +22,6 @@ export default class RenderSong {
   sheetMusicRender: HTMLDivElement;
   timeMarker: TimeMarker;
   measureDuration: number;
-  playMusic: boolean;
-  buttonPlay: HTMLButtonElement;
   buttonChangeTrack: HTMLButtonElement;
   trackList: HTMLUListElement;
   track: Track;
@@ -42,8 +40,6 @@ export default class RenderSong {
       firstMeasure: null,
       lastMeasure: null,
     };
-    this.playMusic = false;
-    this.buttonPlay;
     this.buttonChangeTrack;
     this.trackList;
     this.measureDuration;
@@ -93,8 +89,7 @@ export default class RenderSong {
       timeMarker.element.style.left = `${rowStartX}px`;
       timeMarker.element.style.top = '0';
 
-      this.playMusic = !this.playMusic;
-      this.buttonPlay.textContent = 'play';
+      //Событие конца песни
 
       clearInterval(this.timeMarker.timer);
       return;
@@ -108,19 +103,14 @@ export default class RenderSong {
   }
 
   playMusicTrack() {
-    this.store.eventEmitter.emit(EVENTS.PLAY_BUTTON_CLICK);
     this.timeMarker.shiftOffset = this.timeMarker.speed / 20;
-    this.playMusic = !this.playMusic;
 
-    if (this.playMusic) {
+    if (this.store.playMusic) {
       // для теста
       //startTime = Date.now();
-      this.buttonPlay.textContent = 'stop';
       this.timeMarker.timer = setInterval(() => this.moveTimeMarker(this.timeMarker), 50);
       this.timeMarker.element.scrollIntoView({ block: 'center', behavior: 'smooth' });
     } else {
-      this.buttonPlay.textContent = 'play';
-
       clearInterval(this.timeMarker.timer);
     }
   }
@@ -204,9 +194,6 @@ export default class RenderSong {
   renderAside() {
     const aside = renderElement(this.parentElement, 'aside', ['sheet-music__aside']);
 
-    this.buttonPlay = renderElement(aside, 'button', ['button-play'], 'play') as HTMLButtonElement;
-    this.buttonPlay.addEventListener('click', this.playMusicTrack);
-
     this.trackList = renderElement(aside, 'ul', ['sheet-music__track-list']) as HTMLUListElement;
     this.trackList.addEventListener('click', this.changeTrack);
 
@@ -253,12 +240,14 @@ export default class RenderSong {
       this.track.Clef,
       this.sheetMusicRender,
     );
-    
+
     renderTrack.render();
 
     this.timeMarker.element = this.addTimeMarker(this.sheetMusicRender);
     this.timeMarker.speed = SECTION_SIZE.width / this.measureDuration;
     this.timeMarker.firstMeasure = this.sheetMusicRender.children[1] as HTMLDivElement;
     this.timeMarker.lastMeasure = this.sheetMusicRender.lastElementChild as HTMLDivElement;
+
+    this.store.eventEmitter.addEvent(EVENTS.PLAY_BUTTON_CLICK, () => this.playMusicTrack());
   }
 }

@@ -1,4 +1,4 @@
-import { AudioGenerator } from './AudioGenerator';
+import { AudioGenerator } from "./AudioGenerator/AudioGenerator";
 import RenderSong from './RenderSong';
 import Store from './Store';
 
@@ -23,7 +23,7 @@ export default class DisplayTab {
     this.notesContent = document.createElement('div');
     this.notesContent.className = 'tab__content';
     this.displayContent.appendChild(this.notesContent);
-    this.renderSongContent();
+    //this.renderSongContent();
   }
 
   renderSongTitle() {
@@ -47,7 +47,8 @@ export default class DisplayTab {
   }
 
   async renderSongContent() {
-    const responce = await fetch('http://localhost:3000/songs/id/?id=6004835e0bea8613c8a9fbe8');
+    const responce = await fetch('http://localhost:3000/songs/id/?id=6000521b6a4f1508a4233e03');
+    //const responce = await fetch('http://localhost:3000/songs/id/?id=6000a2a200bb3e15e47d4d33');
     const {midiData, converted} = await responce.json();
 
     //const arrayBuffer = new ArrayBuffer(midiData.data);
