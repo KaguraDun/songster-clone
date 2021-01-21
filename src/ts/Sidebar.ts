@@ -26,7 +26,7 @@ export default class Sidebar {
     this.fullScreenBtn.addEventListener('click', this.openfullScreenMode);
     this.createInstrumentButton();
     this.createMetronomeButton();
-    const printBtn =this.createPrintButton();
+    const printBtn = this.createPrintButton();
     printBtn.addEventListener('click', this.printDiv);
   }
 
@@ -69,17 +69,23 @@ export default class Sidebar {
     const elem = document.getElementById('data-wrapper');
     if (elem.requestFullscreen) {
       elem.requestFullscreen();
+      // } else if (elem.webkitRequestFullscreen) {
+      //   /* Safari */
+      //   elem.webkitRequestFullscreen();
+      // } else if (elem.msRequestFullscreen) {
+      //   /* IE11 */
+      //   elem.msRequestFullscreen();
     }
   }
-  printDiv() { 
-    var divContents = document.getElementById("print").innerHTML; 
-    var a = window.open('', '', 'height=900, width=600'); 
-    a.document.write('<html>'); 
-    a.document.write('<body > <h2>Render Title here and Author <br>'); 
-    a.document.write(`<h6>${divContents}</h6>`); 
-    // a.document.write('</body></html><font-size="18"'); 
-    a.document.close(); 
-    a.print(); 
-} 
 
+  printDiv() {
+    var divContents = document.getElementById('print').innerHTML;
+    var a = window.open('', '', 'height=700, width=500');
+    a.document.write('<html>');
+    a.document.write('<body > <h2>Render Title here and Author <br>');
+    a.document.write(`<h6>${divContents}</h6>`);
+    // a.document.write('</body></html><font-size="18"');
+    a.document.close();
+    a.print();
+  }
 }
