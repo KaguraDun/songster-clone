@@ -79,12 +79,13 @@ export default class RenderSong {
     //--------------------------------------
 
     const lastMesureEndX = timeMarker.lastMeasure.offsetLeft + SECTION_SIZE.width;
-    const lastMesureEndY = timeMarker.lastMeasure.offsetTop - SECTION_SIZE.height;
+    const lastMesureEndY = timeMarker.lastMeasure.offsetTop;
 
     const isEndOfLastMeasure = timeMarker.element.offsetLeft >= lastMesureEndX;
     const isLastMeasure = timeMarker.element.offsetTop >= lastMesureEndY;
     const isEndOfRow = timeMarker.element.offsetLeft > firstRowEndPosition;
 
+    console.log(isLastMeasure, timeMarker.element.offsetTop, lastMesureEndY);
     if (isEndOfLastMeasure && isLastMeasure) {
       timeMarker.element.style.left = `${rowStartX}px`;
       timeMarker.element.style.top = '0';
@@ -102,12 +103,12 @@ export default class RenderSong {
   }
 
   playMusicTrack() {
-    this.timeMarker.shiftOffset = this.timeMarker.speed / 20;
+    this.timeMarker.shiftOffset = this.timeMarker.speed / 50;
 
     if (this.store.playMusic) {
       // для теста
       //startTime = Date.now();
-      this.timeMarker.timer = setInterval(() => this.moveTimeMarker(this.timeMarker), 50);
+      this.timeMarker.timer = setInterval(() => this.moveTimeMarker(this.timeMarker), 20);
       this.timeMarker.element.scrollIntoView({ block: 'center', behavior: 'smooth' });
     } else {
       clearInterval(this.timeMarker.timer);
