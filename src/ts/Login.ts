@@ -25,12 +25,10 @@ export default class Login {
   renderInput(parentElement: HTMLElement, name: string, labelText: string, type?: string) {
     const label = renderElement(parentElement, 'label', [], labelText) as HTMLLabelElement;
     label.htmlFor = name;
-
     const input = renderElement(parentElement, 'input', []) as HTMLInputElement;
     input.name = name;
     input.type = type;
     input.required = true;
-
     return input;
   }
 
@@ -40,20 +38,45 @@ export default class Login {
     const form = renderElement(this.formContainer, 'form', []) as HTMLFormElement;
     form.action = '/signup';
 
-    const heading = renderElement(form, 'h2', [], name);
+    // const heading = renderElement(form, 'h2', [], name);
 
-    const email = this.renderInput(form, 'email', 'Email', 'text');
+    // const email = this.renderInput(form, 'email', 'Email', 'text');
+    const email = this.renderInput(form, 'email', 'Login', 'text');
+    email.setAttribute('value', 'Enter email...');
+    email.innerText='Enter email...';
+
+email.addEventListener('focus', ()=>{
+  email.removeAttribute('value');
+})
     const emailError = renderElement(form, 'div', ['form_email-error']);
 
     const password = this.renderInput(form, 'password', 'Password', 'password');
+    password.setAttribute('value', 'Enter...');
+
+    password.addEventListener('focus', ()=>{
+       password.removeAttribute('value');
+         })
+
     const passwordError = renderElement(form, 'div', ['form_password-error']);
 
-    const button = renderElement(form, 'button', [], name);
+    const buttonLogin = renderElement(form, 'button', [], name);
+    const buttonSignup = renderElement(form, 'button', [], "Sign up");
+    buttonLogin.className = 'button_login';
+    buttonSignup.className = 'button_signup';
 
-    return { form, email, emailError, password, passwordError, button };
+
+    const logSocialBox = renderElement(form, 'div', ['wrapper-user-social']);
+    
+    const ggButton= renderElement(logSocialBox, 'button', ['fb-button']);
+    const fbButton  = renderElement(logSocialBox, 'button', ['gg-button']);
+    fbButton.innerHTML = SVG_SPRITE.FACEBOOK;
+    ggButton.innerHTML = SVG_SPRITE.GOOGLE;
+
+    return { form, email, emailError, password, passwordError, buttonLogin, buttonSignup, logSocialBox };
   }
 
   renderFormLogin() {
+    
     this.formOverlay.classList.add(SHOW);
     this.formContainer.classList.add(SHOW);
 
@@ -95,6 +118,7 @@ export default class Login {
   }
 
   renderFormSingUp() {
+    
     this.formOverlay.classList.add(SHOW);
     this.formContainer.classList.add(SHOW);
 
@@ -171,12 +195,17 @@ export default class Login {
     buttonLogin.addEventListener('click', this.renderFormLogin);
     buttonLogin.title = 'Log in';
 
-    const buttonSingUp = renderElement(this.parentElement, 'button', ['wrapper-user-signup']);
-    buttonSingUp.addEventListener('click', this.renderFormSingUp);
-    buttonSingUp.title = 'Sing up';
+    // const buttonSingUp = renderElement(this.parentElement, 'button', ['wrapper-user-signup']);
+    // buttonSingUp.addEventListener('click', this.renderFormSingUp);
+    // buttonSingUp.title = 'Sing up';
 
     buttonLogin.innerHTML= SVG_SPRITE.LOGIN;
-    buttonSingUp.innerHTML = SVG_SPRITE.SIGNIN;
+    // buttonSingUp.innerHTML = SVG_SPRITE.SIGNIN;
+
+   
+  
 
   }
+
+ 
 }
