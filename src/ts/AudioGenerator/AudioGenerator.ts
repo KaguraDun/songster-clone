@@ -27,6 +27,8 @@ export class AudioGenerator {
     this.timeOffset = 0;
 
     this.play = this.play.bind(this);
+    this.stopMusic = this.stopMusic.bind(this);
+    this.setTimeOffset = this.setTimeOffset.bind(this);
   }
 
   render() {
@@ -42,12 +44,26 @@ export class AudioGenerator {
     stop.onclick = () => Tone.Transport.stop();
   }
 
+  setTimeOffset() {
+    const second: number = 1000;
+
+    this.timeOffset = this.store.songTime / second;
+
+    if (this.store.playMusic) {
+      Tone.Transport.pause();
+      this.play();
+    }
+  }
+
+  stopMusic() {
+    this.timeOffset = 0;
+    Tone.Transport.stop();
+  }
+
   init() {
-    this.store.eventEmitter.addEvent(EVENTS.PLAY_BUTTON_CLICK, () => this.play());
-    this.store.eventEmitter.addEvent(
-      EVENTS.TIME_MARKER_POSITION_CHANGED,
-      () => (this.timeOffset = this.store.songTime / 1000),
-    );
+    this.store.eventEmitter.addEvent(EVENTS.PLAY_BUTTON_CLICK, this.play);
+    this.store.eventEmitter.addEvent(EVENTS.TIME_MARKER_POSITION_CHANGED, this.setTimeOffset);
+    this.store.eventEmitter.addEvent(EVENTS.END_OF_SONG, this.stopMusic);
 
     Tone.Transport.bpm.value = this.midi.header.tempos[0].bpm;
     Tone.Transport.timeSignature = this.midi.header.timeSignatures[0].timeSignature;
@@ -72,7 +88,7 @@ export class AudioGenerator {
   }
 
   play() {
-    console.log('offset', this.timeOffset);
+    console.log(this.store.playMusic, 'offset', this.timeOffset);
 
     if (this.store.playMusic) {
       console.log(this.toneTracks.length);

@@ -10,12 +10,12 @@ export enum EVENTS {
 export default class Store {
   eventEmitter: EventEmitter;
   songTime: number;
-  playMusic: boolean;
+  playMusic: boolean = false;
 
   constructor() {
-    this.songTime = null;
+    this.songTime;
     this.eventEmitter = new EventEmitter();
-    this.playMusic = false;
+    this.playMusic;
   }
 
   init() {}
@@ -25,8 +25,13 @@ export default class Store {
     this.eventEmitter.emit(EVENTS.TIME_MARKER_POSITION_CHANGED);
   }
 
-  playSong(){
+  playSong() {
     this.playMusic = !this.playMusic;
     this.eventEmitter.emit(EVENTS.PLAY_BUTTON_CLICK);
+  }
+
+  endOfSong() {
+    this.playMusic = false;
+    this.eventEmitter.emit(EVENTS.END_OF_SONG);
   }
 }

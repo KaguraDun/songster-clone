@@ -21,12 +21,12 @@ export default class RenderSong {
   store: Store;
   sheetMusicRender: HTMLDivElement;
   timeMarker: TimeMarker = {
-      element: null,
-      timer: null,
-      speed: null,
-      shiftOffset: null,
-      firstMeasure: null,
-      lastMeasure: null,
+    element: null,
+    timer: null,
+    speed: null,
+    shiftOffset: null,
+    firstMeasure: null,
+    lastMeasure: null,
   };
   measureDuration: number;
   buttonChangeTrack: HTMLButtonElement;
@@ -89,8 +89,7 @@ export default class RenderSong {
       timeMarker.element.style.left = `${rowStartX}px`;
       timeMarker.element.style.top = '0';
 
-      //Событие конца песни
-
+      this.store.endOfSong();
       clearInterval(this.timeMarker.timer);
       return;
     }
@@ -164,11 +163,10 @@ export default class RenderSong {
     this.store.setSongTime(currentTime);
 
     const measureColNum = Math.floor(
-      (event.y + this.parentElement.scrollTop - Math.abs(this.parentElement.offsetTop)) / SECTION_SIZE.height,
+      (event.y + this.parentElement.scrollTop - Math.abs(this.parentElement.offsetTop)) /
+        SECTION_SIZE.height,
     );
 
-    console.log(measureColNum);
-    
     const timeMarkerTop = measureColNum * SECTION_SIZE.height;
 
     this.timeMarker.element.style.left = `${event.x - this.parentElement.offsetLeft}px`;
