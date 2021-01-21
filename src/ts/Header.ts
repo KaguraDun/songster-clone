@@ -19,28 +19,19 @@ export default class Header {
 
   render() {
 
-      this.wrapper = document.createElement('div');
+    this.wrapper = document.createElement('div');
     this.wrapper.className = 'header__wrapper';
     this.parentElement.appendChild(this.wrapper);
 
     const headerTitle = document.createElement('span');
     headerTitle.className = 'header__wrapper-title';
     headerTitle.textContent = 'Songster-Clone';
-
-    headerWrapper.appendChild(headerTitle);
-    const userDiv = document.createElement('div');
-    userDiv.className = 'wrapper-user';
-    headerWrapper.appendChild(userDiv);
-    new Login(userDiv).render();
-    //new SignIn(userDiv).render();
-
     this.wrapper.appendChild(headerTitle);
-    
+
     this.userDiv = document.createElement('div');
     this.userDiv.className = 'wrapper-user';
     this.wrapper.appendChild(this.userDiv);
     this.renderSearchButton();
-
     new Login(this.userDiv).render();
     
   }

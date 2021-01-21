@@ -12,12 +12,10 @@ header {
         max-width: 85%;
         margin: 0 auto;
         padding: 20px 20px;
-
         &-title {
             font-size: 32px;
             color: $unnamed-color-f5f5f5;
             cursor: default;
-
             font-family: 'Segoe UI';
             font-weight: 300;
         }
@@ -61,9 +59,6 @@ header {
     height: 60px;
     justify-content: space-between;
     padding: 0 10px;
-
-
-
     &-login,
     &-signup,
     &-log-out {
@@ -71,7 +66,6 @@ header {
         margin-left: 20px;
         border-radius: 50px;
         background-color: $shadow;
-
         // background-color: ;
         svg {
             width: 25px;
@@ -79,8 +73,7 @@ header {
             fill: $color-white;
             opacity: 0.5;
         }
-    } 
-
+    }
     &-login {
         background-size: cover;
         border: none;
@@ -90,7 +83,6 @@ header {
         cursor: pointer;
         border-radius: 30px;
     }
-
     &-login:hover,
     &-signup:hover,
     &-log-out:hover {
@@ -99,20 +91,16 @@ header {
         transition: 0.2s;
         background-color: rgba(240, 230, 230, 0.3);
     }
-
     &-login {
-        background-image: url('../images/login.svg');
+        //background-image: url('../images/login.svg');
     }
-
     &-signup {
-        background-image: url('../images/user.svg');
+        //background-image: url('../images/user.svg');
     }
-    
-    &-log-out{
-        background-image: url('../images/login.svg');
+    &-log-out {
+        //background-image: url('../images/login.svg');
     }
-
-    &__form-container{
+    &__form-container {
         display: none;
         position: fixed;
         width: 250px;
@@ -124,19 +112,18 @@ header {
         background: white;
         z-index: 100;
     }
-
     &__form-overlay {
         display: none;
         position: fixed;
         top: 0;
         right: 0;
-        bottom:0;
+        bottom: 0;
         left: 0;
-        background: rgba(0,0,0,0.2);
+        background: rgba(0, 0, 0, 0.2);
         z-index: 90;
     }
 }
 
-.--show{
+.--show {
     display: block;
 }
