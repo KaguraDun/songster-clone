@@ -1,7 +1,7 @@
 import Vex from 'vexflow';
 import { Touch } from '../models/Notations';
 import { Chord, Measure, NoteTie} from '../models/TrackDisplayType';
-import { SECTION_SIZE } from './Constants';
+import { SECTION_SIZE } from '../models/Constants';
 import renderElement from './helpers/renderElements';
 
 export default class renderTrack {

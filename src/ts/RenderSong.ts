@@ -1,7 +1,7 @@
 import renderElement from './helpers/renderElements';
 import { Track, Song } from '../models/TrackDisplayType';
 import Store, { EVENTS } from './Store';
-import { SECTION_SIZE } from './Constants';
+import { SECTION_SIZE } from '../models/Constants';
 import RenderTrack from './RenderTrack';
 
 interface TimeMarker {
@@ -225,6 +225,7 @@ export default class RenderSong {
 
     this.sheetMusicRender = document.createElement('div');
     this.sheetMusicRender.classList.add('sheet-music__render');
+    this.sheetMusicRender.setAttribute('id', 'print');
     this.sheetMusicRender.addEventListener('click', this.changeTimeMarkerPosition);
 
     this.parentElement.appendChild(this.sheetMusicRender);

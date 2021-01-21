@@ -59,14 +59,48 @@ header {
     height: 60px;
     justify-content: space-between;
     padding: 0 10px;
+    &-social {
+        margin-top: 20px;
+        display: flex;
+        width: 240px;
+        justify-content: space-between;
+        border-radius: 35px;
+        button {
+            cursor: pointer;
+            width: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        button:last-child {
+            background-color: $color-blue;
+            svg {
+                color: $color-white;
+                height: 35px;
+            }
+        }
+        button:last-child:hover {
+            background-color: $color-blue;
+            opacity: 0.8;
+        }
+        button:first-child {
+            background-color: $unnamed-color-f5f5f5;
+            svg {
+                color: $color-orange;
+                height: 35px;
+            }
+        }
+        button:first-child:hover {
+            background-color: $unnamed-color-f5f5f5;
+            opacity: 0.8;
+        }
+    }
     &-login,
     &-signup,
     &-log-out {
-        background-color: transparent;
         margin-left: 20px;
         border-radius: 50px;
         background-color: $shadow;
-        // background-color: ;
         svg {
             width: 25px;
             height: 25px;
@@ -74,46 +108,61 @@ header {
             opacity: 0.5;
         }
     }
-    &-login {
+    // &-login {
+    //     background-size: cover;
+    //     border: none;
+    //     outline: none;
+    //     width: 70px;
+    //     height: 70px;
+    //     cursor: pointer;
+    //     border-radius: 30px;
+    // }
+    &-login:hover,
+    &-signup:hover,
+    &-log-out:hover {
+        background-color: #707070;
+        svg {
+            opacity: 0.8;
+        }
+    }
+    &-login,
+    &-signup {
+        //background-image: url('../images/login.svg');
         background-size: cover;
         border: none;
         outline: none;
         width: 70px;
         height: 70px;
         cursor: pointer;
-        border-radius: 30px;
-    }
-    &-login:hover,
-    &-signup:hover,
-    &-log-out:hover {
-        transform: scale(1.1);
-        box-shadow: 0 0 10px $color-white;
-        transition: 0.2s;
-        background-color: rgba(240, 230, 230, 0.3);
-    }
-    &-login {
-        //background-image: url('../images/login.svg');
+        border-radius: 50px;
+        // background-color: $shadow;
     }
     &-signup {
-        //background-image: url('../images/user.svg');
-    }
-    &-log-out {
-        //background-image: url('../images/login.svg');
-    }
-    &-log-out {
-        //background-image: url('../images/login.svg');
+        svg {
+            width: 30px;
+            height: 35px;
+            fill: $color-white;
+            opacity: 0.5;
+        }
     }
     &__form-container {
         display: none;
         position: fixed;
-        width: 250px;
-        height: 250px;
         padding: 25px;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: white;
+        background: $login-bac;
         z-index: 100;
+        border-radius: 10px;
+        box-shadow: 0 5px 10px rgba(231, 230, 230, 0.2);
+        color: white;
+        font-family: 'Segoe UI';
+        font-weight: Semibold;
+        font-size: 18px;
+        text-align: left;
+        margin-bottom: 15px;
+        padding: 70px;
     }
     &__form-overlay {
         display: none;
@@ -124,9 +173,64 @@ header {
         left: 0;
         background: rgba(0, 0, 0, 0.2);
         z-index: 90;
+        backdrop-filter: blur(10px);
     }
 }
 
 .--show {
     display: block;
+}
+
+form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    input {
+        height: 40px;
+        width: 300px;
+        border-radius: 35px;
+        outline: none;
+        background-color: #707070;
+        opacity: 0.5;
+        padding: 10px 20px;
+        color: $color-white;
+        border: none;
+    }
+    input.text:focus {
+        background-color: red;
+    }
+    label {
+        margin: 15px;
+    }
+    button {
+        height: 60px;
+        width: 330px;
+        border-radius: 35px;
+        outline: none;
+        background-color: $color-orange;
+        cursor: pointer;
+        padding: 10px;
+        color: $color-white;
+        border: none;
+        margin: 5px;
+        padding: 20px;
+    }
+    button:hover {
+        cursor: pointer;
+        background-color: #da6556;
+    }
+}
+
+.button {
+    &_login {
+        margin-top: 40px;
+    }
+    &_signup {
+        // background-color: rgba(218,101,86, 0.5);
+        opacity: 0.5;
+    }
+    &_signup:hover {
+        opacity: 1;
+    }
 }
