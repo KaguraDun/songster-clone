@@ -20,7 +20,14 @@ export default class RenderSong {
   song: Song;
   store: Store;
   sheetMusicRender: HTMLDivElement;
-  timeMarker: TimeMarker;
+  timeMarker: TimeMarker = {
+      element: null,
+      timer: null,
+      speed: null,
+      shiftOffset: null,
+      firstMeasure: null,
+      lastMeasure: null,
+  };
   measureDuration: number;
   buttonChangeTrack: HTMLButtonElement;
   trackList: HTMLUListElement;
@@ -32,14 +39,7 @@ export default class RenderSong {
     this.store = store;
     this.track = this.song.Tracks[0];
     this.sheetMusicRender;
-    this.timeMarker = {
-      element: null,
-      timer: null,
-      speed: null,
-      shiftOffset: null,
-      firstMeasure: null,
-      lastMeasure: null,
-    };
+    this.timeMarker;
     this.buttonChangeTrack;
     this.trackList;
     this.measureDuration;
@@ -164,9 +164,11 @@ export default class RenderSong {
     this.store.setSongTime(currentTime);
 
     const measureColNum = Math.floor(
-      (event.y + scrollY - Math.abs(this.parentElement.offsetTop)) / SECTION_SIZE.height,
+      (event.y + this.parentElement.scrollTop - Math.abs(this.parentElement.offsetTop)) / SECTION_SIZE.height,
     );
 
+    console.log(measureColNum);
+    
     const timeMarkerTop = measureColNum * SECTION_SIZE.height;
 
     this.timeMarker.element.style.left = `${event.x - this.parentElement.offsetLeft}px`;
