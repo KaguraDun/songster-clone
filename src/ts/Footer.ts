@@ -1,3 +1,5 @@
+import renderElement from "./helpers/renderElements";
+
 export default class Footer {
   parentElement: HTMLElement;
 
@@ -6,8 +8,8 @@ export default class Footer {
   }
 
   render() {
-    const footerDiv = document.createElement('div');
-    footerDiv.className = 'footer__content';
+    const footerDiv = renderElement(this.parentElement, 'footer__content', ['footer__content']);
+    
     const linkLogo = document.createElement('a');
     linkLogo.className = 'footer__content-link';
     linkLogo.setAttribute('href', 'https://rs.school/js/');
@@ -42,15 +44,15 @@ export default class Footer {
       iuliiaLink.textContent = 'Iuliia Mazaeva';
       iuliiaLink.className = 'github__container-iuliia';
       
-      const vasilyLink = document.createElement('a');
-      vasilyLink.textContent = 'Vasily Kovnev';
+      const vasilyLink = renderElement(footerDiv, 'a', ['github__container-vasya'], 'Vasily Kovnev'); 
+      // vasilyLink.textContent = 'Vasily Kovnev';
       vasilyLink.setAttribute('href', 'https://github.com/kaguradun');
-      vasilyLink.className = 'github__container-vasya';
+      // vasilyLink.className = 'github__container-vasya';
       
       // dropGHContent.append(alexLink, ilyaLink, iuliiaLink, vasilyLink);
       
       // this.dropDownGithub.appendChild(dropGHContent);
       footerDiv.append(linkLogo,alexLink, ilyaLink, iuliiaLink, vasilyLink);
-      this.parentElement.appendChild(footerDiv);
+      
     }
 }

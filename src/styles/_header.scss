@@ -29,11 +29,13 @@ header {
         padding: 22px 55px;
         background-color: #ef5743;
         border-radius: 35px;
+
         &-container {
             display: flex;
             justify-content: space-between;
             margin: 0 auto;
         }
+
         &-content {
             color: #f5f5f5;
             font-size: 18px/24px;
@@ -41,6 +43,7 @@ header {
             letter-spacing: 0px;
             text-align: center;
         }
+
         &-icon {
             margin-right: 10px;
             background-color: transparent;
@@ -62,12 +65,58 @@ header {
     justify-content: space-between;
     padding: 0 10px;
 
+    &-social {
+        margin-top: 20px;
+        display: flex;
+        width: 240px;
+        justify-content: space-between;
+        border-radius: 35px;
+
+        button {
+            cursor: pointer;
+            width: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button:last-child {
+            background-color: $color-blue;
+           
+
+            svg {
+                color: $color-white;
+                height: 35px;
+                
+            }
+        }
+
+        button:last-child:hover {
+            background-color: $color-blue;
+            opacity: 0.8;
+        }
+
+        button:first-child {
+            background-color: $unnamed-color-f5f5f5;
+
+            svg {
+                color: $color-orange;
+                height: 35px;
+            }
+        }
+
+        button:first-child:hover {
+            background-color: $unnamed-color-f5f5f5;
+            opacity: 0.8;
+        }
+    }
+
 
 
     &-login,
     &-signup,
     &-log-out {
-        background-color: transparent;
+
         margin-left: 20px;
         border-radius: 50px;
         background-color: $shadow;
@@ -79,7 +128,18 @@ header {
             fill: $color-white;
             opacity: 0.5;
         }
-    } 
+
+    }
+
+    &-login:hover,
+    &-signup:hover,
+    &-log-out:hover {
+        background-color: #707070;
+
+        svg {
+            opacity: 0.8;
+        }
+    }
 
     &-login {
         background-size: cover;
@@ -88,41 +148,51 @@ header {
         width: 70px;
         height: 70px;
         cursor: pointer;
-        border-radius: 30px;
-    }
-
-    &-login:hover,
-    &-signup:hover,
-    &-log-out:hover {
-        transform: scale(1.1);
-        box-shadow: 0 0 10px $color-white;
-        transition: 0.2s;
-        background-color: rgba(240, 230, 230, 0.3);
-    }
-
-    &-login {
-        background-image: green;
+        border-radius: 50px;
+        // background-color: $shadow;
     }
 
     &-signup {
-        background-image: green;
-    }
-    
-    &-log-out{
-        background-image: green;
+        background-size: cover;
+        border: none;
+        outline: none;
+        width: 70px;
+        height: 70px;
+        cursor: pointer;
+        border-radius: 50px;
+
+        // background-color: $shadow;
+        svg {
+            width: 30px;
+            height: 35px;
+            fill: $color-white;
+            opacity: 0.5;
+        }
     }
 
-    &__form-container{
+
+
+    &__form-container {
         display: none;
         position: fixed;
-        width: 250px;
-        height: 250px;
+
+        // width: 450px;
+        // height: 600px;
         padding: 25px;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        background: white;
+        background: $login-bac;
         z-index: 100;
+        border-radius: 10px;
+        box-shadow: 0 5px 10px rgba(231, 230, 230, 0.2);
+        color: white;
+        font-family: 'Segoe UI';
+        font-weight: Semibold;
+        font-size: 18px;
+        text-align: left;
+        margin-bottom: 15px;
+        padding: 70px;
     }
 
     &__form-overlay {
@@ -130,13 +200,92 @@ header {
         position: fixed;
         top: 0;
         right: 0;
-        bottom:0;
+        bottom: 0;
         left: 0;
-        background: rgba(0,0,0,0.2);
+        background: rgba(0, 0, 0, 0.2);
         z-index: 90;
+        backdrop-filter: blur(10px);
+
+        // position: absolute;
+        // top: 0;
+        // left: 0;
+        // // z-index: 1;
+        // width: 100%;
+        // height: 100%;
+
     }
 }
 
-.--show{
+.--show {
     display: block;
+}
+
+form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
+
+    input {
+        height: 40px;
+        width: 300px;
+        border-radius: 35px;
+        outline: none;
+        background-color: #707070;
+        opacity: 0.5;
+        padding: 10px 20px;
+        color: $color-white;
+        border: none;
+    }
+
+    input.text:focus {
+        background-color: red;
+    }
+
+    label {
+        margin: 15px;
+    }
+
+    button {
+        height: 60px;
+        width: 330px;
+        border-radius: 35px;
+        outline: none;
+        background-color: $color-orange;
+        cursor: pointer;
+        padding: 10px;
+        color: $color-white;
+        border: none;
+        margin:  5px;
+        padding: 20px;
+
+       
+    }
+    // button:last-child{
+    //     margin-top: 10px;
+    //     opacity: 0.5;
+    // }
+
+    button:hover {
+        cursor: pointer;
+        background-color: #da6556;
+    }
+}
+
+.button{
+
+    &_login{
+        margin-top: 40px;
+    }
+    &_signup{
+        // background-color: rgba(218,101,86, 0.5);
+        opacity: 0.5;
+
+        
+    }
+
+    &_signup:hover{
+        opacity: 1;
+    }
 }
