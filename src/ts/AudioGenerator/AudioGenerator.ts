@@ -32,7 +32,9 @@ export class AudioGenerator {
   render() {
     this.init();
     const button = document.createElement('button');
+    button.className='button_play';
     button.textContent = 'click';
+    
     this.parentElement.appendChild(button);
     button.onclick = () => this.play();
 

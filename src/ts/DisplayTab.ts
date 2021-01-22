@@ -4,6 +4,8 @@ import { AudioGenerator } from './AudioGenerator/AudioGenerator';
 import RenderSong from './RenderSong';
 import renderElement from './helpers/renderElements';
 import MusicPlayerBox from './MusicPlayerBox';
+import { Player } from 'tone';
+import { SVG_SPRITE } from './helpers/svg_sprites';
 
 export default class DisplayTab {
   parentElement: HTMLElement;
@@ -14,6 +16,7 @@ export default class DisplayTab {
   // title: string;
   // author: string;
   artistName: HTMLElement;
+  isPlaying: boolean;
 
   constructor(parentElement: HTMLElement, store: Store) {
     this.parentElement = parentElement;
@@ -21,7 +24,7 @@ export default class DisplayTab {
     this.changeDisplay = this.changeDisplay.bind(this);
     this.titleComponents;
     this.artistName;
-
+    this.isPlaying;
     // this.author;
   }
 
@@ -35,7 +38,7 @@ export default class DisplayTab {
     this.notesContent.setAttribute('id', 'data-wrapper');
     new MusicPlayerBox(this.notesContent, this.store).render();
     new Sidebar(dataWrapper, this.store).render();
-
+    this.createPlayer();
     this.store.eventEmitter.addEvent(EVENTS.SELECT_SONG, this.changeDisplay);
   }
 
@@ -54,14 +57,30 @@ export default class DisplayTab {
 
   async renderSongContent(id: string) {
     const responce = await fetch(`http://localhost:3000/songs/id/?id=${id}`);
+    // const f = await responce.json();
+    // console.log(f)
     const { midiData, converted } = await responce.json();
     this.titleComponents.innerHTML = '';
     this.renderSongTitle(converted.Name, converted.Author);
 
     const audio = new AudioGenerator(this.notesContent, midiData.data, this.store);
     audio.init();
-
+ 
     const page = new RenderSong(this.notesContent, converted, this.store);
     page.render();
   }
+
+createPlayer(){
+  
+    const playerContainer = renderElement(this.displayContent, 'div', ['player']);
+    const playerButtons = renderElement(playerContainer, 'div', ['player__buttons']);
+    const playButton = renderElement(playerButtons, 'button', ['player__buttons-play']);
+    playButton.innerHTML = SVG_SPRITE.PLAY;
+
+    playButton.addEventListener('click', ()=>this.store.playSong());
+
+    
+  }
 }
+
+

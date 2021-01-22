@@ -37,4 +37,6 @@ export default class Store {
     this.selectedSong = id;
     this.eventEmitter.emit(EVENTS.SELECT_SONG);
   }
+
+  
 }

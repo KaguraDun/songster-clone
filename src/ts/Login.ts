@@ -1,11 +1,9 @@
-
-import { SVG_SPRITE } from "./helpers/svg_sprites";
+import { SVG_SPRITE } from './helpers/svg_sprites';
 import renderElement from './helpers/renderElements';
-import { SingleEntryPlugin } from "webpack";
+import { SingleEntryPlugin } from 'webpack';
 
 const LOGGED_IN = 'loggedIn';
 const SHOW = '--show';
-
 
 export default class Login {
   parentElement: HTMLElement;
@@ -43,40 +41,48 @@ export default class Login {
     // const email = this.renderInput(form, 'email', 'Email', 'text');
     const email = this.renderInput(form, 'email', 'Login', 'text');
     email.setAttribute('value', 'Enter email...');
-    email.innerText='Enter email...';
+    email.innerText = 'Enter email...';
 
-email.addEventListener('focus', ()=>{
-  email.removeAttribute('value');
-})
+    email.addEventListener('focus', () => {
+      email.removeAttribute('value');
+    });
+
     const emailError = renderElement(form, 'div', ['form_email-error']);
 
     const password = this.renderInput(form, 'password', 'Password', 'password');
     password.setAttribute('value', 'Enter...');
 
-    password.addEventListener('focus', ()=>{
-       password.removeAttribute('value');
-         })
+    password.addEventListener('focus', () => {
+      password.removeAttribute('value');
+    });
 
     const passwordError = renderElement(form, 'div', ['form_password-error']);
 
     const buttonLogin = renderElement(form, 'button', [], name);
-    const buttonSignup = renderElement(form, 'button', [], "Sign up");
+    const buttonSignup = renderElement(form, 'button', [], 'Sign up');
     buttonLogin.className = 'button_login';
     buttonSignup.className = 'button_signup';
 
-
     const logSocialBox = renderElement(form, 'div', ['wrapper-user-social']);
-    
-    const ggButton= renderElement(logSocialBox, 'button', ['fb-button']);
-    const fbButton  = renderElement(logSocialBox, 'button', ['gg-button']);
+
+    const ggButton = renderElement(logSocialBox, 'button', ['fb-button']);
+    const fbButton = renderElement(logSocialBox, 'button', ['gg-button']);
     fbButton.innerHTML = SVG_SPRITE.FACEBOOK;
     ggButton.innerHTML = SVG_SPRITE.GOOGLE;
 
-    return { form, email, emailError, password, passwordError, buttonLogin, buttonSignup, logSocialBox };
+    return {
+      form,
+      email,
+      emailError,
+      password,
+      passwordError,
+      buttonLogin,
+      buttonSignup,
+      logSocialBox,
+    };
   }
 
   renderFormLogin() {
-    
     this.formOverlay.classList.add(SHOW);
     this.formContainer.classList.add(SHOW);
 
@@ -118,7 +124,6 @@ email.addEventListener('focus', ()=>{
   }
 
   renderFormSingUp() {
-    
     this.formOverlay.classList.add(SHOW);
     this.formContainer.classList.add(SHOW);
 
@@ -173,7 +178,6 @@ email.addEventListener('focus', ()=>{
   }
 
   render() {
-
     // const loginButton = document.createElement('button');
     // loginButton.className = 'wrapper-user-login';
     // loginButton.innerHTML = SVG_SPRITE.LOGIN;
@@ -199,13 +203,7 @@ email.addEventListener('focus', ()=>{
     // buttonSingUp.addEventListener('click', this.renderFormSingUp);
     // buttonSingUp.title = 'Sing up';
 
-    buttonLogin.innerHTML= SVG_SPRITE.LOGIN;
+    buttonLogin.innerHTML = SVG_SPRITE.LOGIN;
     // buttonSingUp.innerHTML = SVG_SPRITE.SIGNIN;
-
-   
-  
-
   }
-
- 
 }

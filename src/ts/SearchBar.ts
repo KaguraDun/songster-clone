@@ -142,7 +142,7 @@ export default class SearchBar {
       let div = target.closest('div');
       if (!div) return;
       this.store.setSongData(div.dataset.id);
-      setTimeout(this.dispose, 500);
+      setTimeout(this.dispose, 300);
     });
 
     for (const song of songs) {

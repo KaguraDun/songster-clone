@@ -16,6 +16,7 @@ export default class Sidebar {
   constructor(parentElement: HTMLElement, store: Store) {
     this.parentElement = parentElement;
     this.store = store;
+    this.showInstrumentsBar =  this.showInstrumentsBar.bind(this);
   }
 
   render() {
@@ -24,7 +25,9 @@ export default class Sidebar {
     this.extraButtons = renderElement(this.sideBarContent, 'div', ['sidebar__extra']);
     this.fullScreenBtn = this.createFullScreenButton();
     this.fullScreenBtn.addEventListener('click', this.openfullScreenMode);
-    this.createInstrumentButton();
+    const instrButton = this.createInstrumentButton();
+    instrButton.addEventListener('click', this.showInstrumentsBar);
+
     this.createMetronomeButton();
     const printBtn = this.createPrintButton();
     printBtn.addEventListener('click', this.printDiv);
@@ -41,6 +44,7 @@ export default class Sidebar {
     const playButton = document.createElement('button');
     playButton.className = 'sidebar__button-play';
     this.sideBarContent.appendChild(playButton);
+    console.log('button created!');
 
     playButton.addEventListener('click', () => this.store.playSong());
   }
@@ -56,7 +60,7 @@ export default class Sidebar {
     const instrumentButton = document.createElement('button');
     instrumentButton.className = 'sidebar__button-instrument';
     instrumentButton.innerHTML = SVG_SPRITE.GUITAR;
-    this.functionButtons.appendChild(instrumentButton);
+    return this.functionButtons.appendChild(instrumentButton);
   }
   createPrintButton() {
     const printButton = renderElement(this.extraButtons, 'button', ['sidebar__button-print']);
@@ -87,5 +91,27 @@ export default class Sidebar {
     // a.document.write('</body></html><font-size="18"');
     a.document.close();
     a.print();
+  }
+
+  showInstrumentsBar() {
+    console.log('im here')
+    this.createInstrumentsBar(this.store.selectedSong);
+  }
+  async createInstrumentsBar(id: string) {
+    const responce = await fetch(`http://localhost:3000/songs/id/?id=${id}`);
+    const{ converted } = await responce.json();
+    console.log(converted.Tracks);
+    const arr = converted.Tracks;
+    console.log(arr);
+    const instrumentBar = renderElement(this.sideBarContent, 'div', ['instr__bar']);
+    arr.forEach((element: { Instrument: any; })  => {
+    console.log(element.Instrument);
+
+      const instrumentButton = renderElement(instrumentBar, 'button', [`instr__bar-${(element.Instrument).replace(/\s+/g, '')}`]);
+      // instrumentButton.innerHTML = 
+       
+    });
+    return instrumentBar;
+
   }
 }

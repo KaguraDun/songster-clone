@@ -102,4 +102,15 @@
 
 .sheet-music__aside {
     display: none;
+    position: absolute;
+}
+
+.player{
+    &__buttons{
+        &-play{
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+        }
+    }
 }
