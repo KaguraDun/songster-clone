@@ -49,7 +49,7 @@ export default class Login {
   renderForm() {
     this.formContainer.innerHTML = '';
 
-    const form = renderElement(this.formContainer, 'form', []) as HTMLFormElement;
+    const form = renderElement(this.formContainer, 'form', ['form-login']) as HTMLFormElement;
     form.action = '/signup';
 
     const email = this.renderInput(form, 'email', 'Email', 'text');
@@ -130,8 +130,8 @@ export default class Login {
 
     const form = this.renderForm();
 
-    const buttonLogin = renderElement(this.formContainer, 'button', ['button-login'], 'Log in');
-    const buttonSignup = renderElement(this.formContainer, 'button', ['button-signup'], 'Sign up');
+    const buttonLogin = renderElement(this.formContainer, 'button', ['button-form-login'], 'Log in');
+    const buttonSignup = renderElement(this.formContainer, 'button', ['button-form-signup'], 'Sign up');
     const logSocialBox = renderElement(this.formContainer, 'div', ['social']);
 
     const ggButton = renderElement(logSocialBox, 'button', ['gg-button']);

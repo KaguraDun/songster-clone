@@ -2,9 +2,15 @@
 @import './_variables.scss';
 @include normalize();
 @import './_header.scss';
+@import './loginForm.scss';
 @import './_searchbar.scss';
 @import './_sidebar.scss';
 @import './_displaytab.scss';
 @import './_footer.scss';
 @import './main.scss';
 @import './_sheetMusicPage.scss';
+
+.--show {
+    display: flex;
+}
+
