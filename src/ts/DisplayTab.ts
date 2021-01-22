@@ -48,7 +48,7 @@ export default class DisplayTab {
   }
 
   async renderSongTitle(title: string, track: string) {
-    this.titleComponents.innerHTML = '';
+    
     this.artistName = renderElement(this.titleComponents, 'div', ['title__tab-artist'], `${title}`);
     const titleBox = renderElement(this.titleComponents, 'div', ['title__box']);
     const trackTitle = renderElement(titleBox, 'div', ['title__tab-track'], `${track}`);
@@ -61,6 +61,8 @@ export default class DisplayTab {
     // console.log(f)
     const { midiData, converted } = await responce.json();
     this.titleComponents.innerHTML = '';
+    const tracksArray = converted.Tracks;
+    this.store.getSongArray(id, tracksArray);
     this.renderSongTitle(converted.Name, converted.Author);
 
     const audio = new AudioGenerator(this.notesContent, midiData.data, this.store);

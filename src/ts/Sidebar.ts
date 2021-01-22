@@ -12,11 +12,12 @@ export default class Sidebar {
   extraButtons: HTMLElement;
   fullScreenBtn: HTMLButtonElement;
   store: Store;
+  instrumentBar: HTMLElement;
 
   constructor(parentElement: HTMLElement, store: Store) {
     this.parentElement = parentElement;
     this.store = store;
-    this.showInstrumentsBar =  this.showInstrumentsBar.bind(this);
+    this.showInstrumentsBar = this.showInstrumentsBar.bind(this);
   }
 
   render() {
@@ -27,7 +28,7 @@ export default class Sidebar {
     this.fullScreenBtn.addEventListener('click', this.openfullScreenMode);
     const instrButton = this.createInstrumentButton();
     instrButton.addEventListener('click', this.showInstrumentsBar);
-
+    this.instrumentBar = renderElement(this.sideBarContent, 'div', ['instr__bar']);
     this.createMetronomeButton();
     const printBtn = this.createPrintButton();
     printBtn.addEventListener('click', this.printDiv);
@@ -94,24 +95,26 @@ export default class Sidebar {
   }
 
   showInstrumentsBar() {
-    console.log('im here')
-    this.createInstrumentsBar(this.store.selectedSong);
+    console.log('im here');
+    this.createInstrumentsBar(this.store.selectedSong, this.store.tracksArray);
   }
-  async createInstrumentsBar(id: string) {
-    const responce = await fetch(`http://localhost:3000/songs/id/?id=${id}`);
-    const{ converted } = await responce.json();
-    console.log(converted.Tracks);
-    const arr = converted.Tracks;
-    console.log(arr);
-    const instrumentBar = renderElement(this.sideBarContent, 'div', ['instr__bar']);
-    arr.forEach((element: { Instrument: any; })  => {
-    console.log(element.Instrument);
 
-      const instrumentButton = renderElement(instrumentBar, 'button', [`instr__bar-${(element.Instrument).replace(/\s+/g, '')}`]);
-      // instrumentButton.innerHTML = 
-       
+  createInstrumentsBar(id: string, array: any) {
+    this.instrumentBar.innerHTML='';
+    
+
+    array.forEach((element: { Instrument: any }) => {
+      console.log(element.Instrument);
+
+      const instrumentButton = renderElement(
+        this.instrumentBar,
+        'button',
+        [`instr__bar-${element.Instrument.replace(/ /g, '_')}`],
+        `${element.Instrument}`,
+      );
+      // instrumentButton.innerHTML = // TODO icons from
+      instrumentButton.dataset[`id`] = id;
     });
-    return instrumentBar;
-
+    return this.instrumentBar;
   }
 }

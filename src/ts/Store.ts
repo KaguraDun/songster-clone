@@ -8,17 +8,22 @@ export enum EVENTS {
   SELECT_SONG = 'SELECT_SONG',
 }
 
+
+
 export default class Store {
   eventEmitter: EventEmitter;
   songTime: number;
   playMusic: boolean;
   selectedSong: string;
+  tracksArray: any;
+
 
   constructor() {
     this.songTime = null;
     this.eventEmitter = new EventEmitter();
     this.playMusic = false;
     this.selectedSong;
+    this.tracksArray;
   }
 
   init() {}
@@ -38,5 +43,11 @@ export default class Store {
     this.eventEmitter.emit(EVENTS.SELECT_SONG);
   }
 
-  
+    getSongArray(id:string, tracks: any){
+      this.selectedSong = id;
+      this.tracksArray =  tracks;
+      this.eventEmitter.emit(EVENTS.SELECT_SONG);
+    }
+
+
 }
