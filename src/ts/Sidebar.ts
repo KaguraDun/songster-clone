@@ -17,7 +17,7 @@ export default class Sidebar {
   constructor(parentElement: HTMLElement, store: Store) {
     this.parentElement = parentElement;
     this.store = store;
-    this.showInstrumentsBar = this.showInstrumentsBar.bind(this);
+    // this.showInstrumentsBar = this.showInstrumentsBar.bind(this);
   }
 
   render() {
@@ -27,7 +27,7 @@ export default class Sidebar {
     this.fullScreenBtn = this.createFullScreenButton();
     this.fullScreenBtn.addEventListener('click', this.openfullScreenMode);
     const instrButton = this.createInstrumentButton();
-    instrButton.addEventListener('click', this.showInstrumentsBar);
+    // instrButton.addEventListener('click', this.showInstrumentsBar);
     this.instrumentBar = renderElement(this.sideBarContent, 'div', ['instr__bar']);
     this.createMetronomeButton();
     const printBtn = this.createPrintButton();
@@ -94,27 +94,27 @@ export default class Sidebar {
     a.print();
   }
 
-  showInstrumentsBar() {
-    console.log('im here');
-    this.createInstrumentsBar(this.store.selectedSong, this.store.tracksArray);
-  }
+  // showInstrumentsBar() {
+  //   console.log('im here');
+  //   this.createInstrumentsBar(this.store.selectedSong, this.store.tracksArray);
+  // }
 
-  createInstrumentsBar(id: string, array: any) {
-    this.instrumentBar.innerHTML='';
+  // createInstrumentsBar(id: string, array: any) {
+  //   this.instrumentBar.innerHTML='';
     
 
-    array.forEach((element: { Instrument: any }) => {
-      console.log(element.Instrument);
+  //   array.forEach((element: { Instrument: any }) => {
+  //     console.log(element.Instrument);
 
-      const instrumentButton = renderElement(
-        this.instrumentBar,
-        'button',
-        [`instr__bar-${element.Instrument.replace(/ /g, '_')}`],
-        `${element.Instrument}`,
-      );
-      // instrumentButton.innerHTML = // TODO icons from
-      instrumentButton.dataset[`id`] = id;
-    });
-    return this.instrumentBar;
-  }
+  //     const instrumentButton = renderElement(
+  //       this.instrumentBar,
+  //       'button',
+  //       [`instr__bar-${element.Instrument.replace(/ /g, '_')}`],
+  //       `${element.Instrument}`,
+  //     );
+  //     // instrumentButton.innerHTML = // TODO icons from
+  //     instrumentButton.dataset[`id`] = id;
+  //   });
+  //   return this.instrumentBar;
+  // }
 }

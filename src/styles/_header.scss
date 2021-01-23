@@ -12,6 +12,7 @@ header {
         max-width: 85%;
         margin: 0 auto;
         padding: 20px 20px;
+
         &-title {
             font-size: 32px;
             color: $unnamed-color-f5f5f5;
@@ -27,11 +28,13 @@ header {
         padding: 22px 55px;
         background-color: #ef5743;
         border-radius: 35px;
+
         &-container {
             display: flex;
             justify-content: space-between;
             margin: 0 auto;
         }
+
         &-content {
             color: #f5f5f5;
             font-size: 18px/24px;
@@ -39,6 +42,7 @@ header {
             letter-spacing: 0px;
             text-align: center;
         }
+
         &-icon {
             margin-right: 10px;
             background-color: transparent;
@@ -59,12 +63,14 @@ header {
     height: 60px;
     justify-content: space-between;
     padding: 0 10px;
+
     &-social {
         margin-top: 20px;
         display: flex;
         width: 240px;
         justify-content: space-between;
         border-radius: 35px;
+
         button {
             cursor: pointer;
             width: 100px;
@@ -72,35 +78,43 @@ header {
             justify-content: center;
             align-items: center;
         }
+
         button:last-child {
             background-color: $color-blue;
+
             svg {
                 color: $color-white;
                 height: 35px;
             }
         }
+
         button:last-child:hover {
             background-color: $color-blue;
             opacity: 0.8;
         }
+
         button:first-child {
             background-color: $unnamed-color-f5f5f5;
+
             svg {
                 color: $color-orange;
                 height: 35px;
             }
         }
+
         button:first-child:hover {
             background-color: $unnamed-color-f5f5f5;
             opacity: 0.8;
         }
     }
+
     &-login,
     &-signup,
     &-log-out {
         margin-left: 20px;
         border-radius: 50px;
         background-color: $shadow;
+
         svg {
             width: 25px;
             height: 25px;
@@ -108,26 +122,20 @@ header {
             opacity: 0.5;
         }
     }
-    // &-login {
-    //     background-size: cover;
-    //     border: none;
-    //     outline: none;
-    //     width: 70px;
-    //     height: 70px;
-    //     cursor: pointer;
-    //     border-radius: 30px;
-    // }
+
     &-login:hover,
     &-signup:hover,
     &-log-out:hover {
         background-color: #707070;
+
         svg {
             opacity: 0.8;
         }
     }
+
     &-login,
     &-signup {
-        //background-image: url('../images/login.svg');
+   
         background-size: cover;
         border: none;
         outline: none;
@@ -135,8 +143,9 @@ header {
         height: 70px;
         cursor: pointer;
         border-radius: 50px;
-        // background-color: $shadow;
+  
     }
+
     &-signup {
         svg {
             width: 30px;
@@ -145,6 +154,7 @@ header {
             opacity: 0.5;
         }
     }
+
     &__form-container {
         display: none;
         position: fixed;
@@ -162,8 +172,9 @@ header {
         font-size: 18px;
         text-align: left;
         margin-bottom: 15px;
-        padding: 70px;
+        padding: 50px;
     }
+
     &__form-overlay {
         display: none;
         position: fixed;
@@ -186,23 +197,24 @@ form {
     align-items: center;
     flex-direction: column;
     justify-content: center;
+
     input {
         height: 40px;
-        width: 300px;
+        width: 330px;
         border-radius: 35px;
         outline: none;
-        background-color: #707070;
-        opacity: 0.5;
+        background-color: $shadow;
+        opacity: 0.7;
         padding: 10px 20px;
         color: $color-white;
         border: none;
+        font-size: 16px;
     }
-    input.text:focus {
-        background-color: red;
-    }
+
     label {
         margin: 15px;
     }
+
     button {
         height: 60px;
         width: 330px;
@@ -216,6 +228,7 @@ form {
         margin: 5px;
         padding: 20px;
     }
+
     button:hover {
         cursor: pointer;
         background-color: #da6556;
@@ -226,11 +239,70 @@ form {
     &_login {
         margin-top: 40px;
     }
+
     &_signup {
         // background-color: rgba(218,101,86, 0.5);
         opacity: 0.5;
     }
+
     &_signup:hover {
         opacity: 1;
     }
+}
+
+.form-add {
+    &__button-container {
+        margin-top: 40px;
+    }
+}
+
+.button-submit,
+.button-cancel {
+    width: 150px;
+}
+
+.button-cancel {
+    background-color: $shadow;
+    opacity: 0.7;
+}
+
+.form-add {
+    text-align: left;
+
+    input {
+        background-color: $shadow;
+        border-radius: 10px;
+        font-size: 16px;
+
+    }
+
+}
+
+.author__title {
+    margin-top: 10px;
+}
+
+.options-container {
+    color: $color-white;
+
+    select {
+        color: $color-white;
+        font-size: 14px;
+    }
+}
+
+.input__author {
+    width: 330px;
+    height: 120px;
+
+    border-radius: 10px;
+    outline: none;
+    background-color: $shadow;
+    opacity: 0.7;
+    padding: 10px 20px;
+    color: $color-white;
+    border: none;
+    font-size: 16px;
+    margin-top: 10px;
+    resize: none;
 }

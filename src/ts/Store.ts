@@ -43,11 +43,11 @@ export default class Store {
     this.eventEmitter.emit(EVENTS.SELECT_SONG);
   }
 
-    getSongArray(id:string, tracks: any){
-      this.selectedSong = id;
-      this.tracksArray =  tracks;
-      this.eventEmitter.emit(EVENTS.SELECT_SONG);
-    }
+    // getSongArray(id:string, tracks: any){
+    //   this.selectedSong = id;
+    //   this.tracksArray =  tracks;
+    //   this.eventEmitter.emit(EVENTS.SELECT_SONG);
+    // }
 
 
 }

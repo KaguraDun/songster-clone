@@ -17,6 +17,7 @@ export default class DisplayTab {
   // author: string;
   artistName: HTMLElement;
   isPlaying: boolean;
+  trackLength: any;
 
   constructor(parentElement: HTMLElement, store: Store) {
     this.parentElement = parentElement;
@@ -25,6 +26,7 @@ export default class DisplayTab {
     this.titleComponents;
     this.artistName;
     this.isPlaying;
+    this.trackLength;
     // this.author;
   }
 
@@ -62,9 +64,12 @@ export default class DisplayTab {
     const { midiData, converted } = await responce.json();
     this.titleComponents.innerHTML = '';
     const tracksArray = converted.Tracks;
-    this.store.getSongArray(id, tracksArray);
-    this.renderSongTitle(converted.Name, converted.Author);
 
+    // this.store.getSongArray(id, tracksArray);
+    this.renderSongTitle(converted.Name, converted.Author);
+    this.trackLength = converted.Tracks;
+    
+    console.log(this.trackLength);
     const audio = new AudioGenerator(this.notesContent, midiData.data, this.store);
     audio.init();
  
@@ -80,6 +85,7 @@ createPlayer(){
     playButton.innerHTML = SVG_SPRITE.PLAY;
 
     playButton.addEventListener('click', ()=>this.store.playSong());
+    // trackLength = 
 
     
   }

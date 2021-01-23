@@ -199,11 +199,11 @@ export default class Login {
     buttonLogin.addEventListener('click', this.renderFormLogin);
     buttonLogin.title = 'Log in';
 
+    buttonLogin.innerHTML = SVG_SPRITE.LOGIN;
     // const buttonSingUp = renderElement(this.parentElement, 'button', ['wrapper-user-signup']);
     // buttonSingUp.addEventListener('click', this.renderFormSingUp);
     // buttonSingUp.title = 'Sing up';
 
-    buttonLogin.innerHTML = SVG_SPRITE.LOGIN;
     // buttonSingUp.innerHTML = SVG_SPRITE.SIGNIN;
   }
 }

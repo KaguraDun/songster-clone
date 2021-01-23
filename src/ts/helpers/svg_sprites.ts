@@ -112,8 +112,8 @@ export const SVG_SPRITE: any = {
     `,
   SIGNIN: `<svg height="469pt" viewBox="0 0 469 469.33333" width="469pt" xmlns="http://www.w3.org/2000/svg"><path d="m233.765625 0c-122.410156 0-222.804687 93.738281-233.597656 213.332031h190.933593v-64c0-8.617187 5.203126-16.402343 13.160157-19.710937 7.980469-3.304688 17.152343-1.472656 23.253906 4.628906l85.332031 85.335938c8.34375 8.339843 8.34375 21.820312 0 30.164062l-85.332031 85.332031c-6.101563 6.101563-15.273437 7.9375-23.253906 4.628907-7.976563-3.304688-13.160157-11.09375-13.160157-19.710938v-64h-190.933593c10.792969 119.59375 111.1875 213.332031 233.597656 213.332031 129.601563 0 234.667969-105.066406 234.667969-234.664062 0-129.601563-105.066406-234.667969-234.667969-234.667969zm0 0" fill="#fff"/></svg>
     `,
-    FACEBOOK: `<?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg enable-background="new 0 0 512 512" id="Layer_1" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><path d="M304,383c0,40.2-0.1,80.3,0.1,120.5c0,4.4-1.2,5.6-5.6,5.5c-34.2-0.2-68.3-0.2-102.5,0   c-4.7,0-6.2-1.1-6.2-6c0.2-79.7,0.1-159.3,0.1-239c0-8,0.9-7-7.3-7.1c-14.5,0-29-0.1-43.5,0.1c-3.5,0-4.5-1.1-4.5-4.6   c0.1-25.3,0.1-50.7,0-76c0-3.5,1-4.6,4.5-4.5c15.2,0.2,30.3-0.1,45.5,0.2c4.1,0.1,5.4-1,5.4-5.3c-0.2-21.3,0-42.7-0.1-64   c-0.1-17.7,2.6-34.8,11.5-50.4c9.6-17,24-28.7,41.8-36.3c15-6.4,30.8-9.4,47-10.3c32.1-1.8,64.3-0.3,96.4-0.9   c3.6-0.1,4.5,1.2,4.5,4.6c-0.1,26.3-0.1,52.7,0,79c0,4-1.5,4.6-5,4.6c-18.5-0.1-37-0.1-55.5-0.1c-15.4,0-26.5,11.1-26.5,26.3   c0,15.7,0.2,31.3-0.1,47c-0.1,4.5,1.4,5.6,5.7,5.6c25.3-0.2,50.7,0,76-0.2c4.2,0,5.6,1.2,5.1,5.4c-1.5,12.9-2.8,25.8-4.2,38.7   c-1.3,12.4-3.5,24.7-5.5,37c-0.6,3.5-1.7,4.3-4.9,4.3c-21.7-0.1-43.3-0.1-65,0c-8.5,0-7.3-1.1-7.3,7.5C304,304,304,343.5,304,383z" fill="#ffff"/></g></svg>`,
-    GOOGLE:`<?xml version="1.0" encoding="iso-8859-1"?>
+  FACEBOOK: `<?xml version="1.0" ?><!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd'><svg enable-background="new 0 0 512 512" id="Layer_1" version="1.1" viewBox="0 0 512 512" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><g><path d="M304,383c0,40.2-0.1,80.3,0.1,120.5c0,4.4-1.2,5.6-5.6,5.5c-34.2-0.2-68.3-0.2-102.5,0   c-4.7,0-6.2-1.1-6.2-6c0.2-79.7,0.1-159.3,0.1-239c0-8,0.9-7-7.3-7.1c-14.5,0-29-0.1-43.5,0.1c-3.5,0-4.5-1.1-4.5-4.6   c0.1-25.3,0.1-50.7,0-76c0-3.5,1-4.6,4.5-4.5c15.2,0.2,30.3-0.1,45.5,0.2c4.1,0.1,5.4-1,5.4-5.3c-0.2-21.3,0-42.7-0.1-64   c-0.1-17.7,2.6-34.8,11.5-50.4c9.6-17,24-28.7,41.8-36.3c15-6.4,30.8-9.4,47-10.3c32.1-1.8,64.3-0.3,96.4-0.9   c3.6-0.1,4.5,1.2,4.5,4.6c-0.1,26.3-0.1,52.7,0,79c0,4-1.5,4.6-5,4.6c-18.5-0.1-37-0.1-55.5-0.1c-15.4,0-26.5,11.1-26.5,26.3   c0,15.7,0.2,31.3-0.1,47c-0.1,4.5,1.4,5.6,5.7,5.6c25.3-0.2,50.7,0,76-0.2c4.2,0,5.6,1.2,5.1,5.4c-1.5,12.9-2.8,25.8-4.2,38.7   c-1.3,12.4-3.5,24.7-5.5,37c-0.6,3.5-1.7,4.3-4.9,4.3c-21.7-0.1-43.3-0.1-65,0c-8.5,0-7.3-1.1-7.3,7.5C304,304,304,343.5,304,383z" fill="#ffff"/></g></svg>`,
+  GOOGLE: `<?xml version="1.0" encoding="iso-8859-1"?>
     <!-- Generator: Adobe Illustrator 18.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
     <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
        viewBox="0 0 478.185 478.185" style="enable-background:new 0 0 478.185 478.185;" xml:space="preserve">
@@ -162,7 +162,7 @@ export const SVG_SPRITE: any = {
     </g>
     </svg>
     `,
-    PLAY: `<?xml version="1.0" encoding="iso-8859-1"?>
+  PLAY: `<?xml version="1.0" encoding="iso-8859-1"?>
     <!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
     <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
        viewBox="0 0 485 485" style="enable-background:new 0 0 485 485;" xml:space="preserve">
@@ -205,7 +205,7 @@ export const SVG_SPRITE: any = {
     </g>
     </svg>
     `,
-    PAUSE: `<?xml version="1.0" encoding="iso-8859-1"?>
+  PAUSE: `<?xml version="1.0" encoding="iso-8859-1"?>
     <!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
     <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
        viewBox="0 0 512 512" style="enable-background:new 0 0 512 512;" xml:space="preserve">
@@ -229,6 +229,44 @@ export const SVG_SPRITE: any = {
           C222.799,144.439,216.083,137.723,207.799,137.723z"/>
       </g>
     </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    <g>
+    </g>
+    </svg>
+    `,
+  ADD: `<?xml version="1.0" encoding="iso-8859-1"?>
+    <!-- Generator: Adobe Illustrator 19.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+    <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+       viewBox="0 0 42 42" style="enable-background:new 0 0 42 42;" xml:space="preserve">
+    <path d="M37.059,16H26V4.941C26,2.224,23.718,0,21,0s-5,2.224-5,4.941V16H4.941C2.224,16,0,18.282,0,21s2.224,5,4.941,5H16v11.059
+      C16,39.776,18.282,42,21,42s5-2.224,5-4.941V26h11.059C39.776,26,42,23.718,42,21S39.776,16,37.059,16z"/>
     <g>
     </g>
     <g>

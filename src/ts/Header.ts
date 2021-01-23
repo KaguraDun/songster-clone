@@ -3,6 +3,7 @@ import Login from './Login';
 
 import Store from './Store';
 import renderElement from './helpers/renderElements';
+import AddForm from './AddForm';
 
 export default class Header {
   parentElement: HTMLElement;
@@ -32,6 +33,7 @@ export default class Header {
 
     this.renderSearchButton();
     this.renderLoginButton();
+    this.renderAddMediaButton();
   }
 
   renderTitle() {
@@ -56,4 +58,10 @@ export default class Header {
   renderLoginButton() {
     new Login(this.rightContainer).render();
   }
+  
+  renderAddMediaButton() {
+    new AddForm(this.rightContainer).render();
+  }
+
+
 }
