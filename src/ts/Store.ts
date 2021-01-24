@@ -15,16 +15,16 @@ export enum EVENTS {
 export default class Store {
   eventEmitter: EventEmitter;
   songTime: number;
-  playMusic: boolean;
+  playMusic: boolean = false;
   selectedSongId: string;
   selectedInstrumentId: number = 0;
   tracksArray: any;
 
 
   constructor() {
-    this.songTime = null;
+    this.songTime;
     this.eventEmitter = new EventEmitter();
-    this.playMusic = false;
+    this.playMusic;
   }
 
   init() {}
@@ -39,6 +39,10 @@ export default class Store {
     this.eventEmitter.emit(EVENTS.PLAY_BUTTON_CLICK);
   }
 
+  endOfSong() {
+    this.playMusic = false;
+    this.eventEmitter.emit(EVENTS.END_OF_SONG);
+  }
   setSongId(id: string) {
     this.selectedSongId = id;
     this.eventEmitter.emit(EVENTS.SELECT_SONG);
@@ -58,5 +62,4 @@ export default class Store {
     this.selectedInstrumentId = id;
     this.eventEmitter.emit(EVENTS.SELECT_INSTRUMENT);
   }
-
 }

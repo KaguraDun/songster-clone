@@ -20,7 +20,14 @@ export default class RenderSong {
   song: Song;
   store: Store;
   sheetMusicRender: HTMLDivElement;
-  timeMarker: TimeMarker;
+  timeMarker: TimeMarker = {
+    element: null,
+    timer: null,
+    speed: null,
+    shiftOffset: null,
+    firstMeasure: null,
+    lastMeasure: null,
+  };
   measureDuration: number;
   buttonChangeTrack: HTMLButtonElement;
   trackList: HTMLUListElement;
@@ -32,14 +39,7 @@ export default class RenderSong {
     this.store = store;
     this.track = this.song.Tracks[0];
     this.sheetMusicRender;
-    this.timeMarker = {
-      element: null,
-      timer: null,
-      speed: null,
-      shiftOffset: null,
-      firstMeasure: null,
-      lastMeasure: null,
-    };
+    this.timeMarker;
     this.buttonChangeTrack;
     this.trackList;
     this.measureDuration;
@@ -79,18 +79,18 @@ export default class RenderSong {
     //--------------------------------------
 
     const lastMesureEndX = timeMarker.lastMeasure.offsetLeft + SECTION_SIZE.width;
-    const lastMesureEndY = timeMarker.lastMeasure.offsetTop - SECTION_SIZE.height;
+    const lastMesureEndY = timeMarker.lastMeasure.offsetTop;
 
     const isEndOfLastMeasure = timeMarker.element.offsetLeft >= lastMesureEndX;
     const isLastMeasure = timeMarker.element.offsetTop >= lastMesureEndY;
     const isEndOfRow = timeMarker.element.offsetLeft > firstRowEndPosition;
 
+    console.log(isLastMeasure, timeMarker.element.offsetTop, lastMesureEndY);
     if (isEndOfLastMeasure && isLastMeasure) {
       timeMarker.element.style.left = `${rowStartX}px`;
       timeMarker.element.style.top = '0';
 
-      //Событие конца песни
-
+      this.store.endOfSong();
       clearInterval(this.timeMarker.timer);
       return;
     }
@@ -103,12 +103,12 @@ export default class RenderSong {
   }
 
   playMusicTrack() {
-    this.timeMarker.shiftOffset = this.timeMarker.speed / 20;
+    this.timeMarker.shiftOffset = this.timeMarker.speed / 50;
 
     if (this.store.playMusic) {
       // для теста
       //startTime = Date.now();
-      this.timeMarker.timer = setInterval(() => this.moveTimeMarker(this.timeMarker), 50);
+      this.timeMarker.timer = setInterval(() => this.moveTimeMarker(this.timeMarker), 20);
       this.timeMarker.element.scrollIntoView({ block: 'center', behavior: 'smooth' });
     } else {
       clearInterval(this.timeMarker.timer);
@@ -164,7 +164,8 @@ export default class RenderSong {
     this.store.setSongTime(currentTime);
 
     const measureColNum = Math.floor(
-      (event.y + scrollY - Math.abs(this.parentElement.offsetTop)) / SECTION_SIZE.height,
+      (event.y + this.parentElement.scrollTop - Math.abs(this.parentElement.offsetTop)) /
+        SECTION_SIZE.height,
     );
 
     const timeMarkerTop = measureColNum * SECTION_SIZE.height;
