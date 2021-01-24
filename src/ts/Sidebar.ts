@@ -1,85 +1,105 @@
 import { DuoSynth } from 'tone';
+import { Track } from '../models/TrackDisplayType';
 import DisplayTab from './DisplayTab';
 import renderElement from './helpers/renderElements';
 import { SVG_SPRITE } from './helpers/svg_sprites';
+import { InstrumentBar } from './InstrumentBar';
 import Store, { EVENTS } from './Store';
 
 export default class Sidebar {
   parentElement: HTMLElement;
-  sideBarContent: HTMLElement;
-  dropDownGithub: HTMLElement;
+  container: HTMLElement;
   functionButtons: HTMLElement;
   extraButtons: HTMLElement;
-  fullScreenBtn: HTMLButtonElement;
-  store: Store;
 
-  constructor(parentElement: HTMLElement, store: Store) {
+  store: Store;
+  tracks: Track[];
+
+  constructor(parentElement: HTMLElement, store: Store, tracks: Track[]) {
     this.parentElement = parentElement;
     this.store = store;
+    this.tracks = tracks;
+
+    this.renderInstrumentsBar = this.renderInstrumentsBar.bind(this);
+    this.openfullScreenMode = this.openfullScreenMode.bind(this);
+    this.onPrintClick = this.onPrintClick.bind(this);
   }
 
   render() {
-    this.sideBarContent = renderElement(this.parentElement, 'section', ['sidebar']);
-    this.functionButtons = renderElement(this.sideBarContent, 'div', ['sidebar__function']);
-    this.extraButtons = renderElement(this.sideBarContent, 'div', ['sidebar__extra']);
-    this.fullScreenBtn = this.createFullScreenButton();
-    this.fullScreenBtn.addEventListener('click', this.openfullScreenMode);
-    this.createInstrumentButton();
-    this.createMetronomeButton();
-    const printBtn =this.createPrintButton();
-    printBtn.addEventListener('click', this.printDiv);
+    this.container = renderElement(this.parentElement, 'section', ['sidebar']);
+    this.renderFunctionButtons();
+    this.renderExtraButtons();
   }
 
-  createFullScreenButton() {
-    const fullScreen = document.createElement('button');
-    fullScreen.className = 'sidebar__button-fullscreen';
-    fullScreen.innerHTML = SVG_SPRITE.FULL_SCREEN;
-    return this.functionButtons.appendChild(fullScreen);
+  renderFunctionButtons() {
+    this.functionButtons = renderElement(this.container, 'div', ['sidebar__function']);
+    this.renderFullScreenButton(this.functionButtons);
+    this.renderInstrumentButton(this.functionButtons);
+    this.renderMetronomeButton(this.functionButtons);
   }
 
-  createPlayButton() {
-    const playButton = document.createElement('button');
-    playButton.className = 'sidebar__button-play';
-    this.sideBarContent.appendChild(playButton);
-
-    playButton.addEventListener('click', () => this.store.playSong());
+  renderExtraButtons() {
+    this.extraButtons = renderElement(this.container, 'div', ['sidebar__extra']);
+    this.renderPrintButton(this.extraButtons);
   }
 
-  createMetronomeButton() {
-    const metronomeButton = renderElement(this.functionButtons, 'button', [
-      'sidebar__button-metronome',
-    ]);
-    metronomeButton.innerHTML = SVG_SPRITE.METRONOME;
-  }
-
-  createInstrumentButton() {
-    const instrumentButton = document.createElement('button');
-    instrumentButton.className = 'sidebar__button-instrument';
-    instrumentButton.innerHTML = SVG_SPRITE.GUITAR;
-    this.functionButtons.appendChild(instrumentButton);
-  }
-  createPrintButton() {
-    const printButton = renderElement(this.extraButtons, 'button', ['sidebar__button-print']);
-
-    printButton.innerHTML = SVG_SPRITE.PRINTER;
-    return printButton;
+  renderFullScreenButton(parentElement: HTMLElement) {
+    const fullScreenButton = renderElement(parentElement,'button',['sidebar__button-fullscreen']);
+    fullScreenButton.innerHTML = SVG_SPRITE.FULL_SCREEN;
+    fullScreenButton.addEventListener('click',this.openfullScreenMode);
   }
 
   openfullScreenMode() {
-    const elem = document.getElementById('data-wrapper');
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    }
+    this.store.openFullScreen();
   }
-  printDiv() { 
-    var divContents = document.getElementById("print").innerHTML; 
-    var a = window.open('', '', 'height=900, width=600'); 
-    a.document.write('<html>'); 
-    a.document.write('<body > <h2>Render Title here and Author <br>'); 
-    a.document.write(`<h6>${divContents}</h6>`); 
-    // a.document.write('</body></html><font-size="18"'); 
-    a.document.close(); 
-    a.print(); 
-} 
 
+  renderInstrumentButton(parentElement: HTMLElement) {
+    const instrumentButton = renderElement(parentElement,'button',['sidebar__button-instrument']);
+    instrumentButton.innerHTML = SVG_SPRITE.GUITAR;
+    instrumentButton.addEventListener('click',this.renderInstrumentsBar);
+  }
+
+  renderInstrumentsBar() {
+    const element = document.body.firstElementChild as HTMLElement
+    new InstrumentBar(element,this.store,this.tracks).render();
+  }
+
+  // renderInstrumentsBarbbb(tracks: Track[]) {
+  //   this.instrumentBar.innerHTML='';
+    
+  //   tracks.forEach((track,id) => {
+  //     console.log(track.Instrument);
+
+  //     const instrumentButton = renderElement(
+  //       this.instrumentBar,
+  //       'button',
+  //       [`instr__bar-${track.Instrument.replace(/ /g, '_')}`],
+  //       `${track.Instrument}`,
+  //     );
+  //     // instrumentButton.innerHTML = // TODO icons from
+  //     instrumentButton.dataset['id'] = id.toString();
+  //   });
+  //   return this.instrumentBar;
+  // }
+
+  renderMetronomeButton(parentElement: HTMLElement) {
+    const metronomeButton = renderElement(parentElement, 'button', ['sidebar__button-metronome',]);
+    metronomeButton.innerHTML = SVG_SPRITE.METRONOME;
+  }
+
+  renderPrintButton(parentElement: HTMLElement) {
+    const printButton = renderElement(parentElement, 'button', ['sidebar__button-print']);
+    printButton.innerHTML = SVG_SPRITE.PRINTER;
+    printButton.addEventListener('click',this.onPrintClick);
+  }
+
+  onPrintClick() {
+    var divContents = document.getElementById('print').innerHTML;
+    var a = window.open('', '', 'height=700, width=500');
+    a.document.write('<html>');
+    a.document.write('<body > <h2>Render Title here and Author <br>');
+    a.document.write(`<h6>${divContents}</h6>`);
+    a.document.close();
+    a.print();
+  }
 }

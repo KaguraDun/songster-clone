@@ -1,66 +1,93 @@
 import Sidebar from './Sidebar';
-import Store from './Store';
+import Store, { EVENTS } from './Store';
 import { AudioGenerator } from './AudioGenerator/AudioGenerator';
 import RenderSong from './RenderSong';
 import renderElement from './helpers/renderElements';
 import MusicPlayerBox from './MusicPlayerBox';
-
+import { Player } from 'tone';
+import { SVG_SPRITE } from './helpers/svg_sprites';
+import { Song } from '../models/TrackDisplayType';
 
 export default class DisplayTab {
   parentElement: HTMLElement;
-  displayContent: HTMLElement;
+  container: HTMLElement;
+  titleContainer: HTMLElement;
+  contentContainer: HTMLElement;
   notesContent: HTMLElement;
-  store: Store;
 
-  constructor(parentElement: HTMLElement, store: Store) {
+  store: Store;
+  songId: string;
+  song: Song;
+  midiData: ArrayBuffer;
+
+  constructor(parentElement: HTMLElement, store: Store, songId: string) {
     this.parentElement = parentElement;
     this.store = store;
+    this.songId = songId;
+
+    this.openFullScreenMode = this.openFullScreenMode.bind(this);
   }
 
-  render() {
-    this.displayContent = renderElement(this.parentElement, 'section', ['display__tab']);
+  dispose() {
+    this.parentElement.removeChild(this.container);
+  }
+
+  async render() {
+    this.store.eventEmitter.addEvent(EVENTS.FULL_SCREEN_BUTTON_CLICK,this.openFullScreenMode);
+
+    this.container = renderElement(this.parentElement, 'section', ['display__tab']);
+    await this.fetchSong();
+
     this.renderSongTitle();
-    const dataWrapper = renderElement(this.displayContent, 'div', ['display__data']);
-    this.notesContent = renderElement(dataWrapper, 'div', ['tab__content']);
-    this.notesContent.setAttribute('id', 'data-wrapper');
-    new MusicPlayerBox(this.notesContent, this.store).render();
-    new Sidebar(dataWrapper, this.store).render();
     this.renderSongContent();
+    this.renderSideBar();
+    this.renderMusicPlayer();
+    this.initAudio();
+  }
+
+  async fetchSong() {
+    const responce = await fetch(`http://localhost:3000/songs/id/?id=${this.songId}`);
+    const { midiData, converted } = await responce.json();
+
+    this.song = converted;
+    this.midiData = midiData.data;
   }
 
   renderSongTitle() {
-    const titleComponents = renderElement(this.displayContent, 'div', ['title']);
-    const artistName = renderElement(titleComponents, 'div', ['title__tab-artist'], 'Nirvana');
-    const titleBox = renderElement(titleComponents, 'div', ['title__box']);
-    const trackTitle = renderElement(
-      titleBox,
-      'div',
-      ['title__tab-track'],
-      'Smells like Teen Spirit',
-    );
-    const favButton = renderElement(titleBox, 'button', ['title__tab-fav']);
-    const subTitle = renderElement(
-      titleComponents,
-      'div',
-      ['title__sub'],
-      'Kurt Cobain - Intro/Verse Guitar - Electric Guitar (clean)',
-    );
+    this.titleContainer = renderElement(this.container, 'div', ['title']);
+    renderElement(this.titleContainer, 'div', ['title__tab-artist'], this.song.Author);
+    const titleBox = renderElement(this.titleContainer, 'div', ['title__box']);
+    renderElement(titleBox, 'div', ['title__tab-track'], this.song.Name);
+    this.renderFavoritesButton(titleBox);
   }
 
-  async renderSongContent() {
-    const responce = await fetch('http://localhost:3000/songs/id/?id=6000521b6a4f1508a4233e03');
+  renderFavoritesButton(parentElement: HTMLElement) {
+    const favButton = renderElement(parentElement, 'button', ['title__tab-fav']);
+  }
 
-    //const responce = await fetch('http://localhost:3000/songs/id/?id=6000a2a200bb3e15e47d4d33');
+  renderSongContent() {
+    this.contentContainer = renderElement(this.container, 'div', ['display__data']);
+    this.notesContent = renderElement(this.contentContainer, 'div', ['tab__content']);
+    this.notesContent.setAttribute('id', 'data-wrapper');
 
-    const {midiData, converted} = await responce.json();
+    new RenderSong(this.notesContent,this.song,this.store).render();
+  }
 
+  renderMusicPlayer() {
+    new MusicPlayerBox(this.container, this.store).render();
+  }
 
-    //const arrayBuffer = new ArrayBuffer(midiData.data);
-    //const midi = new Midi(arrayBuffer);
-    const audio = new AudioGenerator(this.notesContent, midiData.data, this.store);
-    audio.init();
+  renderSideBar() {
+    new Sidebar(this.contentContainer, this.store,this.song.Tracks).render();
+  }
 
-    const page = new RenderSong(this.notesContent, converted, this.store);
-    page.render();
-  } 
+  initAudio() {
+    new AudioGenerator(this.midiData,this.store).init();
+  }
+
+  openFullScreenMode() {
+    this.notesContent.requestFullscreen();
+  }
 }
+
+

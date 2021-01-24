@@ -2,7 +2,7 @@ import renderElement from './helpers/renderElements';
 import { Genre } from '../models/Genre';
 import { InstrumentType } from '../models/Instrument';
 import { Difficulty } from '../models/Difficulty';
-import Store from './Store';
+import Store, { EVENTS } from './Store';
 import { SongViewModel } from '../models/SongViewModel';
 
 //************* */
@@ -20,9 +20,9 @@ export default class SearchBar {
   genreInput: HTMLSelectElement;
   difficultyInput: HTMLSelectElement;
 
-  store: Store
+  store: Store;
 
-  constructor(parentElement: HTMLElement,store: Store) {
+  constructor(parentElement: HTMLElement, store: Store) {
     this.parentElement = parentElement;
     this.store = store;
 
@@ -50,12 +50,12 @@ export default class SearchBar {
 
   renderCloseIcon() {
     const close = document.createElement('div');
-    close.classList.add('search__close-icon','icon');
+    close.classList.add('search__close-icon', 'icon');
     this.wrapper.appendChild(close);
 
-    close.addEventListener('click',this.dispose);
-    this.overlay.addEventListener('click',this.dispose);
-    this.wrapper.addEventListener('click',(e:MouseEvent) => {
+    close.addEventListener('click', this.dispose);
+    this.overlay.addEventListener('click', this.dispose);
+    this.wrapper.addEventListener('click', (e: MouseEvent) => {
       e.stopPropagation();
     });
   }
@@ -66,64 +66,64 @@ export default class SearchBar {
   }
 
   renderTextInput() {
-      this.textInput = document.createElement('input');
-      this.textInput.classList.add('search__text-input');
-      this.textInput.placeholder = 'Enter a song...';
-      this.wrapper.appendChild(this.textInput);
+    this.textInput = document.createElement('input');
+    this.textInput.classList.add('search__text-input');
+    this.textInput.placeholder = 'Enter a song...';
+    this.wrapper.appendChild(this.textInput);
   }
 
   renderOptionsInputs() {
-      const container = document.createElement('div');
-      container.classList.add('options-container');
-      this.wrapper.appendChild(container);
+    const container = document.createElement('div');
+    container.classList.add('options-container');
+    this.wrapper.appendChild(container);
 
-      this.instrumentInput = this.renderOptionSelectAndGet(InstrumentType, 'Instrument', container);
-      this.genreInput = this.renderOptionSelectAndGet(Genre, 'Genre', container);
-      this.difficultyInput = this.renderOptionSelectAndGet(Difficulty,'Difficulty',container);
+    this.instrumentInput = this.renderOptionSelectAndGet(InstrumentType, 'Instrument', container);
+    this.genreInput = this.renderOptionSelectAndGet(Genre, 'Genre', container);
+    this.difficultyInput = this.renderOptionSelectAndGet(Difficulty, 'Difficulty', container);
   }
 
   /**e is enum*/
-  renderOptionSelectAndGet(e:any, name:string, parentElement: HTMLElement) {
-      const select = document.createElement('select');
-      const option = document.createElement('option');
-      option.text = name;
-      option.selected = true;
-      option.disabled = true;
-      select.options.add(option);
+  renderOptionSelectAndGet(e: any, name: string, parentElement: HTMLElement) {
+    const select = document.createElement('select');
+    const option = document.createElement('option');
+    option.text = name;
+    option.selected = true;
+    option.disabled = true;
+    select.options.add(option);
 
-      for (const value of Object.keys(e)) {
-        const option = document.createElement('option');
-        option.text = value;
-        option.value = value;
-        select.options.add(option);
-      }
-      parentElement.appendChild(select);
-      return select;
+    for (const value of Object.keys(e)) {
+      const option = document.createElement('option');
+      option.text = value;
+      option.value = value;
+      select.options.add(option);
+    }
+    parentElement.appendChild(select);
+    return select;
   }
 
   renderSearchButton() {
     const button = document.createElement('div');
-    button.classList.add('search-button','icon');
+    button.classList.add('search-button', 'icon');
     this.wrapper.appendChild(button);
-    button.addEventListener('click',this.search);
-    this.wrapper.addEventListener('keypress',this.search)
+    button.addEventListener('click', this.search);
+    this.wrapper.addEventListener('keypress', this.search);
   }
 
   async search(e: MouseEvent | KeyboardEvent) {
     if (e instanceof KeyboardEvent && e.key !== 'Enter') return;
 
     const searchOption: any = {
-     name:  this.textInput.value,
-     instrument: this.instrumentInput.selectedOptions[0].value,
-     genre: this.genreInput.selectedOptions[0].value,
-     difficulty: this.difficultyInput.selectedOptions[0].value,
-    }
+      name: this.textInput.value,
+      instrument: this.instrumentInput.selectedOptions[0].value,
+      genre: this.genreInput.selectedOptions[0].value,
+      difficulty: this.difficultyInput.selectedOptions[0].value,
+    };
 
     const quaryArray = [];
     for (const key in searchOption) {
-        const quaryArg = searchOption[key];
-        if(!quaryArg || quaryArg.toLowerCase() === key) continue;
-        quaryArray.push(`${key}=${quaryArg}`);
+      const quaryArg = searchOption[key];
+      if (!quaryArg || quaryArg.toLowerCase() === key) continue;
+      quaryArray.push(`${key}=${quaryArg}`);
     }
     const url = `${serverUrl}/songs/?${quaryArray.join('&')}`;
     const response = await fetch(url);
@@ -137,15 +137,23 @@ export default class SearchBar {
     this.songsContainer.classList.add('songs-container');
     this.wrapper.appendChild(this.songsContainer);
 
+    this.songsContainer.addEventListener('click', (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      let div = target.closest('div');
+      if (!div) return;
+      this.store.setSongId(div.dataset.id);
+      setTimeout(this.dispose, 300);
+    });
+
     for (const song of songs) {
       const songElement = document.createElement('div');
       songElement.classList.add('song');
       songElement.dataset.id = song._id;
       this.songsContainer.appendChild(songElement);
-      songElement.addEventListener('click',this.songClick);
+      songElement.addEventListener('click', this.songClick);
 
       this.renderSongImage(songElement);
-      this.renderSongContent(song.name,song.author,songElement);
+      this.renderSongContent(song.name, song.author, songElement);
     }
   }
 
@@ -159,7 +167,7 @@ export default class SearchBar {
     parentElement.appendChild(img);
   }
 
-  renderSongContent(name: string,author: string, parentElement: HTMLElement) {
+  renderSongContent(name: string, author: string, parentElement: HTMLElement) {
     const content = document.createElement('div');
     content.classList.add('content');
     parentElement.appendChild(content);

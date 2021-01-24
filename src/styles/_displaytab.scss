@@ -11,11 +11,10 @@
 .title {
     display: flex;
     flex-direction: column;
+    justify-content: center;
     align-items: center;
-
     border-radius: 30px 30px 0 0;
     padding: 15px;
-
     &__sub {
         color: $unnamed-color-f5f5f5;
         text-align: left;
@@ -24,29 +23,20 @@
         // color: #F5F5F5;
         opacity: 0.7;
     }
-
     // background-color: rgba(240, 230, 230, 0.3);
     &__tab {
         &-artist {
-
             font-size: 32px;
             color: $unnamed-color-f5f5f5;
-
-
             font-family: 'Segoe UI';
             font-weight: 300;
         }
-
         &-track {
             font-size: 36px;
             color: $unnamed-color-f5f5f5;
-
-
             font-family: 'Segoe UI';
             font-weight: bold;
         }
-
-
         &-fav {
             background-image: url('../images/star.svg');
             background-color: transparent;
@@ -58,10 +48,8 @@
             cursor: pointer;
             margin-left: 30px;
             opacity: 0.7;
-
             transition: 0.2s;
         }
-
         // &-fav:hover {
         //     transform: scale(1.1);
         //     // box-shadow: 0 0 10px $color-white;
@@ -81,10 +69,10 @@
 .tab__content {
     border: solid 1px $color-white;
     background: white;
-
     // margin-top: 10px;
     overflow-y: scroll;
-    height: 100vh;
+    //height: 100vh;
+    height: 50vh;
     min-width: 1100px;
     // padding: 15px;
 }
@@ -95,10 +83,20 @@
 
 .display__data {
     display: flex;
-    
-    overflow: hidden;
+    //overflow: hidden;
 }
 
 .sheet-music__aside {
     display: none;
+    position: absolute;
+}
+
+.player {
+    &__buttons {
+        &-play {
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+        }
+    }
 }
