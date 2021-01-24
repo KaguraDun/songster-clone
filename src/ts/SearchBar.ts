@@ -141,7 +141,7 @@ export default class SearchBar {
       const target = event.target as HTMLElement;
       let div = target.closest('div');
       if (!div) return;
-      this.store.setSongData(div.dataset.id);
+      this.store.setSongId(div.dataset.id);
       setTimeout(this.dispose, 300);
     });
 

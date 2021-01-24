@@ -1,4 +1,4 @@
-export const SVG_SPRITE: any = {
+export const SVG_SPRITE = {
   FULL_SCREEN: `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
   viewBox="0 0 322.113 322.113" style="enable-background:new 0 0 322.113 322.113;" xml:space="preserve class='btn_fullScreen'">
   <g transform="translate(0 -562.36)">
