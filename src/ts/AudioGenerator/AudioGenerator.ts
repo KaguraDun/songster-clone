@@ -12,15 +12,13 @@ enum Volume {
 
 export class AudioGenerator {
   private midi: Midi;
-  private parentElement: HTMLElement;
   private store: Store;
   private toneTracks: Tone.Part[];
   private currentTrackId: number;
   private timeOffset: number;
 
-  constructor(parentElement: HTMLElement, midiData: ArrayBuffer, store: Store) {
+  constructor(midiData: ArrayBuffer, store: Store) {
     this.store = store;
-    this.parentElement = parentElement;
     this.midi = new Midi(midiData);
     this.toneTracks = [];
     this.currentTrackId = 0;
@@ -29,19 +27,8 @@ export class AudioGenerator {
     this.play = this.play.bind(this);
     this.stopMusic = this.stopMusic.bind(this);
     this.setTimeOffset = this.setTimeOffset.bind(this);
-  }
-
-  render() {
-    this.init();
-    const button = document.createElement('button');
-    button.textContent = 'click';
-    this.parentElement.appendChild(button);
-    button.onclick = () => this.play();
-
-    const stop = document.createElement('button');
-    stop.textContent = 'stop';
-    this.parentElement.appendChild(stop);
-    stop.onclick = () => Tone.Transport.stop();
+    //this.changeTimeOffset = this.changeTimeOffset.bind(this);
+    this.changeTrack = this.changeTrack.bind(this);
   }
 
   setTimeOffset() {
@@ -64,14 +51,20 @@ export class AudioGenerator {
     this.store.eventEmitter.addEvent(EVENTS.PLAY_BUTTON_CLICK, this.play);
     this.store.eventEmitter.addEvent(EVENTS.TIME_MARKER_POSITION_CHANGED, this.setTimeOffset);
     this.store.eventEmitter.addEvent(EVENTS.END_OF_SONG, this.stopMusic);
+    //this.store.eventEmitter.addEvent(EVENTS.TIME_MARKER_POSITION_CHANGED,this.changeTimeOffset);
+    this.store.eventEmitter.addEvent(EVENTS.SELECT_INSTRUMENT,this.changeTrack);
 
     Tone.Transport.bpm.value = this.midi.header.tempos[0].bpm;
     Tone.Transport.timeSignature = this.midi.header.timeSignatures[0].timeSignature;
 
-    this.midi.tracks.forEach((track, i) => {
-      const volume = i === this.currentTrackId ? +Volume.SelectedTrack : +Volume.DefaultTrack;
-      this.initTonePart(track, volume);
-    });
+    this.initTracks();
+  }
+
+  initTracks() {
+    this.midi.tracks.forEach((track,id) => {
+      const volume = id === this.currentTrackId ? +Volume.SelectedTrack : +Volume.DefaultTrack;
+      this.initTonePart(track,volume);
+    })
   }
 
   initTonePart(track: Track, volumeLevel: number) {
@@ -87,22 +80,42 @@ export class AudioGenerator {
     this.toneTracks.push(part);
   }
 
+  changeTimeOffset() {
+    this.timeOffset = this.store.songTime / 1000;
+  }
+
+  changeTrack() {
+    this.timeOffset = Tone.now();
+    Tone.Transport.cancel();
+    this.setCurrentTrack(this.store.selectedInstrumentId);
+    this.toneTracks = [];
+    this.initTracks();
+    if(this.store.playMusic) {
+      this.start();
+    }
+  }
+
   play() {
     console.log(this.store.playMusic, 'offset', this.timeOffset);
 
     if (this.store.playMusic) {
-      console.log(this.toneTracks.length);
-
-      this.toneTracks.forEach((part) => {
-        part.start(undefined, this.timeOffset);
-      });
-
-      Tone.Transport.start(undefined, this.timeOffset);
-      Tone.start();
+      this.start();
     } else {
-      Tone.Transport.pause();
-      this.timeOffset = Tone.now();
+      this.pause();
     }
+  }
+
+  start() {
+    this.toneTracks.forEach((part) => {
+      part.start(undefined,this.timeOffset);
+    });
+    Tone.Transport.start(undefined,this.timeOffset);
+    Tone.start();
+  }
+
+  pause() {
+    this.timeOffset = Tone.now();
+    Tone.Transport.pause();
   }
 
   setCurrentTrack(id: number) {

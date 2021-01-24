@@ -1,11 +1,14 @@
 import Header from './Header';
 import Footer from './Footer';
-import Sidebar from './Sidebar';
 import DisplayTab from './DisplayTab';
 import Store from './Store';
 
 export default class Page {
   parentElement: HTMLElement;
+  headerElement: HTMLElement;
+  mainElement: HTMLElement;
+  footerElement: HTMLElement;
+
   store: Store;
 
   constructor(parentElement: HTMLElement, store: Store) {
@@ -14,34 +17,39 @@ export default class Page {
   }
 
   render() {
+    this.renderHeader();
+    this.renderMain();
+    this.renderFooter();
+  }
 
-    const header = document.createElement('header');
+  renderHeader() {
+    this.headerElement = document.createElement('header');
+    this.headerElement.className = 'header';
+    this.parentElement.appendChild(this.headerElement);
 
-    header.className = 'header';
-    new Header(header,this.store).render();
+    new Header(this.headerElement,this.store).render();
+  }
 
-    const main = document.createElement('main');
-    const mainWrapper = document.createElement('div');
+  renderMain() {
+    const wrapper = document.createElement('main');
+    this.parentElement.appendChild(wrapper);
 
-    mainWrapper.className = 'main__wrapper';
-    main.appendChild(mainWrapper);
+    this.mainElement = document.createElement('div');
+    this.mainElement.className = 'main__wrapper';
+    wrapper.appendChild(this.mainElement);
 
-    
-    // new Sidebar(mainWrapper).render();
-    new DisplayTab(mainWrapper,this.store).render();
+    const id = '6004807c0bea8613c8a9fbe7';
+    new DisplayTab(this.mainElement,this.store,id).render();
+  }
 
-
-    // new Sidebar(mainWrapper, this.store).render();
-    // new DisplayTab(mainWrapper, this.store).render();
-
-
+  renderFooter() {
     const footer = document.createElement('footer');
-    const footerWrapper = document.createElement('div');
+    this.parentElement.appendChild(footer);
 
-    footerWrapper.className = 'footer__wrapper';
-    footer.appendChild(footerWrapper);
+    this.footerElement = document.createElement('div');
+    this.footerElement.className = 'footer__wrapper';
+    footer.appendChild(this.footerElement);
 
-    new Footer(footerWrapper).render(); //create div and push it as a parent elem
-    this.parentElement.append(header, main, footer);
+    new Footer(this.footerElement).render();
   }
 }

@@ -1,7 +1,7 @@
 import renderElement from './helpers/renderElements';
 import { Track, Song } from '../models/TrackDisplayType';
 import Store, { EVENTS } from './Store';
-import { SECTION_SIZE } from './Constants';
+import { SECTION_SIZE } from '../models/Constants';
 import RenderTrack from './RenderTrack';
 
 interface TimeMarker {
@@ -179,16 +179,9 @@ export default class RenderSong {
     }
   }
 
-  changeTrack(event: MouseEvent) {
-    const target = event.target as HTMLElement;
-    const closestToList = target.closest('ul');
-
-    if (!closestToList) return;
-
-    const trackID = Number(target.id);
-
-    this.track = this.song.Tracks[trackID];
-
+  changeTrack() {
+    const id = this.store.selectedInstrumentId;
+    this.track = this.song.Tracks[id];
     this.render();
   }
 
@@ -216,6 +209,7 @@ export default class RenderSong {
   }
 
   render() {
+    this.store.eventEmitter.addEvent(EVENTS.SELECT_INSTRUMENT,this.changeTrack);
     // console.log(this.song);
     // Подумать как лучше сделать адаптив
     // Синхронизировать ползунок с песней, протестировать
@@ -226,6 +220,7 @@ export default class RenderSong {
 
     this.sheetMusicRender = document.createElement('div');
     this.sheetMusicRender.classList.add('sheet-music__render');
+    this.sheetMusicRender.setAttribute('id', 'print');
     this.sheetMusicRender.addEventListener('click', this.changeTimeMarkerPosition);
 
     this.parentElement.appendChild(this.sheetMusicRender);
