@@ -1,4 +1,3 @@
-import renderElement from './helpers/renderElements';
 import { Track, Song } from '../models/TrackDisplayType';
 import Store, { EVENTS } from './Store';
 import { SECTION_SIZE } from '../models/Constants';
@@ -7,13 +6,10 @@ import RenderTrack from './RenderTrack';
 interface TimeMarker {
   element: HTMLDivElement;
   timer: NodeJS.Timer;
-  speed: number;
-  shiftOffset: number;
   firstMeasure: HTMLDivElement;
   lastMeasure: HTMLDivElement;
+  currentMeasureNum: number;
 }
-// для теста
-//let startTime = Date.now();
 
 export default class RenderSong {
   parentElement: HTMLElement;
@@ -23,14 +19,11 @@ export default class RenderSong {
   timeMarker: TimeMarker = {
     element: null,
     timer: null,
-    speed: null,
-    shiftOffset: null,
     firstMeasure: null,
     lastMeasure: null,
+    currentMeasureNum: 1,
   };
   measureDuration: number;
-  buttonChangeTrack: HTMLButtonElement;
-  trackList: HTMLUListElement;
   track: Track;
 
   constructor(parentElement: HTMLElement, song: Song, store: Store) {
@@ -40,8 +33,6 @@ export default class RenderSong {
     this.track = this.song.Tracks[0];
     this.sheetMusicRender;
     this.timeMarker;
-    this.buttonChangeTrack;
-    this.trackList;
     this.measureDuration;
     this.playMusicTrack = this.playMusicTrack.bind(this);
     this.changeTrack = this.changeTrack.bind(this);
@@ -56,38 +47,27 @@ export default class RenderSong {
     parentElement.appendChild(bitrateContainer);
   }
 
+  flushCss(element: HTMLDivElement) {
+    // By reading the offsetHeight property, we are forcing
+    // the browser to flush the pending CSS changes (which it
+    // does to ensure the value obtained is accurate).
+    element.offsetHeight;
+  }
+
+  moveTimeMarkerToBeginOfRow() {
+    this.timeMarker.element.style.transition = 'none';
+    this.timeMarker.element.style.left = this.timeMarker.firstMeasure.offsetLeft + 'px';
+    // apply the "transition: none" and "left: Xpx" rule immediately
+    this.flushCss(this.timeMarker.element);
+    // restore animation
+    this.timeMarker.element.style.transition = `left ${this.measureDuration}s linear`;
+  }
+
   moveTimeMarker(timeMarker: TimeMarker) {
-    const numberElementsPerRow = Math.floor(this.parentElement.clientWidth / SECTION_SIZE.width);
-    const rowStartX = timeMarker.firstMeasure.offsetLeft;
-    const firstRowEndPosition = rowStartX + numberElementsPerRow * SECTION_SIZE.width;
+    const lastMeasureID = Number(timeMarker.lastMeasure.dataset.measureId);
 
-    timeMarker.element.style.left = `${timeMarker.element.offsetLeft + timeMarker.shiftOffset}px`;
-
-    // Для тестирования ------------------------
-    //let elapsedTime = Date.now() - startTime;
-    //timeMarker.element.innerText = (elapsedTime / 1000).toFixed(3);
-
-    //elapsedTime / 1000 should be equal to measureDuration
-
-    // if (
-    //   Math.round(timeMarker.element.offsetLeft - timeMarker.firstMeasure.offsetLeft) %
-    //     SECTION_SIZE.width === 0
-    // ) {
-    //   startTime = Date.now();
-    //   console.log(elapsedTime / 1000, this.measureDuration);
-    // }
-    //--------------------------------------
-
-    const lastMesureEndX = timeMarker.lastMeasure.offsetLeft + SECTION_SIZE.width;
-    const lastMesureEndY = timeMarker.lastMeasure.offsetTop;
-
-    const isEndOfLastMeasure = timeMarker.element.offsetLeft >= lastMesureEndX;
-    const isLastMeasure = timeMarker.element.offsetTop >= lastMesureEndY;
-    const isEndOfRow = timeMarker.element.offsetLeft > firstRowEndPosition;
-
-    console.log(isLastMeasure, timeMarker.element.offsetTop, lastMesureEndY);
-    if (isEndOfLastMeasure && isLastMeasure) {
-      timeMarker.element.style.left = `${rowStartX}px`;
+    if (timeMarker.currentMeasureNum > lastMeasureID + 1) {
+      timeMarker.element.style.left = `${timeMarker.firstMeasure.offsetLeft}px`;
       timeMarker.element.style.top = '0';
 
       this.store.endOfSong();
@@ -95,21 +75,34 @@ export default class RenderSong {
       return;
     }
 
-    if (isEndOfRow) {
-      timeMarker.element.style.left = `${rowStartX}px`;
-      timeMarker.element.style.top = `${timeMarker.element.offsetTop + SECTION_SIZE.height}px`;
-      timeMarker.element.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    const numberElementsPerRow = Math.floor(this.parentElement.clientWidth / SECTION_SIZE.width);
+    const rowNum = Math.ceil(timeMarker.currentMeasureNum / numberElementsPerRow) - 1;
+
+    const multipler = timeMarker.currentMeasureNum % numberElementsPerRow || numberElementsPerRow;
+    const leftShift = SECTION_SIZE.width * multipler + timeMarker.firstMeasure.offsetLeft;
+
+    if (multipler === 1) {
+      this.moveTimeMarkerToBeginOfRow();
+      this.timeMarker.element.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
+
+    timeMarker.element.style.top = `${SECTION_SIZE.height * rowNum}px`;
+    timeMarker.element.style.left = `${leftShift}px`;
+
+    timeMarker.currentMeasureNum = timeMarker.currentMeasureNum + 1;
   }
 
   playMusicTrack() {
-    this.timeMarker.shiftOffset = this.timeMarker.speed / 50;
+    console.log(this.measureDuration);
 
     if (this.store.playMusic) {
-      // для теста
-      //startTime = Date.now();
-      this.timeMarker.timer = setInterval(() => this.moveTimeMarker(this.timeMarker), 20);
-      this.timeMarker.element.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      // Вызываем функцию сразу чтобы не было первой задаржки перед её выполнением
+      this.moveTimeMarker(this.timeMarker);
+
+      this.timeMarker.timer = setInterval(
+        () => this.moveTimeMarker(this.timeMarker),
+        this.measureDuration * 1000,
+      );
     } else {
       clearInterval(this.timeMarker.timer);
     }
@@ -185,38 +178,11 @@ export default class RenderSong {
     this.render();
   }
 
-  renderAside() {
-    const aside = renderElement(this.parentElement, 'aside', ['sheet-music__aside']);
-
-    this.trackList = renderElement(aside, 'ul', ['sheet-music__track-list']) as HTMLUListElement;
-    this.trackList.addEventListener('click', this.changeTrack);
-
-    this.song.Tracks.forEach((track, index) => {
-      const item = renderElement(this.trackList, 'li', [
-        'sheet-music__track-list-item',
-      ]) as HTMLLIElement;
-
-      const button = renderElement(
-        item,
-        'button',
-        ['button-change-track'],
-        '🎸',
-      ) as HTMLButtonElement;
-
-      button.title = track.Instrument;
-      button.id = String(index);
-    });
-  }
-
   render() {
-    this.store.eventEmitter.addEvent(EVENTS.SELECT_INSTRUMENT,this.changeTrack);
-    // console.log(this.song);
-    // Подумать как лучше сделать адаптив
-    // Синхронизировать ползунок с песней, протестировать
+    this.store.eventEmitter.addEvent(EVENTS.SELECT_INSTRUMENT, this.changeTrack);
+
     this.parentElement.innerHTML = '';
     this.addBitrate(this.parentElement);
-
-    this.renderAside();
 
     this.sheetMusicRender = document.createElement('div');
     this.sheetMusicRender.classList.add('sheet-music__render');
@@ -240,7 +206,6 @@ export default class RenderSong {
     renderTrack.render();
 
     this.timeMarker.element = this.addTimeMarker(this.sheetMusicRender);
-    this.timeMarker.speed = SECTION_SIZE.width / this.measureDuration;
     this.timeMarker.firstMeasure = this.sheetMusicRender.children[1] as HTMLDivElement;
     this.timeMarker.lastMeasure = this.sheetMusicRender.lastElementChild as HTMLDivElement;
 
