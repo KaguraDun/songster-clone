@@ -64,7 +64,7 @@ export default class Sidebar {
     new InstrumentBar(element,this.store,this.tracks).render();
   }
 
- 
+  
   renderMetronomeButton(parentElement: HTMLElement) {
     const metronomeButton = renderElement(parentElement, 'button', ['sidebar__button-metronome',]);
     metronomeButton.innerHTML = SVG_SPRITE.METRONOME;
