@@ -64,24 +64,7 @@ export default class Sidebar {
     new InstrumentBar(element,this.store,this.tracks).render();
   }
 
-  // renderInstrumentsBarbbb(tracks: Track[]) {
-  //   this.instrumentBar.innerHTML='';
-    
-  //   tracks.forEach((track,id) => {
-  //     console.log(track.Instrument);
-
-  //     const instrumentButton = renderElement(
-  //       this.instrumentBar,
-  //       'button',
-  //       [`instr__bar-${track.Instrument.replace(/ /g, '_')}`],
-  //       `${track.Instrument}`,
-  //     );
-  //     // instrumentButton.innerHTML = // TODO icons from
-  //     instrumentButton.dataset['id'] = id.toString();
-  //   });
-  //   return this.instrumentBar;
-  // }
-
+ 
   renderMetronomeButton(parentElement: HTMLElement) {
     const metronomeButton = renderElement(parentElement, 'button', ['sidebar__button-metronome',]);
     metronomeButton.innerHTML = SVG_SPRITE.METRONOME;
@@ -94,10 +77,11 @@ export default class Sidebar {
   }
 
   onPrintClick() {
+    var title = document.getElementById('print_title').innerHTML;
     var divContents = document.getElementById('print').innerHTML;
-    var a = window.open('', '', 'height=700, width=500');
+    var a = window.open('', '', 'height=1200, width=900');
     a.document.write('<html>');
-    a.document.write('<body > <h2>Render Title here and Author <br>');
+    a.document.write(`<body > <h1>${title}<br>`);
     a.document.write(`<h6>${divContents}</h6>`);
     a.document.close();
     a.print();

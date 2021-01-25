@@ -55,6 +55,7 @@ export default class DisplayTab {
 
   renderSongTitle() {
     this.titleContainer = renderElement(this.container, 'div', ['title']);
+    this.titleContainer.setAttribute('id', 'print_title');
     renderElement(this.titleContainer, 'div', ['title__tab-artist'], this.song.Author);
     const titleBox = renderElement(this.titleContainer, 'div', ['title__box']);
     renderElement(titleBox, 'div', ['title__tab-track'], this.song.Name);

@@ -20,8 +20,7 @@ export class InstrumentBar {
     }
 
     render() {
-        this.parentElement.style.filter = 'blur(10px)';
-
+     
         this.overlay = renderElement(document.body,'div',['overlay']);
         this.container = renderElement(this.overlay,'div',['inst-bar__container']);
 

@@ -3,6 +3,7 @@
     font-weight: Semibold;
     font-size: 18px;
     color: #f5f5f5;
+    
 }
 
 .inst-bar {
@@ -17,6 +18,7 @@
         box-shadow: 0 5px 10px rgba(231, 230, 230, 0.2);
         margin-bottom: 15px;
         padding: 40px;
+        
     }
     &__title {
         font-size: 32px;
@@ -53,4 +55,7 @@
             background: #e77364;
         }
     }
+}
+.overlay{
+   backdrop-filter: blur(10px);
 }
