@@ -178,9 +178,14 @@ export default class RenderSong {
     this.render();
   }
 
-  render() {
+  init() {
     this.store.eventEmitter.addEvent(EVENTS.SELECT_INSTRUMENT, this.changeTrack);
+    this.store.eventEmitter.addEvent(EVENTS.PLAY_BUTTON_CLICK, () => this.playMusicTrack());
 
+    this.render();
+  }
+
+  render() {
     this.parentElement.innerHTML = '';
     this.addBitrate(this.parentElement);
 
@@ -208,7 +213,5 @@ export default class RenderSong {
     this.timeMarker.element = this.addTimeMarker(this.sheetMusicRender);
     this.timeMarker.firstMeasure = this.sheetMusicRender.children[1] as HTMLDivElement;
     this.timeMarker.lastMeasure = this.sheetMusicRender.lastElementChild as HTMLDivElement;
-
-    this.store.eventEmitter.addEvent(EVENTS.PLAY_BUTTON_CLICK, () => this.playMusicTrack());
   }
 }
