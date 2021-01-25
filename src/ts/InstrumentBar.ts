@@ -21,6 +21,7 @@ export class InstrumentBar {
 
     render() {
      
+
         this.overlay = renderElement(document.body,'div',['overlay']);
         this.container = renderElement(this.overlay,'div',['inst-bar__container']);
 
@@ -55,7 +56,7 @@ export class InstrumentBar {
         if(this.store.selectedInstrumentId === id) {
             this.highlightSelectedInstrument(instrumentElement);
         }
-
+        console.log('here ' + id);
         instrumentElement.dataset.id = id.toString();
         instrumentElement.addEventListener('click',this.selectInstrument);
 
@@ -69,6 +70,7 @@ export class InstrumentBar {
 
     renderInstrumentIcon(parentElement: HTMLElement) {
         const icon = renderElement(parentElement,'div',['inst-bar__instrument-icon']);
+        // icon.innerHTML = 
     }
 
     renderInstrumentContent(parentElement: HTMLElement,track: Track) {
