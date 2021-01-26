@@ -1,20 +1,20 @@
 import Vex from 'vexflow';
 import { Touch } from '../models/Notations';
-import { Chord, Measure, NoteTie} from '../models/TrackDisplayType';
+import { Chord, Measure, NoteTie } from '../models/TrackDisplayType';
 import { SECTION_SIZE } from '../models/Constants';
 import renderElement from './helpers/renderElements';
 
 export default class renderTrack {
   measures: Measure[];
   timeSignature: string;
-  sheetMusicRender: HTMLDivElement;
+  sheetMusicRender: HTMLElement;
   clef: string;
 
   constructor(
     measures: Measure[],
     timeSignature: string,
     clef: string,
-    sheetMusicRender: HTMLDivElement,
+    sheetMusicRender: HTMLElement,
   ) {
     this.measures = measures;
     this.timeSignature = timeSignature;
@@ -39,8 +39,18 @@ export default class renderTrack {
   }
 
   drawStaveMeasures() {
+    if (this.measures.length <= 1) {
+      const measureContainer = renderElement(this.sheetMusicRender, 'div', ['measure-error']);
+
+      measureContainer.style.height = `${SECTION_SIZE.height}px`;
+      measureContainer.dataset.time = `${this.measures[0].Time}`;
+      measureContainer.dataset.measureId = `${0}`;
+      measureContainer.innerText = 'Note list for this instrument is empty. Try other instrument';
+      return;
+    }
+
     this.measures.forEach((measure, index: number) => {
-      const measureContainer = renderElement(this.sheetMusicRender,'div',['measure'])
+      const measureContainer = renderElement(this.sheetMusicRender, 'div', ['measure']);
 
       const context = Vex.Flow.Renderer.getSVGContext(
         measureContainer,
@@ -58,6 +68,11 @@ export default class renderTrack {
       const notesList = this.getNotesArray(measure.Chords);
       const beams = Vex.Flow.Beam.generateBeams(notesList.notes);
 
+      measureContainer.style.height = `${SECTION_SIZE.height}px`;
+      measureContainer.dataset.time = `${measure.Time}`;
+      measureContainer.dataset.measureId = `${index}`;
+
+
       Vex.Flow.Formatter.FormatAndDraw(context, stave, notesList.notes);
 
       beams.forEach((beam) => {
@@ -69,9 +84,6 @@ export default class renderTrack {
       ties.forEach((tie) => {
         tie.setContext(context).draw();
       });
-      measureContainer.style.height = `${SECTION_SIZE.height}px`;
-      measureContainer.dataset.time = `${measure.Time}`;
-      measureContainer.dataset.measureId = `${index}`;
     });
   }
 
