@@ -2,15 +2,16 @@
 @import './_variables.scss';
 @include normalize();
 @import './_header.scss';
-@import './loginForm.scss';
+@import './_loginForm.scss';
 @import './_searchbar.scss';
 @import './_sidebar.scss';
 @import './_displaytab.scss';
 @import './_footer.scss';
 @import './main.scss';
 @import './_sheetMusicPage.scss';
+@import './instrumentBar.scss';
+@import './playerBox';
 
 .--show {
     display: flex;
 }
-

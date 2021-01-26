@@ -83,7 +83,7 @@ export default class Login {
   async handleLogin(form: any) {
     form.emailError.textContent = '';
     form.passwordError.textContent = '';
-
+    
     const data = await this.sendRequest(
       'http://localhost:3000/login',
       form.email.value,

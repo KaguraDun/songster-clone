@@ -1,6 +1,5 @@
 import Header from './Header';
 import Footer from './Footer';
-import Sidebar from './Sidebar';
 import DisplayTab from './DisplayTab';
 import Store from './Store';
 
@@ -38,8 +37,10 @@ export default class Page {
     this.mainElement = document.createElement('div');
     this.mainElement.className = 'main__wrapper';
     wrapper.appendChild(this.mainElement);
-  
-    new DisplayTab(this.mainElement,this.store).render();
+
+    //const id = '6000a2a200bb3e15e47d4d33';
+    const id = '6003406a0221632f7493cd3b';
+    new DisplayTab(this.mainElement,this.store,id).render();
   }
 
   renderFooter() {
