@@ -58,16 +58,62 @@ header {
     background-color: #da6556;
 }
 
-.button{
-    &-log-out,
-    &-user-login{
-        width: 60px;
-        height: 60px;
+.wrapper-user {
+    display: flex;
+    height: 60px;
+    justify-content: space-between;
+    padding: 0 10px;
+
+    &-social {
+        margin-top: 20px;
+        display: flex;
+        width: 240px;
+        justify-content: space-between;
+        border-radius: 35px;
+
+        button {
+            cursor: pointer;
+            width: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button:last-child {
+            background-color: $color-blue;
+
+            svg {
+                color: $color-white;
+                height: 35px;
+            }
+        }
+
+        button:last-child:hover {
+            background-color: $color-blue;
+            opacity: 0.8;
+        }
+
+        button:first-child {
+            background-color: $unnamed-color-f5f5f5;
+
+            svg {
+                color: $color-orange;
+                height: 35px;
+            }
+        }
+
+        button:first-child:hover {
+            background-color: $unnamed-color-f5f5f5;
+            opacity: 0.8;
+        }
+    }
+
+    &-login,
+    &-signup,
+    &-log-out {
         margin-left: 20px;
         border-radius: 50px;
         background-color: $shadow;
-        border: 0;
-        cursor: pointer;
 
         svg {
             width: 25px;
@@ -77,7 +123,8 @@ header {
         }
     }
 
-    &-user-login:hover,
+    &-login:hover,
+    &-signup:hover,
     &-log-out:hover {
         background-color: #707070;
 
@@ -86,10 +133,90 @@ header {
         }
     }
 
-    &-log-out{
+    &-login,
+    &-signup {
+        background-size: cover;
         border: none;
         outline: none;
+        width: 70px;
+        height: 70px;
+        cursor: pointer;
         border-radius: 50px;
+    }
+
+    &__form-container {
+        display: none;
+        position: fixed;
+        padding: 25px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: $login-bac;
+        z-index: 100;
+        border-radius: 10px;
+        box-shadow: 0 5px 10px rgba(231, 230, 230, 0.2);
+        color: white;
+        font-family: 'Segoe UI';
+        font-weight: Semibold;
+        font-size: 18px;
+        text-align: left;
+        margin-bottom: 15px;
+        padding: 50px;
+    }
+
+    &__form-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(0, 0, 0, 0.2);
+        z-index: 90;
+        backdrop-filter: blur(10px);
+    }
+}
+
+form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
+    input {
+        height: 40px;
+        width: 330px;
+        border-radius: 35px;
+        outline: none;
+        background-color: $shadow;
+        opacity: 0.7;
+        padding: 10px 20px;
+        color: $color-white;
+        border: none;
+        font-size: 16px;
+    }
+
+    label {
+        margin: 15px;
+    }
+
+    button {
+        height: 60px;
+        width: 330px;
+        border-radius: 35px;
+        outline: none;
+        background-color: $color-orange;
+        cursor: pointer;
+        padding: 10px;
+        color: $color-white;
+        border: none;
+        margin: 5px;
+        padding: 20px;
+    }
+
+    button:hover {
+        cursor: pointer;
+        background-color: #da6556;
     }
 }
 
@@ -183,6 +310,39 @@ header {
     background-color: $shadow;
     // border: solid;
     opacity: 0.8;
+}
 
-    svg {}
+.button {
+    &-log-out,
+    &-user-login{
+        width: 60px;
+        height: 60px;
+        margin-left: 20px;
+        border-radius: 50px;
+        background-color: $shadow;
+        border: 0;
+        cursor: pointer;
+
+        svg {
+            width: 25px;
+            height: 25px;
+            fill: $color-white;
+            opacity: 0.5;
+        }
+    }
+
+    &-user-login:hover,
+    &-log-out:hover {
+        background-color: #707070;
+
+        svg {
+            opacity: 0.8;
+        }
+    }
+
+    &-log-out{
+        border: none;
+        outline: none;
+        border-radius: 50px;
+    }
 }
