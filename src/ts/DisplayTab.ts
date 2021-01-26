@@ -70,7 +70,7 @@ export default class DisplayTab {
     this.notesContent = renderElement(this.contentContainer, 'div', ['tab__content']);
     this.notesContent.setAttribute('id', 'data-wrapper');
 
-    new RenderSong(this.notesContent,this.song,this.store).render();
+    new RenderSong(this.notesContent,this.song,this.store).init();
   }
 
   renderMusicPlayer() {

@@ -8,6 +8,7 @@ interface TimeMarker {
   timer: NodeJS.Timer;
   firstMeasure: HTMLDivElement;
   lastMeasure: HTMLDivElement;
+  currentMeasure: HTMLDivElement;
   currentMeasureNum: number;
 }
 
@@ -21,6 +22,7 @@ export default class RenderSong {
     timer: null,
     firstMeasure: null,
     lastMeasure: null,
+    currentMeasure: null,
     currentMeasureNum: 1,
   };
   measureDuration: number;
@@ -75,6 +77,8 @@ export default class RenderSong {
       return;
     }
 
+    this.timeMarker.element.style.transition = `left ${this.measureDuration}s linear`;
+
     const numberElementsPerRow = Math.floor(this.parentElement.clientWidth / SECTION_SIZE.width);
     const rowNum = Math.ceil(timeMarker.currentMeasureNum / numberElementsPerRow) - 1;
 
@@ -83,13 +87,30 @@ export default class RenderSong {
 
     if (multipler === 1) {
       this.moveTimeMarkerToBeginOfRow();
-      this.timeMarker.element.scrollIntoView({ block: 'center', behavior: 'smooth' });
     }
 
     timeMarker.element.style.top = `${SECTION_SIZE.height * rowNum}px`;
     timeMarker.element.style.left = `${leftShift}px`;
 
     timeMarker.currentMeasureNum = timeMarker.currentMeasureNum + 1;
+    timeMarker.currentMeasure = this.sheetMusicRender.children[
+      timeMarker.currentMeasureNum
+    ] as HTMLDivElement;
+
+    this.timeMarker.element.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  }
+
+  stopMusicTrack() {
+    const previousMeasure = this.timeMarker.currentMeasure.previousElementSibling as HTMLDivElement;
+
+    this.timeMarker.currentMeasureNum = this.timeMarker.currentMeasureNum - 1;
+    this.timeMarker.element.style.left = `${previousMeasure.offsetLeft}px`;
+    this.timeMarker.element.style.transition = 'none';
+
+    this.flushCss(this.timeMarker.element);
+    clearInterval(this.timeMarker.timer);
+
+    this.store.setSongTime(Number(previousMeasure.dataset.time));
   }
 
   playMusicTrack() {
@@ -104,7 +125,7 @@ export default class RenderSong {
         this.measureDuration * 1000,
       );
     } else {
-      clearInterval(this.timeMarker.timer);
+      this.stopMusicTrack();
     }
   }
 
@@ -213,5 +234,6 @@ export default class RenderSong {
     this.timeMarker.element = this.addTimeMarker(this.sheetMusicRender);
     this.timeMarker.firstMeasure = this.sheetMusicRender.children[1] as HTMLDivElement;
     this.timeMarker.lastMeasure = this.sheetMusicRender.lastElementChild as HTMLDivElement;
+    this.timeMarker.currentMeasure = this.timeMarker.firstMeasure;
   }
 }
