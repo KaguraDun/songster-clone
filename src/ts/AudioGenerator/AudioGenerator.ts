@@ -63,7 +63,6 @@ export class AudioGenerator {
   }
 
   changeTrack() {
-    this.timeOffset = Tone.now();
     Tone.Transport.cancel();
     this.setCurrentTrack(this.store.selectedInstrumentId);
     this.toneTracks = [];
@@ -102,7 +101,7 @@ export class AudioGenerator {
 
   setTimeOffset() {
     const second: number = 1000;
-    
+
     this.timeOffset = this.store.songTime / second;
 
     if (this.store.playMusic) {

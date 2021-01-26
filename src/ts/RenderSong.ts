@@ -145,38 +145,13 @@ export default class RenderSong {
     return timeMarker;
   }
 
-  getTimebyClickPosition(currentMeasure: HTMLElement, offsetX: number): number {
-    const nextMeasure = currentMeasure.nextElementSibling as HTMLElement;
-    const previousMeasure = currentMeasure.previousElementSibling as HTMLElement;
-    let measureTime: number;
-
-    if (nextMeasure) {
-      measureTime = Number(nextMeasure.dataset.time) - Number(currentMeasure.dataset.time);
-    } else {
-      measureTime = Number(currentMeasure.dataset.time) - Number(previousMeasure.dataset.time);
-    }
-
-    measureTime = Number(measureTime.toFixed(3));
-
-    let time = (offsetX * measureTime) / SECTION_SIZE.width;
-
-    if (time <= 0) {
-      time = Number(currentMeasure.dataset.time);
-      return time;
-    }
-
-    time = time + Number(currentMeasure.dataset.measureId) * measureTime;
-
-    return time;
-  }
-
   changeTimeMarkerPosition(event: MouseEvent) {
     const target = event.target as HTMLElement;
     const closestToSvg = target.closest('svg') as SVGSVGElement;
 
     if (!closestToSvg) return;
-    const currentMeasure = closestToSvg.parentElement;
-    const currentTime = Number(currentMeasure.dataset.time);
+    const selectedMeasure = closestToSvg.parentElement;
+    const currentTime = Number(selectedMeasure.dataset.time);
 
     this.store.setSongTime(currentTime);
 
@@ -187,10 +162,10 @@ export default class RenderSong {
 
     const timeMarkerTop = measureColNum * SECTION_SIZE.height;
 
-    this.timeMarker.element.style.left = `${currentMeasure.offsetLeft}px`;
+    this.timeMarker.element.style.left = `${selectedMeasure.offsetLeft}px`;
     this.timeMarker.element.style.top = `${timeMarkerTop}px`;
     this.timeMarker.element.scrollIntoView({ block: 'center', behavior: 'smooth' });
-    this.timeMarker.currentMeasureNum = Number(currentMeasure.dataset.measureId) + 1;
+    this.timeMarker.currentMeasureNum = Number(selectedMeasure.dataset.measureId) + 1;
 
     if (timeMarkerTop > this.timeMarker.lastMeasure.offsetTop) {
       this.timeMarker.element.style.top = `${this.timeMarker.lastMeasure.offsetTop}px`;
@@ -198,9 +173,23 @@ export default class RenderSong {
   }
 
   changeTrack() {
+    const currentMeasure = this.sheetMusicRender.children[
+      this.timeMarker.currentMeasureNum
+    ] as HTMLElement;
+
+    const timeMarkerPositon = {
+      left: this.timeMarker.element.offsetLeft,
+      top: this.timeMarker.element.offsetTop,
+    };
+
     const id = this.store.selectedInstrumentId;
     this.track = this.song.Tracks[id];
     this.render();
+    
+    this.timeMarker.element.style.left = `${timeMarkerPositon.left}px`;
+    this.timeMarker.element.style.top = `${timeMarkerPositon.top}px`;
+
+    this.store.setSongTime(Number(currentMeasure.dataset.time));
   }
 
   init() {
