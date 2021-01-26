@@ -45,6 +45,7 @@ export default class Sidebar {
 
   renderFullScreenButton(parentElement: HTMLElement) {
     const fullScreenButton = renderElement(parentElement,'button',['sidebar__button-fullscreen']);
+    fullScreenButton.title = 'Full Screen Mode';
     fullScreenButton.innerHTML = SVG_SPRITE.FULL_SCREEN;
     fullScreenButton.addEventListener('click',this.openfullScreenMode);
   }
@@ -55,6 +56,7 @@ export default class Sidebar {
 
   renderInstrumentButton(parentElement: HTMLElement) {
     const instrumentButton = renderElement(parentElement,'button',['sidebar__button-instrument']);
+    instrumentButton.title = 'Choose instrument';
     instrumentButton.innerHTML = SVG_SPRITE.GUITAR;
     instrumentButton.addEventListener('click',this.renderInstrumentsBar);
   }
@@ -72,6 +74,7 @@ export default class Sidebar {
 
   renderPrintButton(parentElement: HTMLElement) {
     const printButton = renderElement(parentElement, 'button', ['sidebar__button-print']);
+    printButton.title = 'Print the document';
     printButton.innerHTML = SVG_SPRITE.PRINTER;
     printButton.addEventListener('click',this.onPrintClick);
   }
