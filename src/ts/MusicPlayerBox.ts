@@ -1,4 +1,5 @@
 import renderElement from "./helpers/renderElements";
+import { SVG_SPRITE } from "./helpers/svg_sprites";
 import Store, { EVENTS } from "./Store";
 
 export default class MusicPlayerBox{
@@ -7,6 +8,9 @@ export default class MusicPlayerBox{
     controlsContainer: HTMLElement;
     progressBarContainer: HTMLElement;
 
+    volumeBar: HTMLInputElement;
+    volumeLevel: HTMLElement;
+
     store: Store;  
     
     constructor(parentElement: HTMLElement, store: Store){
@@ -14,6 +18,8 @@ export default class MusicPlayerBox{
         this.store = store;
 
         this.playButtonClick = this.playButtonClick.bind(this);
+        this.changeVolume = this.changeVolume.bind(this);
+        this.mute = this.mute.bind(this);
     }
 
     render(){
@@ -63,9 +69,29 @@ export default class MusicPlayerBox{
     renderVolumeBar() {
         const container = renderElement(this.controlsContainer,'div',['player-box__volume-container']);
 
-        const level = renderElement(container,'div',['percentage'],'60%');
-        const bar = renderElement(container,'div',['progress-bar']);
+        this.volumeLevel = renderElement(container,'div',['percentage'],'50%');
+        this.volumeBar = renderElement(container,'input',['progress-bar']) as HTMLInputElement;
+        this.volumeBar.type = 'range';
+        this.volumeBar.min = '0';
+        this.volumeBar.max = '100';
+        this.volumeBar.addEventListener('change',this.changeVolume);
+
         const mute = renderElement(container,'div',['mute-icon']);
+        mute.innerHTML = SVG_SPRITE.MUTE;
+        mute.addEventListener('click',this.mute);
+    }
+
+    changeVolume() {
+        const value = this.volumeBar.value;
+        this.volumeLevel.textContent = `${value}%`;
+        this.store.changeVolume(+value);
+    }
+
+    mute(e: MouseEvent) {
+        const target = e.target as HTMLDivElement;
+        const element = target.closest('.mute-icon');
+        element.classList.toggle('active');
+        this.store.muteSong();
     }
 
     renderProgressBar() {

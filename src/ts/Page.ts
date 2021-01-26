@@ -2,6 +2,7 @@ import Header from './Header';
 import Footer from './Footer';
 import DisplayTab from './DisplayTab';
 import Store from './Store';
+import { SVG_SPRITE } from './helpers/svg_sprites';
 
 export default class Page {
   parentElement: HTMLElement;
@@ -38,8 +39,8 @@ export default class Page {
     this.mainElement.className = 'main__wrapper';
     wrapper.appendChild(this.mainElement);
 
-    //const id = '6000a2a200bb3e15e47d4d33';
-    const id = '6003406a0221632f7493cd3b';
+    const id = '6000a2a200bb3e15e47d4d33';
+    //const id = '6003406a0221632f7493cd3b';
     new DisplayTab(this.mainElement,this.store,id).render();
   }
 
