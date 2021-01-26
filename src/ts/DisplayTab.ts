@@ -74,7 +74,7 @@ export default class DisplayTab {
   }
 
   renderMusicPlayer() {
-    new MusicPlayerBox(this.container, this.store).render();
+    new MusicPlayerBox(this.container, this.store).init();
   }
 
   renderSideBar() {

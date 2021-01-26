@@ -6,14 +6,27 @@ export default class MusicPlayerBox{
     container: HTMLElement;
     controlsContainer: HTMLElement;
     progressBarContainer: HTMLElement;
+    playButton: HTMLElement;
 
     store: Store;  
     
     constructor(parentElement: HTMLElement, store: Store){
         this.parentElement = parentElement;
         this.store = store;
+        this.playButton;
 
         this.playButtonClick = this.playButtonClick.bind(this);
+        this.playButtonToggleIcon = this.playButtonToggleIcon.bind(this);
+    }
+
+    playButtonToggleIcon(){
+        this.playButton.classList.toggle('play');
+        this.playButton.classList.toggle('pause');
+    }
+
+    init() {
+        this.store.eventEmitter.addEvent(EVENTS.END_OF_SONG, this.playButtonToggleIcon);
+        this.render();
     }
 
     render(){
@@ -33,10 +46,10 @@ export default class MusicPlayerBox{
     renderPlayButtons() {
         const container = renderElement(this.controlsContainer,'div',['player-box__play-container']);
         renderElement(container,'div',['prev']);
-        const playButton = renderElement(container,'div',['play-pause','play']);
+        this.playButton = renderElement(container,'div',['play-pause','play']);
         renderElement(container,'div',['next']);
 
-        playButton.addEventListener('click',this.playButtonClick);
+        this.playButton.addEventListener('click',this.playButtonClick);
     }
 
     playButtonClick(e: MouseEvent) {
