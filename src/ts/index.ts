@@ -6,6 +6,7 @@ const store = new Store();
 store.init();
 
 const container = document.createElement('div');
+container.classList.add('wrapper');
 document.body.appendChild(container);
 new Page(container,store).render();
 

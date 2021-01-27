@@ -1,7 +1,7 @@
 .display__tab {
     // width: 70%;
     text-align: center;
-    padding: 10px;
+    // padding: 10px;
     display: flex;
     flex-direction: column;
     margin: 0 auto;
@@ -26,13 +26,13 @@
     // background-color: rgba(240, 230, 230, 0.3);
     &__tab {
         &-artist {
-            font-size: 32px;
+            font-size: 28px;
             color: $unnamed-color-f5f5f5;
             font-family: 'Segoe UI';
             font-weight: 300;
         }
         &-track {
-            font-size: 36px;
+            font-size: 32px;
             color: $unnamed-color-f5f5f5;
             font-family: 'Segoe UI';
             font-weight: bold;

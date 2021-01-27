@@ -7,6 +7,7 @@ import MusicPlayerBox from './MusicPlayerBox';
 import { Player } from 'tone';
 import { SVG_SPRITE } from './helpers/svg_sprites';
 import { Song } from '../models/TrackDisplayType';
+import { Midi } from '@tonejs/midi';
 
 export default class DisplayTab {
   parentElement: HTMLElement;
@@ -14,6 +15,11 @@ export default class DisplayTab {
   titleContainer: HTMLElement;
   contentContainer: HTMLElement;
   notesContent: HTMLElement;
+
+  songRenderer: RenderSong;
+  musicPlayerBox: MusicPlayerBox;
+  audioGenerator: AudioGenerator;
+  sidebar: Sidebar;
 
   store: Store;
   songId: string;
@@ -30,6 +36,12 @@ export default class DisplayTab {
 
   dispose() {
     this.parentElement.removeChild(this.container);
+    this.store.eventEmitter.removeEvent(EVENTS.FULL_SCREEN_BUTTON_CLICK,this.openFullScreenMode);
+
+    this.songRenderer.dispose();
+    this.musicPlayerBox.dispose();
+    this.audioGenerator.dispose();
+    this.sidebar.dispose();
   }
 
   async render() {
@@ -55,6 +67,7 @@ export default class DisplayTab {
 
   renderSongTitle() {
     this.titleContainer = renderElement(this.container, 'div', ['title']);
+    this.titleContainer.setAttribute('id', 'print_title');
     renderElement(this.titleContainer, 'div', ['title__tab-artist'], this.song.Author);
     const titleBox = renderElement(this.titleContainer, 'div', ['title__box']);
     renderElement(titleBox, 'div', ['title__tab-track'], this.song.Name);
@@ -70,19 +83,29 @@ export default class DisplayTab {
     this.notesContent = renderElement(this.contentContainer, 'div', ['tab__content']);
     this.notesContent.setAttribute('id', 'data-wrapper');
 
-    new RenderSong(this.notesContent,this.song,this.store).render();
+    this.songRenderer = new RenderSong(this.notesContent,this.song,this.store);
+    this.songRenderer.render();
   }
 
   renderMusicPlayer() {
-    new MusicPlayerBox(this.container, this.store).render();
+    const songDuration = this.getSongDuration();
+    this.musicPlayerBox = new MusicPlayerBox(this.container, this.store,songDuration);
+    this.musicPlayerBox.render();
+  }
+
+  getSongDuration() {
+    const midi = new Midi(this.midiData);
+    return midi.duration;
   }
 
   renderSideBar() {
-    new Sidebar(this.contentContainer, this.store,this.song.Tracks).render();
+    this.sidebar = new Sidebar(this.contentContainer, this.store,this.song.Tracks);
+    this.sidebar.render();
   }
 
   initAudio() {
-    new AudioGenerator(this.midiData,this.store).init();
+    this.audioGenerator = new AudioGenerator(this.midiData,this.store);
+    this.audioGenerator.init();
   }
 
   openFullScreenMode() {

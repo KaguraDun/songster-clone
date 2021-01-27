@@ -116,4 +116,8 @@ export default class renderTrack {
   render() {
     this.drawStaveMeasures();
   }
+
+  dispose() {
+    
+  }
 }

@@ -28,13 +28,11 @@ export default class SearchBar {
 
     this.dispose = this.dispose.bind(this);
     this.search = this.search.bind(this);
-    this.songClick = this.songClick.bind(this);
+    this.selectSong = this.selectSong.bind(this);
   }
 
   render() {
-    this.parentElement.style.filter = 'blur(0.3em)';
-
-    this.overlay = document.createElement('div');
+     this.overlay = document.createElement('div');
     this.overlay.classList.add('overlay');
     document.body.appendChild(this.overlay);
 
@@ -137,28 +135,24 @@ export default class SearchBar {
     this.songsContainer.classList.add('songs-container');
     this.wrapper.appendChild(this.songsContainer);
 
-    this.songsContainer.addEventListener('click', (event: MouseEvent) => {
-      const target = event.target as HTMLElement;
-      let div = target.closest('div');
-      if (!div) return;
-      this.store.setSongId(div.dataset.id);
-      setTimeout(this.dispose, 300);
-    });
-
     for (const song of songs) {
       const songElement = document.createElement('div');
       songElement.classList.add('song');
       songElement.dataset.id = song._id;
       this.songsContainer.appendChild(songElement);
-      songElement.addEventListener('click', this.songClick);
+      songElement.addEventListener('click', this.selectSong);
 
       this.renderSongImage(songElement);
       this.renderSongContent(song.name, song.author, songElement);
     }
   }
 
-  songClick(e: any) {
-    const id = e.target.dataset['id'];
+  selectSong(e: MouseEvent) {
+    const target = e.target as HTMLElement;
+    const element = target.closest('.song') as HTMLElement;
+    const id = element.dataset['id'];
+    this.store.selectSong(id);
+    setTimeout(this.dispose);
   }
 
   renderSongImage(parentElement: HTMLElement) {
