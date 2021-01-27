@@ -6,14 +6,15 @@ import { Instrument } from '@tonejs/midi/dist/Instrument';
 import { instruments } from './MidiInstruments';
 
 enum Volume {
-  SelectedTrack = 0,
-  DefaultTrack = -10,
+  SelectedTrack = -20,
+  DefaultTrack = -30,
 }
 
 export class AudioGenerator {
   private midi: Midi;
   private store: Store;
   private toneTracks: Tone.Part[];
+  private toneVolumes: Tone.Volume[];
   private currentTrackId: number;
   private timeOffset: number;
 
@@ -21,6 +22,7 @@ export class AudioGenerator {
     this.store = store;
     this.midi = new Midi(midiData);
     this.toneTracks = [];
+    this.toneVolumes = [];
     this.currentTrackId = 0;
     this.timeOffset = 0;
 
@@ -28,6 +30,8 @@ export class AudioGenerator {
     this.stopMusic = this.stopMusic.bind(this);
     this.setTimeOffset = this.setTimeOffset.bind(this);
     this.changeTrack = this.changeTrack.bind(this);
+    this.muteSong = this.muteSong.bind(this);
+    this.changeVolume = this.changeVolume.bind(this);
   }
 
   init() {
@@ -35,6 +39,8 @@ export class AudioGenerator {
     this.store.eventEmitter.addEvent(EVENTS.TIME_MARKER_POSITION_CHANGED, this.setTimeOffset);
     this.store.eventEmitter.addEvent(EVENTS.END_OF_SONG, this.stopMusic);
     this.store.eventEmitter.addEvent(EVENTS.SELECT_INSTRUMENT,this.changeTrack);
+    this.store.eventEmitter.addEvent(EVENTS.MUTE_SONG,this.muteSong);
+    this.store.eventEmitter.addEvent(EVENTS.CHANGE_VOLUME,this.changeVolume);
 
     Tone.Transport.bpm.value = this.midi.header.tempos[0].bpm;
     Tone.Transport.timeSignature = this.midi.header.timeSignatures[0].timeSignature;
@@ -54,12 +60,27 @@ export class AudioGenerator {
     if (!synth) return;
 
     const volume = new Tone.Volume(volumeLevel).toDestination();
+    this.toneVolumes.push(volume);
     synth.connect(volume);
 
     const part = new Tone.Part((time, note) => {
       synth.triggerAttackRelease(note.name, note.duration, time, note.velocity);
     }, track.notes);
     this.toneTracks.push(part);
+  }
+
+  muteSong() {
+    this.toneVolumes.forEach((volume) => {
+      volume.mute = this.store.isSongMuted;
+    })
+  }
+
+  async changeVolume() {
+    const value = this.store.volumeLevel;
+    this.toneVolumes.forEach((volume,id) => {
+      volume.volume.value = value * 0.8 - 70;
+      if (id === this.currentTrackId) volume.volume.value += 10;
+    });
   }
 
   changeTrack() {

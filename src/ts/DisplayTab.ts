@@ -7,6 +7,7 @@ import MusicPlayerBox from './MusicPlayerBox';
 import { Player } from 'tone';
 import { SVG_SPRITE } from './helpers/svg_sprites';
 import { Song } from '../models/TrackDisplayType';
+import { Midi } from '@tonejs/midi';
 
 export default class DisplayTab {
   parentElement: HTMLElement;
@@ -75,7 +76,13 @@ export default class DisplayTab {
   }
 
   renderMusicPlayer() {
-    new MusicPlayerBox(this.container, this.store).render();
+    const songDuration = this.getSongDuration();
+    new MusicPlayerBox(this.container, this.store,songDuration).render();
+  }
+
+  getSongDuration() {
+    const midi = new Midi(this.midiData);
+    return midi.duration;
   }
 
   renderSideBar() {
