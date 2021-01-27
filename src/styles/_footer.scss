@@ -1,11 +1,11 @@
 .footer {
     &__wrapper {
         background: $dark-background;
+        // margin-top: auto;
     }
     &__content {
         max-width: 85%;
         margin: 0 auto;
-        height: 75px;
         display: flex;
         flex-direction: row;
         justify-content: space-between;
