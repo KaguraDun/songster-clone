@@ -1,3 +1,4 @@
+import { TickSignal } from 'tone/build/esm/core/clock/TickSignal';
 import { Difficulty } from '../models/Difficulty';
 import { Genre } from '../models/Genre';
 import renderElement from './helpers/renderElements';
@@ -15,6 +16,7 @@ export default class AddForm {
   dropArea: HTMLElement;
   text: HTMLElement;
   fileName: string;
+  file: File;
 
   constructor(parentElement: HTMLElement) {
     this.parentElement = parentElement;
@@ -27,6 +29,7 @@ export default class AddForm {
     this.dropArea;
     this.text;
     this.fileName;
+    this.file;
   }
 
   renderInput(parentElement: HTMLElement, name: string, labelText: string, type?: string) {
@@ -73,8 +76,6 @@ export default class AddForm {
     });
 
     const container = renderElement(form, 'div', ['options-container']);
-
-    // this.instrumentInput = this.renderOptionSelectAndGet(InstrumentType, 'Instrument', container);
     this.genreInput = this.renderOptionSelectAndGet(Genre, 'Genre', container);
     this.difficultyInput = this.renderOptionSelectAndGet(Difficulty, 'Difficulty', container);
 
@@ -129,45 +130,48 @@ export default class AddForm {
     const file = this.renderInput(this.dropArea, 'input', 'Upload the file', 'file');
     file.classList.add('drop-area__input');
 
-    document.querySelectorAll('.drop-area__input').forEach((inputElement) => {
-      const dropAreaElement = inputElement.closest('.drop-area');
+    // document.querySelectorAll('.drop-area__input').forEach((inputElement) => {
+    const dropAreaElement = file.closest('.drop-area');
 
-      dropAreaElement.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        dropAreaElement.classList.add('drop-area__over');
-      });
+    dropAreaElement.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropAreaElement.classList.add('drop-area__over');
+    });
 
-      ['dragleave', 'dragend'].forEach((type) => {
-        dropAreaElement.addEventListener(type, (e) => {
-          dropAreaElement.classList.remove('drop-area__over');
-        });
-      });
-
-      dropAreaElement.addEventListener('drop', (e: DragEvent) => {
-        this.dropHandler(e);
-        this.changeDropAreaView();
+    ['dragleave', 'dragend'].forEach((type) => {
+      dropAreaElement.addEventListener(type, (e) => {
+        dropAreaElement.classList.remove('drop-area__over');
       });
     });
+
+    dropAreaElement.addEventListener('drop', (e: DragEvent) => {
+      this.dropHandler(e);
+      // this.changeDropAreaView();
+    });
+    // });
   }
 
-  changeDropAreaView() {
-    this.dropArea.innerHTML = SVG_SPRITE.DONE;
-    this.text = renderElement(this.dropArea, 'div', [], this.fileName);
-  }
+  // changeDropAreaView() {
+  //   this.dropArea.innerHTML = SVG_SPRITE.DONE;
+  //   this.text = renderElement(this.dropArea, 'div', [], this.fileName);
+  // }
 
   dropHandler(ev: DragEvent) {
-    console.log('File(s) dropped');
+    // console.log('File(s) dropped');
     ev.preventDefault();
-
+    // console.log(ev.dataTransfer.items);
     if (ev.dataTransfer.items) {
       // Use DataTransferItemList interface to access the file(s)
       for (var i = 0; i < ev.dataTransfer.items.length; i++) {
         // If dropped items aren't files, reject them
+        // console.log(ev.dataTransfer.items[i].kind);
         if (ev.dataTransfer.items[i].kind === 'file') {
-          var file = ev.dataTransfer.items[i].getAsFile();
-          this.fileName = `${file.name}`;
+          this.file = ev.dataTransfer.items[i].getAsFile();
+          // console.log(this.file);
+          this.fileName = `${this.file.name}`;
           // console.log('... file[' + i + '].name = ' + file.name);
-          console.log(this.fileName);
+          // console.log(this.fileName);
+          this.upload(this.file);
         }
       }
     } else {
@@ -178,6 +182,27 @@ export default class AddForm {
         console.log(this.fileName);
       }
     }
+  }
+  upload(file: File) {
+    var xhr = new XMLHttpRequest();
+
+    // обработчик для отправки
+    xhr.upload.onprogress = function (event) {
+      console.log(event.loaded + ' / ' + event.total);
+    };
+
+    // обработчики успеха и ошибки
+    // если status == 200, то это успех, иначе ошибка
+    xhr.onload = xhr.onerror = function () {
+      if (this.status == 200) {
+        console.log('success');
+      } else {
+        console.log('error ' + this.status);
+      }
+    };
+
+    xhr.open('POST', 'upload', true);
+    xhr.send(file);
   }
 
   activeArea() {

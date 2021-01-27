@@ -1,13 +1,27 @@
 main {
     background: $dark-background;
-    background-position: center;
-    background-size: cover;
+    // background-position: center;
+    // background-size: cover;
+    flex-grow: 1;
 }
 
 .main__wrapper {
     display: flex;
     flex-direction: row-reverse;
-    max-width: 95%;
+    // max-width: 95%;
     margin: 0 auto;
-    //height: calc(100vh - 155px);
+    // height: calc(100vh - 155px);
+}
+
+.wrapper{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.header,
+.footer{
+    flex-shrink:0;
 }
