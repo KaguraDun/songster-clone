@@ -32,9 +32,7 @@ export default class SearchBar {
   }
 
   render() {
-    this.parentElement.style.filter = 'blur(0.3em)';
-
-    this.overlay = document.createElement('div');
+     this.overlay = document.createElement('div');
     this.overlay.classList.add('overlay');
     document.body.appendChild(this.overlay);
 
