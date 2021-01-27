@@ -11,18 +11,32 @@ export default class MusicPlayerBox{
     volumeBar: HTMLInputElement;
     volumeLevel: HTMLElement;
 
-    store: Store;  
+    intervalID: number;
+    songTimeElement: HTMLElement;
+    songTimeDate: Date;
+    timeProgressBarWidth: number;
+    timeProgressBar: HTMLElement;
+    timeSlider: HTMLElement;
+
+    store: Store;
+    songDurationSeconds: number;
     
-    constructor(parentElement: HTMLElement, store: Store){
+    constructor(parentElement: HTMLElement, store: Store,songDuration: number){
         this.parentElement = parentElement;
         this.store = store;
+        this.songDurationSeconds = songDuration;
+        this.songTimeDate = new Date(0);
 
         this.playButtonClick = this.playButtonClick.bind(this);
         this.changeVolume = this.changeVolume.bind(this);
         this.mute = this.mute.bind(this);
+        this.showHoverLocationTime = this.showHoverLocationTime.bind(this);
+        this.startOrStopSlider = this.startOrStopSlider.bind(this);
     }
 
     render(){
+        this.store.eventEmitter.addEvent(EVENTS.PLAY_BUTTON_CLICK,this.startOrStopSlider);
+
         this.container = renderElement(this.parentElement,'div',['player-box__container']);
 
         this.renderControls();
@@ -97,10 +111,63 @@ export default class MusicPlayerBox{
     renderProgressBar() {
         this.progressBarContainer = renderElement(this.container,'div',['player-box__progress']);
 
-        const time = renderElement(this.progressBarContainer,'div',['time'],'2.42');
-        const bar = renderElement(this.progressBarContainer,'div',['progress-bar']);
+        this.songTimeElement = renderElement(this.progressBarContainer,'div',['time'],'0:00');
+
+        this.timeProgressBar = renderElement(this.progressBarContainer,'div',['progress-bar']);
+        this.timeProgressBar.addEventListener('mouseenter',this.showHoverLocationTime);
+        this.timeProgressBarWidth = this.timeProgressBar.offsetWidth;
+
+        this.timeSlider = renderElement(this.timeProgressBar,'div',['slider']);
+        this.timeSlider.style.width = '0px';
+
         const repeat = renderElement(this.progressBarContainer,'div',['repeat']);
     }
+
+    showHoverLocationTime(e: MouseEvent) {
+        const percentage = e.offsetX / this.timeProgressBarWidth;
+        const timeInSeconds = this.songDurationSeconds * percentage;
+        const date = new Date(timeInSeconds * 1000);
+
+        const indicator = renderElement(this.timeProgressBar,'div',['time-indicator']);
+        indicator.style.left = `${e.offsetX}px`;
+        indicator.textContent = `${date.getMinutes()}:${this.addZero(date.getSeconds())}`;
+        this.timeProgressBar.addEventListener('mouseleave',() => {
+            this.timeProgressBar.removeChild(indicator);
+        });
+    }
+
+    addZero(n: number) {
+        return (parseInt(n.toString(), 10) < 10 ? '0' : '') + n;
+    }
+
+    startOrStopSlider() {
+        if(this.store.playMusic) {
+            this.runSlider();
+        }
+        else {
+            this.stopSlider();
+        }
+    }
+
+    runSlider() {
+        const interval = 1000;
+        const delta = this.timeProgressBarWidth / this.songDurationSeconds * (interval/1000);
+
+        let width = +this.timeSlider.style.width.slice(0,-2);
+        this.intervalID = +setInterval(() => {
+            this.songTimeDate.setMilliseconds(interval);
+            this.songTimeElement.textContent = `${this.songTimeDate.getMinutes()}:${this.addZero(this.songTimeDate.getSeconds())}`;
+
+            width += delta;
+            this.timeSlider.style.width = `${width}px`;
+        },interval);
+    }
+
+    stopSlider() {
+        clearInterval(this.intervalID);
+    }
+
+
 }
 
 

@@ -6,8 +6,8 @@ import { Instrument } from '@tonejs/midi/dist/Instrument';
 import { instruments } from './MidiInstruments';
 
 enum Volume {
-  SelectedTrack = 10,
-  DefaultTrack = 0,
+  SelectedTrack = -20,
+  DefaultTrack = -30,
 }
 
 export class AudioGenerator {
