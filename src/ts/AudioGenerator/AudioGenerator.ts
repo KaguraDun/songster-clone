@@ -60,10 +60,10 @@ export class AudioGenerator {
   }
 
   initTracks() {
-    this.midi.tracks.forEach((track,id) => {
+    this.midi.tracks.forEach((track, id) => {
       const volume = id === this.currentTrackId ? +Volume.SelectedTrack : +Volume.DefaultTrack;
-      this.initTonePart(track,volume);
-    })
+      this.initTonePart(track, volume);
+    });
   }
 
   initTonePart(track: Track, volumeLevel: number) {
@@ -95,12 +95,11 @@ export class AudioGenerator {
   }
 
   changeTrack() {
-    this.timeOffset = Tone.now();
     Tone.Transport.cancel();
     this.setCurrentTrack(this.store.selectedInstrumentId);
     this.toneTracks = [];
     this.initTracks();
-    if(this.store.playMusic) {
+    if (this.store.playMusic) {
       this.start();
     }
   }
@@ -122,14 +121,13 @@ export class AudioGenerator {
 
   start() {
     this.toneTracks.forEach((part) => {
-      part.start(undefined,this.timeOffset);
+      part.start(undefined, this.timeOffset);
     });
-    Tone.Transport.start(undefined,this.timeOffset);
+    Tone.Transport.start(undefined, this.timeOffset);
     Tone.start();
   }
 
   pause() {
-    this.timeOffset = Tone.now();
     Tone.Transport.pause();
   }
 

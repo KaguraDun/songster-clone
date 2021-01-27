@@ -7,6 +7,7 @@ export default class MusicPlayerBox{
     container: HTMLElement;
     controlsContainer: HTMLElement;
     progressBarContainer: HTMLElement;
+    playButton: HTMLElement;
 
     playButton: HTMLElement;
 
