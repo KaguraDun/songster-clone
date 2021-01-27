@@ -116,7 +116,8 @@ export class AudioGenerator {
 
   stopMusic() {
     this.timeOffset = 0;
-    Tone.Transport.stop();
+    Tone.Transport.cancel();
+    this.initTracks();
   }
 
   start() {
@@ -138,7 +139,7 @@ export class AudioGenerator {
 
     if (this.store.playMusic) {
       Tone.Transport.pause();
-      this.play();
+      this.start();
     }
   }
 

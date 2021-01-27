@@ -9,8 +9,6 @@ export default class MusicPlayerBox{
     progressBarContainer: HTMLElement;
     playButton: HTMLElement;
 
-    playButton: HTMLElement;
-
     volumeBar: HTMLInputElement;
     volumeLevel: HTMLElement;
 
