@@ -46,7 +46,7 @@ export default class DisplayTab {
   }
 
   async fetchSong() {
-    const responce = await fetch(`http://localhost:3000/songs/id/?id=6000a2a200bb3e15e47d4d33`);
+    const responce = await fetch(`http://localhost:3000/songs/id/?id=${this.songId}`);
     const { midiData, converted } = await responce.json();
 
     this.song = converted;
