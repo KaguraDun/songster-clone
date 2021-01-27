@@ -1,7 +1,7 @@
 import Header from './Header';
 import Footer from './Footer';
 import DisplayTab from './DisplayTab';
-import Store from './Store';
+import Store, { EVENTS } from './Store';
 import { SVG_SPRITE } from './helpers/svg_sprites';
 
 export default class Page {
@@ -10,14 +10,19 @@ export default class Page {
   mainElement: HTMLElement;
   footerElement: HTMLElement;
 
+  songContent: DisplayTab;
   store: Store;
 
   constructor(parentElement: HTMLElement, store: Store) {
     this.parentElement = parentElement;
     this.store = store;
+
+    this.renderSong = this.renderSong.bind(this);
   }
 
   render() {
+    this.store.eventEmitter.addEvent(EVENTS.SELECT_SONG,this.renderSong);
+
     this.renderHeader();
     this.renderMain();
     this.renderFooter();
@@ -39,8 +44,15 @@ export default class Page {
     this.mainElement.className = 'main__wrapper';
     wrapper.appendChild(this.mainElement);
 
-    const id = '6000a2a200bb3e15e47d4d33';
-    new DisplayTab(this.mainElement,this.store,id).render();
+    this.renderSong();
+  }
+
+  renderSong() {
+    if(this.songContent) this.songContent.dispose();
+
+    const id = this.store.selectedSongId;
+    this.songContent = new DisplayTab(this.mainElement,this.store,id);
+    this.songContent.render();
   }
 
   renderFooter() {

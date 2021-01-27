@@ -34,6 +34,17 @@ export class AudioGenerator {
     this.changeVolume = this.changeVolume.bind(this);
   }
 
+  dispose() {
+    Tone.Transport.cancel();
+
+    this.store.eventEmitter.removeEvent(EVENTS.PLAY_BUTTON_CLICK, this.play);
+    this.store.eventEmitter.removeEvent(EVENTS.TIME_MARKER_POSITION_CHANGED, this.setTimeOffset);
+    this.store.eventEmitter.removeEvent(EVENTS.END_OF_SONG, this.stopMusic);
+    this.store.eventEmitter.removeEvent(EVENTS.SELECT_INSTRUMENT,this.changeTrack);
+    this.store.eventEmitter.removeEvent(EVENTS.MUTE_SONG,this.muteSong);
+    this.store.eventEmitter.removeEvent(EVENTS.CHANGE_VOLUME,this.changeVolume);
+  }
+
   init() {
     this.store.eventEmitter.addEvent(EVENTS.PLAY_BUTTON_CLICK, this.play);
     this.store.eventEmitter.addEvent(EVENTS.TIME_MARKER_POSITION_CHANGED, this.setTimeOffset);

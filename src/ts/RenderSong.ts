@@ -3,6 +3,7 @@ import { Track, Song } from '../models/TrackDisplayType';
 import Store, { EVENTS } from './Store';
 import { SECTION_SIZE } from '../models/Constants';
 import RenderTrack from './RenderTrack';
+import renderTrack from './RenderTrack';
 
 interface TimeMarker {
   element: HTMLDivElement;
@@ -32,6 +33,7 @@ export default class RenderSong {
   buttonChangeTrack: HTMLButtonElement;
   trackList: HTMLUListElement;
   track: Track;
+  trackRenderer: renderTrack;
 
   constructor(parentElement: HTMLElement, song: Song, store: Store) {
     this.parentElement = parentElement;
@@ -208,6 +210,11 @@ export default class RenderSong {
     });
   }
 
+  dispose() {
+    this.store.eventEmitter.removeEvent(EVENTS.SELECT_INSTRUMENT,this.changeTrack);
+    this.trackRenderer.dispose();
+  }
+
   render() {
     this.store.eventEmitter.addEvent(EVENTS.SELECT_INSTRUMENT,this.changeTrack);
     // console.log(this.song);
@@ -230,14 +237,14 @@ export default class RenderSong {
 
     this.measureDuration = (4 * quarterDuration * this.track.Size.Count) / this.track.Size.Per;
 
-    const renderTrack = new RenderTrack(
+    this.trackRenderer = new RenderTrack(
       this.track.Measures,
       timeSignature,
       this.track.Clef,
       this.sheetMusicRender,
     );
 
-    renderTrack.render();
+    this.trackRenderer.render();
 
     this.timeMarker.element = this.addTimeMarker(this.sheetMusicRender);
     this.timeMarker.speed = SECTION_SIZE.width / this.measureDuration;

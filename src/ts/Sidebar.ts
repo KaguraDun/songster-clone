@@ -25,6 +25,10 @@ export default class Sidebar {
     this.onPrintClick = this.onPrintClick.bind(this);
   }
 
+  dispose() {
+    
+  }
+
   render() {
     this.container = renderElement(this.parentElement, 'section', ['sidebar']);
     this.renderFunctionButtons();

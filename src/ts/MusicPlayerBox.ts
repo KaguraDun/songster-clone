@@ -8,6 +8,8 @@ export default class MusicPlayerBox{
     controlsContainer: HTMLElement;
     progressBarContainer: HTMLElement;
 
+    playButton: HTMLElement;
+
     volumeBar: HTMLInputElement;
     volumeLevel: HTMLElement;
 
@@ -32,15 +34,22 @@ export default class MusicPlayerBox{
         this.mute = this.mute.bind(this);
         this.showHoverLocationTime = this.showHoverLocationTime.bind(this);
         this.startOrStopSlider = this.startOrStopSlider.bind(this);
+        this.onSongEnded = this.onSongEnded.bind(this);
     }
 
     render(){
         this.store.eventEmitter.addEvent(EVENTS.PLAY_BUTTON_CLICK,this.startOrStopSlider);
+        this.store.eventEmitter.addEvent(EVENTS.END_OF_SONG,this.onSongEnded);
 
         this.container = renderElement(this.parentElement,'div',['player-box__container']);
 
         this.renderControls();
         this.renderProgressBar();
+    }
+
+    dispose() {
+        this.store.eventEmitter.removeEvent(EVENTS.PLAY_BUTTON_CLICK,this.startOrStopSlider);
+        this.store.eventEmitter.removeEvent(EVENTS.END_OF_SONG,this.onSongEnded);
     }
 
     renderControls() {
@@ -53,10 +62,10 @@ export default class MusicPlayerBox{
     renderPlayButtons() {
         const container = renderElement(this.controlsContainer,'div',['player-box__play-container']);
         renderElement(container,'div',['prev']);
-        const playButton = renderElement(container,'div',['play-pause','play']);
+        this.playButton = renderElement(container,'div',['play-pause','play']);
         renderElement(container,'div',['next']);
 
-        playButton.addEventListener('click',this.playButtonClick);
+        this.playButton.addEventListener('click',this.playButtonClick);
     }
 
     playButtonClick(e: MouseEvent) {
@@ -165,6 +174,15 @@ export default class MusicPlayerBox{
 
     stopSlider() {
         clearInterval(this.intervalID);
+    }
+
+    onSongEnded() {
+        this.stopSlider();
+        this.playButton.classList.remove('pause');
+        this.playButton.classList.add('play');
+        this.songTimeDate = new Date(0);
+        this.timeSlider.style.width = '0px';
+        this.songTimeElement.textContent = '0:00';
     }
 
 

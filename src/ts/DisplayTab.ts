@@ -16,6 +16,11 @@ export default class DisplayTab {
   contentContainer: HTMLElement;
   notesContent: HTMLElement;
 
+  songRenderer: RenderSong;
+  musicPlayerBox: MusicPlayerBox;
+  audioGenerator: AudioGenerator;
+  sidebar: Sidebar;
+
   store: Store;
   songId: string;
   song: Song;
@@ -31,6 +36,12 @@ export default class DisplayTab {
 
   dispose() {
     this.parentElement.removeChild(this.container);
+    this.store.eventEmitter.removeEvent(EVENTS.FULL_SCREEN_BUTTON_CLICK,this.openFullScreenMode);
+
+    this.songRenderer.dispose();
+    this.musicPlayerBox.dispose();
+    this.audioGenerator.dispose();
+    this.sidebar.dispose();
   }
 
   async render() {
@@ -72,12 +83,14 @@ export default class DisplayTab {
     this.notesContent = renderElement(this.contentContainer, 'div', ['tab__content']);
     this.notesContent.setAttribute('id', 'data-wrapper');
 
-    new RenderSong(this.notesContent,this.song,this.store).render();
+    this.songRenderer = new RenderSong(this.notesContent,this.song,this.store);
+    this.songRenderer.render();
   }
 
   renderMusicPlayer() {
     const songDuration = this.getSongDuration();
-    new MusicPlayerBox(this.container, this.store,songDuration).render();
+    this.musicPlayerBox = new MusicPlayerBox(this.container, this.store,songDuration);
+    this.musicPlayerBox.render();
   }
 
   getSongDuration() {
@@ -86,11 +99,13 @@ export default class DisplayTab {
   }
 
   renderSideBar() {
-    new Sidebar(this.contentContainer, this.store,this.song.Tracks).render();
+    this.sidebar = new Sidebar(this.contentContainer, this.store,this.song.Tracks);
+    this.sidebar.render();
   }
 
   initAudio() {
-    new AudioGenerator(this.midiData,this.store).init();
+    this.audioGenerator = new AudioGenerator(this.midiData,this.store);
+    this.audioGenerator.init();
   }
 
   openFullScreenMode() {

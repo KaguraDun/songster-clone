@@ -22,7 +22,7 @@ export default class Store {
   isSongMuted: boolean = false;
   volumeLevel: number = 50;
 
-  selectedSongId: string;
+  selectedSongId: string = '6000a2a200bb3e15e47d4d33';
   selectedInstrumentId: number = 0;
   tracksArray: any;
 
@@ -30,7 +30,6 @@ export default class Store {
   constructor() {
     this.songTime;
     this.eventEmitter = new EventEmitter();
-    this.playMusic;
   }
 
   init() {}
@@ -50,14 +49,10 @@ export default class Store {
     this.playMusic = false;
     this.eventEmitter.emit(EVENTS.END_OF_SONG);
   }
-  setSongId(id: string) {
-    this.selectedSongId = id;
-    this.eventEmitter.emit(EVENTS.SELECT_SONG);
-  }
 
-  getSongArray(id:string, tracks: any){
+  selectSong(id: string) {
+    this.playMusic = false;
     this.selectedSongId = id;
-    this.tracksArray =  tracks;
     this.eventEmitter.emit(EVENTS.SELECT_SONG);
   }
 
