@@ -16,7 +16,7 @@ export enum EVENTS {
 
 export default class Store {
   eventEmitter: EventEmitter;
-  songTime: number;
+  songTimeMiliSeconds: number;
   playMusic: boolean = false;
 
   isSongMuted: boolean = false;
@@ -28,14 +28,14 @@ export default class Store {
 
 
   constructor() {
-    this.songTime;
+    this.songTimeMiliSeconds;
     this.eventEmitter = new EventEmitter();
   }
 
   init() {}
 
   setSongTime(time: number) {
-    this.songTime = time;
+    this.songTimeMiliSeconds = time;
     this.eventEmitter.emit(EVENTS.TIME_MARKER_POSITION_CHANGED);
   }
 

@@ -34,11 +34,13 @@ export default class MusicPlayerBox{
         this.showHoverLocationTime = this.showHoverLocationTime.bind(this);
         this.startOrStopSlider = this.startOrStopSlider.bind(this);
         this.onSongEnded = this.onSongEnded.bind(this);
+        this.onTimeMarkerPositionChanged = this.onTimeMarkerPositionChanged.bind(this);
     }
 
     render(){
         this.store.eventEmitter.addEvent(EVENTS.PLAY_BUTTON_CLICK,this.startOrStopSlider);
         this.store.eventEmitter.addEvent(EVENTS.END_OF_SONG,this.onSongEnded);
+        this.store.eventEmitter.addEvent(EVENTS.TIME_MARKER_POSITION_CHANGED,this.onTimeMarkerPositionChanged);
 
         this.container = renderElement(this.parentElement,'div',['player-box__container']);
 
@@ -49,6 +51,7 @@ export default class MusicPlayerBox{
     dispose() {
         this.store.eventEmitter.removeEvent(EVENTS.PLAY_BUTTON_CLICK,this.startOrStopSlider);
         this.store.eventEmitter.removeEvent(EVENTS.END_OF_SONG,this.onSongEnded);
+        this.store.eventEmitter.removeEvent(EVENTS.TIME_MARKER_POSITION_CHANGED,this.onTimeMarkerPositionChanged);
     }
 
     renderControls() {
@@ -184,7 +187,17 @@ export default class MusicPlayerBox{
         this.songTimeElement.textContent = '0:00';
     }
 
-
+    onTimeMarkerPositionChanged() {
+        const percentage = this.store.songTimeMiliSeconds/1000 / this.songDurationSeconds;
+        const width = this.timeProgressBarWidth * percentage;
+        this.timeSlider.style.width = `${width}px`;
+        this.songTimeDate = new Date(this.store.songTimeMiliSeconds);
+        this.songTimeElement.textContent = `${this.songTimeDate.getMinutes()}:${this.addZero(this.songTimeDate.getSeconds())}`;
+        if(this.store.playMusic) {
+            this.stopSlider();
+            this.runSlider();
+        }
+    }
 }
 
 

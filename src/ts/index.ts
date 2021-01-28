@@ -12,5 +12,5 @@ new Page(container,store).render();
 
 
 store.eventEmitter.addEvent(EVENTS.TIME_MARKER_POSITION_CHANGED, () => {
-  console.log(store.songTime);
+  console.log(store.songTimeMiliSeconds);
 });

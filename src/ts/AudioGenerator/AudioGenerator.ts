@@ -5,9 +5,14 @@ import SampleLibrary from '../../../tonejs-instruments/Tonejs-Instruments';
 import { Instrument } from '@tonejs/midi/dist/Instrument';
 import { instruments } from './MidiInstruments';
 
-enum Volume {
-  SelectedTrack = -20,
-  DefaultTrack = -30,
+// enum Volume {
+//   SelectedTrack = -20,
+//   DefaultTrack = -30,
+// }
+
+let Volume = {
+  SelectedTrack: -20,
+  DefaultTrack: -30,
 }
 
 export class AudioGenerator {
@@ -21,8 +26,7 @@ export class AudioGenerator {
   constructor(midiData: ArrayBuffer, store: Store) {
     this.store = store;
     this.midi = new Midi(midiData);
-    this.toneTracks = [];
-    this.toneVolumes = [];
+
     this.currentTrackId = 0;
     this.timeOffset = 0;
 
@@ -57,13 +61,20 @@ export class AudioGenerator {
     Tone.Transport.timeSignature = this.midi.header.timeSignatures[0].timeSignature;
 
     this.initTracks();
+    Tone.start();
   }
 
   initTracks() {
+    this.resetTracks();
     this.midi.tracks.forEach((track, id) => {
-      const volume = id === this.currentTrackId ? +Volume.SelectedTrack : +Volume.DefaultTrack;
+      const volume = id === this.currentTrackId ? Volume.SelectedTrack : Volume.DefaultTrack;
       this.initTonePart(track, volume);
     });
+  }
+
+  resetTracks() {
+    this.toneTracks = [];
+    this.toneVolumes = [];
   }
 
   initTonePart(track: Track, volumeLevel: number) {
@@ -75,6 +86,7 @@ export class AudioGenerator {
     synth.connect(volume);
 
     const part = new Tone.Part((time, note) => {
+      console.log(note.time,time);
       synth.triggerAttackRelease(note.name, note.duration, time, note.velocity);
     }, track.notes);
     this.toneTracks.push(part);
@@ -87,17 +99,23 @@ export class AudioGenerator {
   }
 
   async changeVolume() {
-    const value = this.store.volumeLevel;
+    const value = this.getVolumeLevel(this.store.volumeLevel);
+    Volume.DefaultTrack = value;
+    Volume.SelectedTrack = value + 10;
     this.toneVolumes.forEach((volume,id) => {
-      volume.volume.value = value * 0.8 - 70;
+      volume.volume.value = value;
       if (id === this.currentTrackId) volume.volume.value += 10;
     });
+  }
+
+  getVolumeLevel(value: number) {
+    return value * 0.8 - 70;
   }
 
   changeTrack() {
     Tone.Transport.cancel();
     this.setCurrentTrack(this.store.selectedInstrumentId);
-    this.toneTracks = [];
+    this.resetTracks();
     this.initTracks();
     if (this.store.playMusic) {
       this.start();
@@ -105,8 +123,6 @@ export class AudioGenerator {
   }
 
   play() {
-    console.log(this.store.playMusic, 'offset', this.timeOffset);
-
     if (this.store.playMusic) {
       this.start();
     } else {
@@ -117,15 +133,15 @@ export class AudioGenerator {
   stopMusic() {
     this.timeOffset = 0;
     Tone.Transport.cancel();
+    Tone.Transport.stop();
     this.initTracks();
   }
 
   start() {
     this.toneTracks.forEach((part) => {
-      part.start(undefined, this.timeOffset);
+      part.start();
     });
     Tone.Transport.start(undefined, this.timeOffset);
-    Tone.start();
   }
 
   pause() {
@@ -135,7 +151,7 @@ export class AudioGenerator {
   setTimeOffset() {
     const second: number = 1000;
 
-    this.timeOffset = this.store.songTime / second;
+    this.timeOffset = this.store.songTimeMiliSeconds / second;
 
     if (this.store.playMusic) {
       Tone.Transport.pause();
