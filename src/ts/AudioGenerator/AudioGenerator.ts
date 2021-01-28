@@ -86,7 +86,6 @@ export class AudioGenerator {
     synth.connect(volume);
 
     const part = new Tone.Part((time, note) => {
-      console.log(note.time,time);
       synth.triggerAttackRelease(note.name, note.duration, time, note.velocity);
     }, track.notes);
     this.toneTracks.push(part);
@@ -112,14 +111,9 @@ export class AudioGenerator {
     return value * 0.8 - 70;
   }
 
-  changeTrack() {
-    Tone.Transport.cancel();
+  async changeTrack() {
     this.setCurrentTrack(this.store.selectedInstrumentId);
-    this.resetTracks();
-    this.initTracks();
-    if (this.store.playMusic) {
-      this.start();
-    }
+    await this.changeVolume();
   }
 
   play() {

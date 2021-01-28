@@ -8,6 +8,7 @@ import { Player } from 'tone';
 import { SVG_SPRITE } from './helpers/svg_sprites';
 import { Song } from '../models/TrackDisplayType';
 import { Midi } from '@tonejs/midi';
+import { serverUrl } from '../models/Constants';
 
 export default class DisplayTab {
   parentElement: HTMLElement;
@@ -58,7 +59,7 @@ export default class DisplayTab {
   }
 
   async fetchSong() {
-    const responce = await fetch(`http://localhost:3000/songs/id/?id=${this.songId}`);
+    const responce = await fetch(`${serverUrl}/songs/id/?id=${this.songId}`);
     const { midiData, converted } = await responce.json();
 
     this.song = converted;
