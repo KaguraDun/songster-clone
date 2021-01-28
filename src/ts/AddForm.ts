@@ -6,6 +6,13 @@ import { SVG_SPRITE } from './helpers/svg_sprites';
 
 const SHOW = '--show';
 
+interface FormUploadMedia {
+  element: HTMLFormElement;
+  name: HTMLInputElement;
+  author: HTMLInputElement;
+  genreInput: HTMLSelectElement;
+}
+
 export default class AddForm {
   parentElement: HTMLElement;
   formContainer: HTMLElement;
@@ -17,6 +24,8 @@ export default class AddForm {
   text: HTMLElement;
   fileName: string;
   file: File;
+  formSendFile: HTMLFormElement;
+  inputUpload: HTMLInputElement;
 
   constructor(parentElement: HTMLElement) {
     this.parentElement = parentElement;
@@ -30,6 +39,8 @@ export default class AddForm {
     this.text;
     this.fileName;
     this.file;
+    this.formSendFile;
+    this.inputUpload;
   }
 
   renderInput(parentElement: HTMLElement, name: string, labelText: string, type?: string) {
@@ -45,59 +56,87 @@ export default class AddForm {
   render() {
     this.formContainer = renderElement(this.parentElement, 'div', ['wrapper-user__form-container']);
     this.formOverlay = renderElement(this.parentElement, 'div', ['wrapper-user__form-overlay']);
-
     this.formOverlay.addEventListener('click', this.hideForm);
 
-    const buttonAdd = renderElement(this.parentElement, 'button', ['wrapper-user-login']);
-    buttonAdd.addEventListener('click', this.renderForm);
-    buttonAdd.title = 'Add song';
-
-    buttonAdd.innerHTML = SVG_SPRITE.ADD;
+    const formUpload = this.renderForm();
+    formUpload.element.addEventListener('submit', (event: Event) => {
+      this.handleFileUpload(formUpload, event);
+    });
   }
 
   renderForm() {
     this.formOverlay.classList.add(SHOW);
     this.formContainer.classList.add(SHOW);
     this.formContainer.innerHTML = '';
-    const form = renderElement(this.formContainer, 'form', ['form-add']) as HTMLFormElement;
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-    });
+    const formSendFile = renderElement(this.formContainer, 'form', ['form-add']) as HTMLFormElement;
 
-    const name = this.renderInput(form, 'name', 'Song Title', 'text');
+    const name = this.renderInput(formSendFile, 'name', 'Song Title', 'text') as HTMLInputElement;
     name.setAttribute('value', 'Enter Song title...');
 
-    const nameError = renderElement(form, 'div', ['form-add__name-error']);
+    const nameError = renderElement(formSendFile, 'div', ['form-add__name-error']);
     nameError.textContent = '';
 
     name.addEventListener('focus', () => {
       name.removeAttribute('value');
     });
 
-    const container = renderElement(form, 'div', ['options-container']);
-    this.genreInput = this.renderOptionSelectAndGet(Genre, 'Genre', container);
-    this.difficultyInput = this.renderOptionSelectAndGet(Difficulty, 'Difficulty', container);
+    const optionsContainer = renderElement(formSendFile, 'div', ['options-container']);
+    const genreInput = this.renderOptionSelectAndGet(Genre, 'Genre', optionsContainer);
+    this.difficultyInput = this.renderOptionSelectAndGet(
+      Difficulty,
+      'Difficulty',
+      optionsContainer,
+    );
 
-    const authorTitle = renderElement(form, 'div', ['author__title']);
-    authorTitle.innerText = 'Author';
-    const author = renderElement(form, 'textarea', ['input__author']);
+    const authorTitle = renderElement(formSendFile, 'div', ['author__title'], 'Author');
+    const author = renderElement(
+      formSendFile,
+      'textarea',
+      ['input__author'],
+      'Enter the author...',
+    ) as HTMLInputElement;
 
     author.setAttribute('value', 'Enter the author...');
-    author.innerText = 'Enter the author...';
     author.addEventListener('focus', () => {
       author.textContent = '';
     });
-    const authorError = renderElement(form, 'div', ['form-add__name-error']);
+
+    const authorError = renderElement(formSendFile, 'div', ['form-add__name-error']);
     authorError.textContent = '';
 
-    this.renderUploadForm(form);
+    this.renderUploadForm(formSendFile);
 
-    const buttonContainer = renderElement(form, 'div', ['form-add__button-container']);
+    const buttonContainer = renderElement(formSendFile, 'div', ['form-add__button-container']);
     const buttonSubmit = renderElement(buttonContainer, 'button', ['button-submit'], 'Submit');
 
     const buttonCancel = renderElement(buttonContainer, 'button', ['button-cancel'], 'Cancel');
     buttonCancel.addEventListener('click', this.hideForm);
+
+    return { element: formSendFile, name, author, genreInput };
+  }
+
+  handleFileUpload(formUpload: FormUploadMedia, event: Event) {
+    event.preventDefault();
+
+    const formData = new FormData();
+    console.log(formUpload);
+    formData.append('midi', this.inputUpload.files[0]);
+    formData.append('name', formUpload.name.value);
+    formData.append('author', formUpload.author.value);
+    formData.append('genre', formUpload.genreInput.options[formUpload.genreInput.selectedIndex].value);
+
+    fetch('http://localhost:3000/addSong', {
+      method: 'POST',
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
   renderOptionSelectAndGet(e: any, name: string, parentElement: HTMLElement) {
@@ -117,6 +156,7 @@ export default class AddForm {
     parentElement.appendChild(select);
     return select;
   }
+
   hideForm() {
     this.formOverlay.classList.remove(SHOW);
     this.formContainer.classList.remove(SHOW);
@@ -127,27 +167,26 @@ export default class AddForm {
     this.text = renderElement(this.dropArea, 'div', [], 'Drop your file here');
     this.dropArea.innerHTML = SVG_SPRITE.UPLOAD;
 
-    const file = this.renderInput(this.dropArea, 'input', 'Upload the file', 'file');
-    file.classList.add('drop-area__input');
+    this.inputUpload = this.renderInput(this.dropArea, 'input', 'Upload the file', 'file');
+    this.inputUpload.classList.add('drop-area__input');
 
-    // document.querySelectorAll('.drop-area__input').forEach((inputElement) => {
-    const dropAreaElement = file.closest('.drop-area');
+    // const dropAreaElement = this.inputUpload.closest('.drop-area');
 
-    dropAreaElement.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropAreaElement.classList.add('drop-area__over');
-    });
+    // dropAreaElement.addEventListener('dragover', (e) => {
+    //   e.preventDefault();
+    //   dropAreaElement.classList.add('drop-area__over');
+    // });
 
-    ['dragleave', 'dragend'].forEach((type) => {
-      dropAreaElement.addEventListener(type, (e) => {
-        dropAreaElement.classList.remove('drop-area__over');
-      });
-    });
+    // ['dragleave', 'dragend'].forEach((type) => {
+    //   dropAreaElement.addEventListener(type, (e) => {
+    //     dropAreaElement.classList.remove('drop-area__over');
+    //   });
+    // });
 
-    dropAreaElement.addEventListener('drop', (e: DragEvent) => {
-      this.dropHandler(e);
-      // this.changeDropAreaView();
-    });
+    // dropAreaElement.addEventListener('drop', (e: DragEvent) => {
+    //   this.dropHandler(e);
+    //   // this.changeDropAreaView();
+    // });
     // });
   }
 
@@ -183,6 +222,7 @@ export default class AddForm {
       }
     }
   }
+
   upload(file: File) {
     var xhr = new XMLHttpRequest();
 
