@@ -1,4 +1,8 @@
+footer{
+    display: none;
+}
 .footer {
+    
     &__wrapper {
         background: $dark-background;
         // margin-top: auto;
@@ -11,7 +15,7 @@
         justify-content: space-between;
         align-items: center;
         a{
-        color: $unnamed-color-f5f5f5;
+        color: $font-color;
         opacity: 0.3;
         text-decoration: none;
         

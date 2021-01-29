@@ -88,7 +88,7 @@ export default class Sidebar {
     var divContents = document.getElementById('print').innerHTML;
     var a = window.open('', '', 'height=1200, width=900');
     a.document.write('<html>');
-    a.document.write(`<body > <h1>${title}<br>`);
+    a.document.write(`<body > <h1>${title}`);
     a.document.write(`<h6>${divContents}</h6>`);
     a.document.close();
     a.print();

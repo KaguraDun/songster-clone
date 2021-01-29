@@ -41,7 +41,7 @@
         background-color: $shadow;
         border-radius: 10px;
         transition: 0.2s;
-        color: #ffff;
+        color: $color-white;
         background-position: center;
         background-repeat: no-repeat;
         background-size: 30px 30px;
@@ -54,7 +54,7 @@
 
 
         transition: 0.2s;
-        background-color: #707070;
+        background-color: $shadow-dark;
         svg{
             opacity: 0.8;
         }
@@ -65,7 +65,7 @@
     button:active {
         transform: scale(0.95);
         transition: 0.2s;
-        background-color: #353535;
+        background-color: $color-brown;
     }
 
 
