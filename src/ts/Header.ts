@@ -71,7 +71,7 @@ export default class Header {
   }
   
   renderFormUploadMedia() {
-    new AddForm(this.rightContainer).render();
+    new AddForm(this.rightContainer, this.store).render();
   }
 
 

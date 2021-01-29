@@ -1,8 +1,9 @@
-import { TickSignal } from 'tone/build/esm/core/clock/TickSignal';
 import { Difficulty } from '../models/Difficulty';
 import { Genre } from '../models/Genre';
 import renderElement from './helpers/renderElements';
 import { SVG_SPRITE } from './helpers/svg_sprites';
+import { serverUrl } from '../models/Constants';
+import Store, { EVENTS } from './Store';
 
 const SHOW = '--show';
 
@@ -11,24 +12,23 @@ interface FormUploadMedia {
   name: HTMLInputElement;
   author: HTMLInputElement;
   genreInput: HTMLSelectElement;
+  difficultyInput: HTMLSelectElement;
 }
 
 export default class AddForm {
   parentElement: HTMLElement;
   formContainer: HTMLElement;
   formOverlay: HTMLElement;
-  instrumentInput: HTMLSelectElement;
-  genreInput: HTMLSelectElement;
-  difficultyInput: HTMLSelectElement;
   dropArea: HTMLElement;
   text: HTMLElement;
   fileName: string;
-  file: File;
-  formSendFile: HTMLFormElement;
+  fileDropUpload: File;
   inputUpload: HTMLInputElement;
+  store: Store;
 
-  constructor(parentElement: HTMLElement) {
+  constructor(parentElement: HTMLElement, store: Store) {
     this.parentElement = parentElement;
+    this.store = store;
     this.renderForm = this.renderForm.bind(this);
     this.hideForm = this.hideForm.bind(this);
     this.activeArea = this.activeArea.bind(this);
@@ -38,18 +38,19 @@ export default class AddForm {
     this.dropArea;
     this.text;
     this.fileName;
-    this.file;
-    this.formSendFile;
+    this.fileDropUpload;
     this.inputUpload;
   }
 
   renderInput(parentElement: HTMLElement, name: string, labelText: string, type?: string) {
     const label = renderElement(parentElement, 'label', [], labelText) as HTMLLabelElement;
     label.htmlFor = name;
+
     const input = renderElement(parentElement, 'input', []) as HTMLInputElement;
     input.name = name;
     input.type = type;
     input.required = true;
+
     return input;
   }
 
@@ -83,7 +84,7 @@ export default class AddForm {
 
     const optionsContainer = renderElement(formSendFile, 'div', ['options-container']);
     const genreInput = this.renderOptionSelectAndGet(Genre, 'Genre', optionsContainer);
-    this.difficultyInput = this.renderOptionSelectAndGet(
+    const difficultyInput = this.renderOptionSelectAndGet(
       Difficulty,
       'Difficulty',
       optionsContainer,
@@ -113,34 +114,47 @@ export default class AddForm {
     const buttonCancel = renderElement(buttonContainer, 'button', ['button-cancel'], 'Cancel');
     buttonCancel.addEventListener('click', this.hideForm);
 
-    return { element: formSendFile, name, author, genreInput };
+    return { element: formSendFile, name, author, genreInput, difficultyInput };
   }
 
-  handleFileUpload(formUpload: FormUploadMedia, event: Event) {
+  async handleFileUpload(formUpload: FormUploadMedia, event: Event) {
     event.preventDefault();
 
     const formData = new FormData();
-    console.log(formUpload);
-    formData.append('midi', this.inputUpload.files[0]);
+
+    if (this.inputUpload.files[0]) {
+      formData.append('midi', this.inputUpload.files[0]);
+    } else if (this.fileDropUpload) {
+      formData.append('midi', this.fileDropUpload);
+    } else {
+      return;
+    }
+
+    const genre = formUpload.genreInput.options[formUpload.genreInput.selectedIndex].value;
+    const difficulty =
+      formUpload.difficultyInput.options[formUpload.difficultyInput.selectedIndex].value;
+
     formData.append('name', formUpload.name.value);
     formData.append('author', formUpload.author.value);
-    formData.append('genre', formUpload.genreInput.options[formUpload.genreInput.selectedIndex].value);
+    formData.append('genre', genre);
+    formData.append('difficulty', difficulty);
 
-    fetch('http://localhost:3000/addSong', {
+    const res = await fetch(`${serverUrl}/addSong`, {
       method: 'POST',
       body: formData,
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
+    });
+
+    const data = await res.json();
+
+    if (data.songID) {
+      this.store.selectSong(data.songID);
+      this.hideForm();
+    }
   }
 
   renderOptionSelectAndGet(e: any, name: string, parentElement: HTMLElement) {
     const select = document.createElement('select');
+    select.required = true;
     const option = document.createElement('option');
     option.text = name;
     option.selected = true;
@@ -153,6 +167,7 @@ export default class AddForm {
       option.value = value;
       select.options.add(option);
     }
+
     parentElement.appendChild(select);
     return select;
   }
@@ -170,79 +185,48 @@ export default class AddForm {
     this.inputUpload = this.renderInput(this.dropArea, 'input', 'Upload the file', 'file');
     this.inputUpload.classList.add('drop-area__input');
 
-    // const dropAreaElement = this.inputUpload.closest('.drop-area');
+    const dropAreaElement = this.inputUpload.closest('.drop-area');
 
-    // dropAreaElement.addEventListener('dragover', (e) => {
-    //   e.preventDefault();
-    //   dropAreaElement.classList.add('drop-area__over');
-    // });
+    dropAreaElement.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropAreaElement.classList.add('drop-area__over');
+    });
 
-    // ['dragleave', 'dragend'].forEach((type) => {
-    //   dropAreaElement.addEventListener(type, (e) => {
-    //     dropAreaElement.classList.remove('drop-area__over');
-    //   });
-    // });
+    ['dragleave', 'dragend'].forEach((type) => {
+      dropAreaElement.addEventListener(type, (e) => {
+        dropAreaElement.classList.remove('drop-area__over');
+      });
+    });
 
-    // dropAreaElement.addEventListener('drop', (e: DragEvent) => {
-    //   this.dropHandler(e);
-    //   // this.changeDropAreaView();
-    // });
-    // });
+    dropAreaElement.addEventListener('drop', (e: DragEvent) => {
+      this.dropHandler(e);
+      this.changeDropAreaView();
+    });
   }
 
-  // changeDropAreaView() {
-  //   this.dropArea.innerHTML = SVG_SPRITE.DONE;
-  //   this.text = renderElement(this.dropArea, 'div', [], this.fileName);
-  // }
+  changeDropAreaView() {
+    this.dropArea.innerHTML = SVG_SPRITE.DONE;
+    this.text = renderElement(this.dropArea, 'div', [], this.fileName);
+  }
 
   dropHandler(ev: DragEvent) {
-    // console.log('File(s) dropped');
     ev.preventDefault();
-    // console.log(ev.dataTransfer.items);
+
     if (ev.dataTransfer.items) {
       // Use DataTransferItemList interface to access the file(s)
       for (var i = 0; i < ev.dataTransfer.items.length; i++) {
         // If dropped items aren't files, reject them
-        // console.log(ev.dataTransfer.items[i].kind);
         if (ev.dataTransfer.items[i].kind === 'file') {
-          this.file = ev.dataTransfer.items[i].getAsFile();
-          // console.log(this.file);
-          this.fileName = `${this.file.name}`;
-          // console.log('... file[' + i + '].name = ' + file.name);
-          // console.log(this.fileName);
-          this.upload(this.file);
+          this.fileDropUpload = ev.dataTransfer.items[i].getAsFile();
+          this.fileName = `${this.fileDropUpload.name}`;
         }
       }
     } else {
       // Use DataTransfer interface to access the file(s)
       for (var i = 0; i < ev.dataTransfer.files.length; i++) {
         this.fileName = `${ev.dataTransfer.files[i].name}`;
-        // console.log('... file[' + i + '].name = ' + ev.dataTransfer.files[i].name);
-        console.log(this.fileName);
       }
     }
-  }
-
-  upload(file: File) {
-    var xhr = new XMLHttpRequest();
-
-    // обработчик для отправки
-    xhr.upload.onprogress = function (event) {
-      console.log(event.loaded + ' / ' + event.total);
-    };
-
-    // обработчики успеха и ошибки
-    // если status == 200, то это успех, иначе ошибка
-    xhr.onload = xhr.onerror = function () {
-      if (this.status == 200) {
-        console.log('success');
-      } else {
-        console.log('error ' + this.status);
-      }
-    };
-
-    xhr.open('POST', 'upload', true);
-    xhr.send(file);
   }
 
   activeArea() {
