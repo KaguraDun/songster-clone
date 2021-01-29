@@ -1,17 +1,16 @@
-header {
-    background-color: $dark-background;
-    height: 80px;
-}
-
 .header {
+    background-color: $dark-background;
+    min-height: 80px;
+    
     &__wrapper {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        max-width: 85%;
+        max-width: 1440px;
         margin: 0 auto;
         padding: 20px 20px;
+        padding-bottom: 10px;
 
         &-title {
             font-size: 32px;
@@ -160,7 +159,7 @@ header {
         color: $color-white;
         font-family: 'Segoe UI';
         font-weight: Semibold;
-        font-size: 18px;
+        font-size: 16px;
         text-align: left;
         margin-bottom: 15px;
         padding: 50px;

@@ -1,3 +1,7 @@
+* {
+    box-sizing: border-box;
+}
+
 @import '~normalize-scss/sass/normalize';
 @import './_colorVariables.scss';
 @include normalize();
