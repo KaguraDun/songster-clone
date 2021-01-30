@@ -164,13 +164,23 @@ export default class RenderSong {
 
     const timeMarkerTop = measureColNum * SECTION_SIZE.height;
 
+    this.store.setSongTime(Number(selectedMeasure.dataset.time));
+
     this.timeMarker.element.style.left = `${selectedMeasure.offsetLeft}px`;
     this.timeMarker.element.style.top = `${timeMarkerTop}px`;
+
     this.timeMarker.element.scrollIntoView({ block: 'center', behavior: 'smooth' });
     this.timeMarker.currentMeasureNum = Number(selectedMeasure.dataset.measureId) + 1;
 
     if (timeMarkerTop > this.timeMarker.lastMeasure.offsetTop) {
       this.timeMarker.element.style.top = `${this.timeMarker.lastMeasure.offsetTop}px`;
+    }
+
+    if (this.store.playMusic) {
+      this.timeMarker.element.style.transition = 'none';
+      this.flushCss(this.timeMarker.element);
+      clearInterval(this.timeMarker.timer);
+      this.playMusicTrack();
     }
   }
 
@@ -187,7 +197,7 @@ export default class RenderSong {
     const id = this.store.selectedInstrumentId;
     this.track = this.song.Tracks[id];
     this.render();
-    
+
     this.timeMarker.element.style.left = `${timeMarkerPositon.left}px`;
     this.timeMarker.element.style.top = `${timeMarkerPositon.top}px`;
 
@@ -202,7 +212,7 @@ export default class RenderSong {
   }
 
   dispose() {
-    this.store.eventEmitter.removeEvent(EVENTS.SELECT_INSTRUMENT,this.changeTrack);
+    this.store.eventEmitter.removeEvent(EVENTS.SELECT_INSTRUMENT, this.changeTrack);
     this.trackRenderer.dispose();
   }
 
