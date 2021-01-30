@@ -22,14 +22,14 @@ export default class Store {
   isSongMuted: boolean = false;
   volumeLevel: number = 50;
 
-  selectedSongId: string = '6000a2a200bb3e15e47d4d33';
+  selectedSongId: string;
   selectedInstrumentId: number = 0;
   tracksArray: any;
 
 
   constructor() {
-    this.songTimeMiliSeconds;
     this.eventEmitter = new EventEmitter();
+    this.setLastSelectedSongId();
   }
 
   init() {}
@@ -50,8 +50,14 @@ export default class Store {
     this.eventEmitter.emit(EVENTS.END_OF_SONG);
   }
 
+  setLastSelectedSongId() {
+    const id = localStorage.getItem('songID');
+    this.selectedSongId = id ? id : '6000a2a200bb3e15e47d4d33';
+  }
+
   selectSong(id: string) {
     this.playMusic = false;
+    localStorage.setItem('songID',id);
     this.selectedSongId = id;
     this.eventEmitter.emit(EVENTS.SELECT_SONG);
   }
