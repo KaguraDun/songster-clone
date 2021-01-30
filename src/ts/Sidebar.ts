@@ -23,6 +23,7 @@ export default class Sidebar {
     this.renderInstrumentsBar = this.renderInstrumentsBar.bind(this);
     this.openfullScreenMode = this.openfullScreenMode.bind(this);
     this.onPrintClick = this.onPrintClick.bind(this);
+    this.toggleMetronome = this.toggleMetronome.bind(this);
   }
 
   dispose() {
@@ -74,6 +75,14 @@ export default class Sidebar {
   renderMetronomeButton(parentElement: HTMLElement) {
     const metronomeButton = renderElement(parentElement, 'button', ['sidebar__button-metronome',]);
     metronomeButton.innerHTML = SVG_SPRITE.METRONOME;
+    metronomeButton.addEventListener('click',this.toggleMetronome);
+  }
+
+  toggleMetronome(e: MouseEvent) {
+    const target = e.target as HTMLElement;
+    const button = target.closest('.sidebar__button-metronome') as HTMLElement;
+    button.classList.toggle('active');
+    this.store.toggleMetronome();
   }
 
   renderPrintButton(parentElement: HTMLElement) {

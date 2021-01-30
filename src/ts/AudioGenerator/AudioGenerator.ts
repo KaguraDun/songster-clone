@@ -4,11 +4,7 @@ import Store, { EVENTS } from '../Store';
 import SampleLibrary from '../../../tonejs-instruments/Tonejs-Instruments';
 import { Instrument } from '@tonejs/midi/dist/Instrument';
 import { instruments } from './MidiInstruments';
-
-// enum Volume {
-//   SelectedTrack = -20,
-//   DefaultTrack = -30,
-// }
+import { Metronome } from './Metronome';
 
 let Volume = {
   SelectedTrack: -20,
@@ -22,6 +18,7 @@ export class AudioGenerator {
   private toneVolumes: Tone.Volume[];
   private currentTrackId: number;
   private timeOffset: number;
+  private metronome: Metronome;
 
   constructor(midiData: ArrayBuffer, store: Store) {
     this.store = store;
@@ -40,6 +37,7 @@ export class AudioGenerator {
 
   dispose() {
     Tone.Transport.cancel();
+    this.metronome.dispose();
 
     this.store.eventEmitter.removeEvent(EVENTS.PLAY_BUTTON_CLICK, this.play);
     this.store.eventEmitter.removeEvent(EVENTS.TIME_MARKER_POSITION_CHANGED, this.setTimeOffset);
@@ -57,8 +55,13 @@ export class AudioGenerator {
     this.store.eventEmitter.addEvent(EVENTS.MUTE_SONG,this.muteSong);
     this.store.eventEmitter.addEvent(EVENTS.CHANGE_VOLUME,this.changeVolume);
 
-    Tone.Transport.bpm.value = this.midi.header.tempos[0].bpm;
-    Tone.Transport.timeSignature = this.midi.header.timeSignatures[0].timeSignature;
+    const bpm = this.midi.header.tempos[0].bpm;
+    const timeSignature = this.midi.header.timeSignatures[0].timeSignature;
+
+    Tone.Transport.bpm.value = bpm;
+    Tone.Transport.timeSignature = timeSignature;
+
+    this.metronome = new Metronome(timeSignature,this.store);
 
     this.initTracks();
     Tone.start();
@@ -70,6 +73,7 @@ export class AudioGenerator {
       const volume = id === this.currentTrackId ? Volume.SelectedTrack : Volume.DefaultTrack;
       this.initTonePart(track, volume);
     });
+    this.metronome.init();
   }
 
   resetTracks() {
@@ -95,6 +99,7 @@ export class AudioGenerator {
     this.toneVolumes.forEach((volume) => {
       volume.mute = this.store.isSongMuted;
     })
+    this.metronome.mute(this.store.isSongMuted);
   }
 
   async changeVolume() {
@@ -105,6 +110,8 @@ export class AudioGenerator {
       volume.volume.value = value;
       if (id === this.currentTrackId) volume.volume.value += 10;
     });
+
+    this.metronome.changeVolume(value);
   }
 
   getVolumeLevel(value: number) {
@@ -119,12 +126,16 @@ export class AudioGenerator {
   play() {
     if (this.store.playMusic) {
       this.start();
+      this.metronome.start();
     } else {
       this.pause();
+      this.metronome.stop();
     }
   }
 
   stopMusic() {
+    this.metronome.dispose();
+
     this.timeOffset = 0;
     Tone.Transport.cancel();
     Tone.Transport.stop();
