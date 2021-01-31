@@ -2,7 +2,7 @@ import { Track, Song } from '../models/TrackDisplayType';
 import Store, { EVENTS } from './Store';
 import { SECTION_SIZE } from '../models/Constants';
 import RenderTrack from './RenderTrack';
-import renderTrack from './RenderTrack';
+import renderElement from './helpers/renderElements';
 
 interface TimeMarker {
   element: HTMLElement;
@@ -27,8 +27,9 @@ export default class RenderSong {
     currentMeasureNum: 1,
   };
   measureDuration: number;
+  numberElementsPerRow: number;
   track: Track;
-  trackRenderer: renderTrack;
+  trackRenderer: RenderTrack;
 
   constructor(parentElement: HTMLElement, song: Song, store: Store) {
     this.parentElement = parentElement;
@@ -38,9 +39,11 @@ export default class RenderSong {
     this.sheetMusicRender;
     this.timeMarker;
     this.measureDuration;
+    this.numberElementsPerRow;
     this.playMusicTrack = this.playMusicTrack.bind(this);
     this.changeTrack = this.changeTrack.bind(this);
-    this.changeTimeMarkerPosition = this.changeTimeMarkerPosition.bind(this);
+    this.selectMeasure = this.selectMeasure.bind(this);
+    this.setTimeMarkerPosition = this.setTimeMarkerPosition.bind(this);
   }
 
   addBitrate(parentElement: HTMLElement) {
@@ -74,7 +77,7 @@ export default class RenderSong {
 
   moveTimeMarkerToBeginOfRow() {
     this.timeMarker.element.style.transition = 'none';
-    this.timeMarker.element.style.left = this.timeMarker.firstMeasure.offsetLeft + 'px';
+    this.timeMarker.element.style.left = `${this.timeMarker.firstMeasure.offsetLeft}px`;
     // apply the "transition: none" and "left: Xpx" rule immediately
     this.flushCss(this.timeMarker.element);
     // restore animation
@@ -82,11 +85,10 @@ export default class RenderSong {
   }
 
   moveTimeMarker() {
-    const numberElementsPerRow = Math.floor(this.parentElement.clientWidth / SECTION_SIZE.width);
-    const rowNum = Math.ceil(this.timeMarker.currentMeasureNum / numberElementsPerRow) - 1;
+    const rowNum = Math.ceil(this.timeMarker.currentMeasureNum / this.numberElementsPerRow) - 1;
 
     const multipler =
-      this.timeMarker.currentMeasureNum % numberElementsPerRow || numberElementsPerRow;
+      this.timeMarker.currentMeasureNum % this.numberElementsPerRow || this.numberElementsPerRow;
     const leftShift = SECTION_SIZE.width * multipler + this.timeMarker.firstMeasure.offsetLeft;
     const lasMeasureNum = Number(this.timeMarker.lastMeasure.dataset.measureId) + 1;
 
@@ -147,24 +149,21 @@ export default class RenderSong {
     return timeMarker;
   }
 
-  changeTimeMarkerPosition(event: MouseEvent) {
+  selectMeasure(event: MouseEvent) {
     const target = event.target as HTMLElement;
     const closestToSvg = target.closest('svg') as SVGSVGElement;
 
     if (!closestToSvg) return;
+
     const selectedMeasure = closestToSvg.parentElement;
+    this.changeTimeMarkerPosition(selectedMeasure);
+  }
+
+  changeTimeMarkerPosition(selectedMeasure: HTMLElement) {
     const currentTime = Number(selectedMeasure.dataset.time);
-
-    this.store.setSongTime(currentTime);
-
-    const measureColNum = Math.floor(
-      (event.y + this.parentElement.scrollTop - Math.abs(this.parentElement.offsetTop)) /
-        SECTION_SIZE.height,
-    );
-
-    const timeMarkerTop = measureColNum * SECTION_SIZE.height;
-
-    this.store.setSongTime(Number(selectedMeasure.dataset.time));
+    const measureID = Number(selectedMeasure.dataset.measureId);
+    const rowNum = Math.floor(measureID / this.numberElementsPerRow);
+    const timeMarkerTop = rowNum * SECTION_SIZE.height;
 
     this.timeMarker.element.style.left = `${selectedMeasure.offsetLeft}px`;
     this.timeMarker.element.style.top = `${timeMarkerTop}px`;
@@ -182,6 +181,15 @@ export default class RenderSong {
       clearInterval(this.timeMarker.timer);
       this.playMusicTrack();
     }
+
+    this.store.setSongTime(currentTime);
+  }
+
+  setTimeMarkerPosition() {
+    const measureID = Math.floor(this.store.songTimeMiliSeconds / (this.measureDuration * 1000));
+    const selectedMeasure = this.sheetMusicRender.children[measureID + 1] as HTMLElement;
+
+    this.changeTimeMarkerPosition(selectedMeasure);
   }
 
   changeTrack() {
@@ -207,12 +215,19 @@ export default class RenderSong {
   init() {
     this.store.eventEmitter.addEvent(EVENTS.SELECT_INSTRUMENT, this.changeTrack);
     this.store.eventEmitter.addEvent(EVENTS.PLAY_BUTTON_CLICK, () => this.playMusicTrack());
+    this.store.eventEmitter.addEvent(EVENTS.PLAYER_PROGRESS_BAR_CLICK, this.setTimeMarkerPosition);
 
     this.render();
   }
 
   dispose() {
     this.store.eventEmitter.removeEvent(EVENTS.SELECT_INSTRUMENT, this.changeTrack);
+    this.store.eventEmitter.removeEvent(EVENTS.PLAY_BUTTON_CLICK, () => this.playMusicTrack());
+    this.store.eventEmitter.removeEvent(
+      EVENTS.PLAYER_PROGRESS_BAR_CLICK,
+      this.setTimeMarkerPosition,
+    );
+
     this.trackRenderer.dispose();
   }
 
@@ -220,17 +235,15 @@ export default class RenderSong {
     this.parentElement.innerHTML = '';
     this.addBitrate(this.parentElement);
 
-    this.sheetMusicRender = document.createElement('div');
-    this.sheetMusicRender.classList.add('sheet-music__render');
+    this.sheetMusicRender = renderElement(this.parentElement, 'div', ['sheet-music__render']);
     this.sheetMusicRender.setAttribute('id', 'print');
-    this.sheetMusicRender.addEventListener('click', this.changeTimeMarkerPosition);
-
-    this.parentElement.appendChild(this.sheetMusicRender);
+    this.sheetMusicRender.addEventListener('click', this.selectMeasure);
 
     const timeSignature = `${this.track.Size.Count}/${this.track.Size.Per}`;
     const quarterDuration = 60 / this.track.Bpm;
 
     this.measureDuration = (4 * quarterDuration * this.track.Size.Count) / this.track.Size.Per;
+    this.numberElementsPerRow = Math.floor(this.parentElement.clientWidth / SECTION_SIZE.width);
 
     this.trackRenderer = new RenderTrack(
       this.track.Measures,
