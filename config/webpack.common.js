@@ -82,7 +82,7 @@ module.exports = {
         test: /\.(?:ico|gif|png|jpg|jpeg)$/i,
         type: 'asset/resource',
         generator: {
-          filename: 'assets/images/[name][ext]',
+          filename: '../assets/images/[name][ext]',
         },
       },
 
@@ -91,7 +91,7 @@ module.exports = {
         test: /\.(woff(2)?|eot|ttf|otf)$/,
         type: 'asset/resource',
         generator: {
-          filename: 'assets/fonts/[name][ext]',
+          filename: '../assets/fonts/[name][ext]',
         },
       },
 
@@ -99,16 +99,16 @@ module.exports = {
         test: /\.(svg)$/,
         type: 'asset/resource',
         generator: {
-          filename: 'assets/icons/[name][ext]',
+          filename: '../assets/icons/[name][ext]',
         },
       },
-      {
-        test: /\.(ogg|mp3|wav|mpe?g)$/i,
-        type: 'asset/resource',
-        generator: {
-          filename: 'assets/audio/[name][ext]',
-        },
-      },
+      // {
+      //   test: /\.(ogg|mp3|wav|mpe?g)$/i,
+      //   type: 'asset/resource',
+      //   generator: {
+      //     filename: 'assets/audio/[name][ext]',
+      //   },
+      // },
     ],
   },
   resolve: {
