@@ -34,8 +34,6 @@ export default class FavoriteSonsAddOrDelete {
 
   async sendRequest(url: string, e?: Event) {
 
-    console.log(this.songId, this.userId)
-
     if(!this.songId || !this.userId) throw new Error()
 
     const res = await fetch(`${serverUrl}/${url}`, {
@@ -45,7 +43,6 @@ export default class FavoriteSonsAddOrDelete {
         'Content-Type': 'application/json',
       },
     });
-    console.log('uhuuuu')
 
   }
 }

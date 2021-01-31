@@ -16,6 +16,7 @@ export default class SearchBar {
   instrumentInput: HTMLSelectElement;
   genreInput: HTMLSelectElement;
   difficultyInput: HTMLSelectElement;
+  favSongsBtn: HTMLElement;
 
   store: Store;
 
@@ -72,6 +73,7 @@ export default class SearchBar {
     container.classList.add('options-container');
     this.wrapper.appendChild(container);
 
+    this.favSongsBtn = this.renderFavSongStarBtn(container);
     this.instrumentInput = this.renderOptionSelectAndGet(InstrumentType, 'Instrument', container);
     this.genreInput = this.renderOptionSelectAndGet(Genre, 'Genre', container);
     this.difficultyInput = this.renderOptionSelectAndGet(Difficulty, 'Difficulty', container);
@@ -96,6 +98,26 @@ export default class SearchBar {
     return select;
   }
 
+  renderFavSongStarBtn(container: HTMLElement) {
+
+    const btn = document.createElement('button');
+    const span = document.createElement('span');
+
+    span.innerText = '🟊';
+    span.classList.add('favorites-star');
+
+    btn.addEventListener('click', this.favSongsBtnOnClick)
+
+    btn.appendChild(span)
+    container.appendChild(btn);
+
+    return span;
+  }
+
+  favSongsBtnOnClick() {
+    this.favSongsBtn.classList.toggle('favorites');
+  }
+
   renderSearchButton() {
     const button = document.createElement('div');
     button.classList.add('search-button', 'icon');
@@ -105,25 +127,42 @@ export default class SearchBar {
   }
 
   async search(e: MouseEvent | KeyboardEvent) {
+
     if (e instanceof KeyboardEvent && e.key !== 'Enter') return;
 
-    const searchOption: any = {
-      name: this.textInput.value,
-      instrument: this.instrumentInput.selectedOptions[0].value,
-      genre: this.genreInput.selectedOptions[0].value,
-      difficulty: this.difficultyInput.selectedOptions[0].value,
-    };
+    if(this.favSongsBtn.classList.contains('favorites')) {
 
-    const quaryArray = [];
-    for (const key in searchOption) {
-      const quaryArg = searchOption[key];
-      if (!quaryArg || quaryArg.toLowerCase() === key) continue;
-      quaryArray.push(`${key}=${quaryArg}`);
+      const userId = window.localStorage.getItem('user');
+      if(!userId) throw new Error()
+
+      const url = `${serverUrl}/favorite-songs/?userId=${userId}`;
+      const response = await fetch(url);
+      const songs: SongViewModel[] = await response.json();
+      this.renderSongList(songs);
+
+    } else {
+
+      const searchOption: any = {
+        name: this.textInput.value,
+        instrument: this.instrumentInput.selectedOptions[0].value,
+        genre: this.genreInput.selectedOptions[0].value,
+        difficulty: this.difficultyInput.selectedOptions[0].value,
+      };
+
+      const quaryArray = [];
+      for (const key in searchOption) {
+        const quaryArg = searchOption[key];
+        if (!quaryArg || quaryArg.toLowerCase() === key) continue;
+        quaryArray.push(`${key}=${quaryArg}`);
+      }
+
+      const url = `${serverUrl}/songs/?${quaryArray.join('&')}`;
+      const response = await fetch(url);
+      const songs: SongViewModel[] = await response.json();
+      this.renderSongList(songs);
+
     }
-    const url = `${serverUrl}/songs/?${quaryArray.join('&')}`;
-    const response = await fetch(url);
-    const songs: SongViewModel[] = await response.json();
-    this.renderSongList(songs);
+
   }
 
   renderSongList(songs: SongViewModel[]) {
