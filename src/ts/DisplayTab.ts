@@ -4,7 +4,6 @@ import { AudioGenerator } from './AudioGenerator/AudioGenerator';
 import RenderSong from './RenderSong';
 import renderElement from './helpers/renderElements';
 import MusicPlayerBox from './MusicPlayerBox';
-import { Player } from 'tone';
 import { SVG_SPRITE } from './helpers/svg_sprites';
 import { Song } from '../models/TrackDisplayType';
 import { Midi } from '@tonejs/midi';

@@ -21,7 +21,7 @@ module.exports = merge(common, {
         hot: true,
         port: 8000,
         before(app) {
-            app.use(express.static(path.resolve(__dirname, '../tonejs-instruments/samples')));
+            app.use(express.static(path.resolve(__dirname, '../public/tonejs-instruments/samples')));
             // app.get('/tonejs-instruments/samples/piano/C7.ogg', function(req, res) {
             //     const url = path.resolve(__dirname, '../tonejs-instruments/samples/piano/C7.ogg');
             //     res.sendFile(url);
