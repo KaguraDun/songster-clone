@@ -4,6 +4,7 @@ import Login from './Login';
 import Store from './Store';
 import renderElement from './helpers/renderElements';
 import AddForm from './AddForm';
+import About from './About';
 
 export default class Header {
   parentElement: HTMLElement;
@@ -30,7 +31,7 @@ export default class Header {
     this.rightContainer = document.createElement('div');
     this.rightContainer.className = 'wrapper-user';
     this.wrapper.appendChild(this.rightContainer);
-
+    this.renderAboutButton();
     this.renderSearchButton();
     this.renderLoginButton();
     this.renderAddMediaButton();
@@ -49,6 +50,9 @@ export default class Header {
     const container = renderElement(this.searchButton, 'div', ['search__button-container']);
     renderElement(container, 'div', ['search__button-icon']);
     renderElement(container, 'div', ['search__button-content'], 'Search');
+  }
+  renderAboutButton(){
+    new About(this.parentElement).render();
   }
 
   renderSearchBar() {
