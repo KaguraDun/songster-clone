@@ -32,21 +32,18 @@ export class Metronome {
         this.volume = new Tone.Volume(this.volumeLevel).toDestination();
         const synth = new Tone.NoiseSynth().connect(this.volume);
         this.metronomeLoop = new Tone.Loop((time) => {
-            console.log(time);
             synth.triggerAttackRelease(`${this.timeSignature[0]}n`);
         },`${this.timeSignature[1]}n`);
     }
 
     start() {
         if (this.store.isMetronomeEnabled) {
-            console.log('enable metronome');
             this.metronomeLoop.start();
         }
     }
 
     stop() {
         if (!this.store.isMetronomeEnabled) {
-            console.log('disable metronome');
             this.metronomeLoop.stop();
         }
     }

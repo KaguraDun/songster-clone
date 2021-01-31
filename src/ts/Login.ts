@@ -169,6 +169,7 @@ export default class Login {
     if (localStorage.getItem(LOGGED_IN)) {
       const buttonLogOut = renderElement(this.parentElement, 'button', ['button-log-out']);
       buttonLogOut.title = 'Log Out';
+      buttonLogOut.innerHTML= SVG_SPRITE.MUSICSIGN;
       buttonLogOut.addEventListener('click', this.logOut);
       return;
     }

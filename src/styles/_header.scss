@@ -1,32 +1,34 @@
-header {
-    background-color: $dark-background;
-    height: 80px;
-}
-
 .header {
+    background-color: $dark-background;
+    min-height: 80px;
+    
     &__wrapper {
         display: flex;
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        max-width: 85%;
+        max-width: 1440px;
         margin: 0 auto;
         padding: 20px 20px;
+        padding-bottom: 10px;
 
         &-title {
             font-size: 32px;
-            color: $unnamed-color-f5f5f5;
+            color: $font-color;
             cursor: default;
             font-family: 'Segoe UI';
             font-weight: 300;
         }
     }
 }
+.wrapper-title{
+    display: flex;
+}
 
 .search {
     &__button {
         padding: 22px 55px;
-        background-color: #ef5743;
+        background-color: $color-orange;
         border-radius: 35px;
 
         &-container {
@@ -36,7 +38,7 @@ header {
         }
 
         &-content {
-            color: #f5f5f5;
+            color:$font-color;
             font-size: 18px/24px;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             letter-spacing: 0px;
@@ -55,7 +57,7 @@ header {
 
 .search__button:hover {
     cursor: pointer;
-    background-color: #da6556;
+    background-color: $color-pale-orange;
 }
 
 .wrapper-user {
@@ -94,7 +96,7 @@ header {
         }
 
         button:first-child {
-            background-color: $unnamed-color-f5f5f5;
+            background-color: $font-color;
 
             svg {
                 color: $color-orange;
@@ -103,7 +105,7 @@ header {
         }
 
         button:first-child:hover {
-            background-color: $unnamed-color-f5f5f5;
+            background-color: $font-color;
             opacity: 0.8;
         }
     }
@@ -114,6 +116,7 @@ header {
         margin-left: 20px;
         border-radius: 50px;
         background-color: $shadow;
+        outline: none;
 
         svg {
             width: 25px;
@@ -126,7 +129,7 @@ header {
     &-login:hover,
     &-signup:hover,
     &-log-out:hover {
-        background-color: #707070;
+        background-color: $shadow-dark;
 
         svg {
             opacity: 0.8;
@@ -142,6 +145,7 @@ header {
         height: 60px;
         cursor: pointer;
         border-radius: 50px;
+        outline: none;
     }
 
     &__form-container {
@@ -155,10 +159,10 @@ header {
         z-index: 100;
         border-radius: 10px;
         box-shadow: 0 5px 10px rgba(231, 230, 230, 0.2);
-        color: white;
+        color: $color-white;
         font-family: 'Segoe UI';
         font-weight: Semibold;
-        font-size: 18px;
+        font-size: 16px;
         text-align: left;
         margin-bottom: 15px;
         padding: 50px;
@@ -216,7 +220,7 @@ form {
 
     button:hover {
         cursor: pointer;
-        background-color: #da6556;
+        background-color:$color-pale-orange;
     }
 }
 
@@ -278,7 +282,7 @@ form {
 }
 
 .drop-area {
-    border: 2px dashed #ccc;
+    border: 2px dashed $font-color;
     border-radius: 20px;
     width: 320px;
     height: 120px;
@@ -315,13 +319,14 @@ form {
 .button {
     &-log-out,
     &-user-login{
-        width: 70px;
-        height: 70px;
+        width: 60px;
+        height: 60px;
         margin-left: 20px;
         border-radius: 50px;
         background-color: $shadow;
         border: 0;
         cursor: pointer;
+        outline:none;
 
         svg {
             width: 25px;
@@ -330,10 +335,13 @@ form {
             opacity: 0.5;
         }
     }
+    &-form-signup{
+        opacity: 0.5;
+    }
 
     &-user-login:hover,
     &-log-out:hover {
-        background-color: #707070;
+        background-color: $shadow-dark;
 
         svg {
             opacity: 0.8;
