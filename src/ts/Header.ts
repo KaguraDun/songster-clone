@@ -12,6 +12,7 @@ export default class Header {
   parentElement: HTMLElement;
   wrapper: HTMLElement;
   searchButton: HTMLElement;
+  leftContainer: HTMLElement;
   rightContainer: HTMLElement;
 
   store: Store;
@@ -28,12 +29,13 @@ export default class Header {
     this.wrapper = document.createElement('div');
     this.wrapper.className = 'header__wrapper';
     this.parentElement.appendChild(this.wrapper);
-
+    this.leftContainer = renderElement(this.wrapper, 'div', ['wrapper-title']);
     this.renderTitle();
 
     this.rightContainer = document.createElement('div');
     this.rightContainer.className = 'wrapper-user';
     this.wrapper.appendChild(this.rightContainer);
+
     this.renderAboutButton();
     this.renderSearchButton();
     this.renderLoginButton();
@@ -44,7 +46,7 @@ export default class Header {
     const headerTitle = document.createElement('span');
     headerTitle.className = 'header__wrapper-title';
     headerTitle.textContent = 'Songster-Clone';
-    this.wrapper.appendChild(headerTitle);
+    this.leftContainer.appendChild(headerTitle);
   }
 
   renderSearchButton() {
@@ -55,7 +57,7 @@ export default class Header {
     renderElement(container, 'div', ['search__button-content'], 'Search');
   }
   renderAboutButton(){
-    new About(this.parentElement).render();
+    new About(this.leftContainer).render();
   }
 
   renderAddMediaButton() {

@@ -19,13 +19,7 @@ export default class Footer {
     logoImage.alt = 'logo';
     logoImage.className = 'footer__content-link-logo';
     linkLogo.appendChild(logoImage);
-    // createGitHubButton() {
-      // this.dropDownGithub = document.createElement('div');
-      // this.dropDownGithub.className = 'dropdown_gitHub'; //dropdown
-      // const gitHubButton = document.createElement('button');
-      // gitHubButton.className = 'sidebar__button-gitHub'; //button
-      // this.dropDownGithub.appendChild(gitHubButton);
-      // this.sideBarContent.appendChild(this.dropDownGithub);
+   
       
       const dropGHContent = document.createElement('div');
       dropGHContent.className = 'github__container'; //container for links
@@ -45,13 +39,8 @@ export default class Footer {
       iuliiaLink.className = 'github__container-iuliia';
       
       const vasilyLink = renderElement(footerDiv, 'a', ['github__container-vasya'], 'Vasily Kovnev'); 
-      // vasilyLink.textContent = 'Vasily Kovnev';
       vasilyLink.setAttribute('href', 'https://github.com/kaguradun');
-      // vasilyLink.className = 'github__container-vasya';
-      
-      // dropGHContent.append(alexLink, ilyaLink, iuliiaLink, vasilyLink);
-      
-      // this.dropDownGithub.appendChild(dropGHContent);
+   
       footerDiv.append(linkLogo,alexLink, ilyaLink, iuliiaLink, vasilyLink);
       
     }

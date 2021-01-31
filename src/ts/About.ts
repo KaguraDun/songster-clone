@@ -15,9 +15,10 @@ export default class About {
   }
 
   render() {
+    this.formAbout = renderElement(this.parentElement, 'div', ['about__form']);
     this.formOverlay = renderElement(this.parentElement, 'div', ['wrapper-user__form-overlay']);
     this.formOverlay.addEventListener('click', this.hideForm);
-
+    
     const buttonAbout = renderElement(this.parentElement, 'button', ['about__button']);
     buttonAbout.addEventListener('click', this.createForm);
     buttonAbout.innerText = 'About';
@@ -25,12 +26,23 @@ export default class About {
   }
 
   createForm() {
-    this.formAbout = renderElement(this.parentElement, 'div', ['about__form']);
-    const formContainer = renderElement(this.formAbout, 'div', ['about__container']);
-    this.renderAboutData(formContainer);
-    this.formOverlay = renderElement(this.parentElement, 'div', ['wrapper-user__form-overlay']);
     this.formOverlay.classList.add(SHOW);
     this.formAbout.classList.add(SHOW);
+    this.formAbout.innerHTML = '';
+    const formContainer = renderElement(this.formAbout, 'div', ['about__container']);
+
+    this.renderAboutData(formContainer);
+    this.renderLogo(formContainer);
+
+
+    
+  }
+
+  renderLogo(parentElement: HTMLElement){
+    const rssLogoLink = this.createLink(parentElement, '', 'https://rs.school/js/');
+    const logoImage : any = renderElement(rssLogoLink, 'img', ['about__logo-rss']);
+    logoImage.src = '../../assets/images/white_logo.svg';
+    logoImage.alt = 'logo';
   }
 
   renderAboutData(parentElement: HTMLElement) {
@@ -58,7 +70,7 @@ export default class About {
   }
 
   createLink(parentElement: HTMLElement, innerText: string, link: string) {
-    const element = renderElement(parentElement, 'a', ['github__creator-link'], innerText);
+    const element = renderElement(parentElement, 'a', ['github__creator-link'], `${(innerText).toUpperCase()}`);
     element.setAttribute('href', link);
     return element;
   }

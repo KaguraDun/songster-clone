@@ -34,8 +34,7 @@ export default class AddForm {
     this.activeArea = this.activeArea.bind(this);
     this.formContainer;
     this.formOverlay;
-    this.formContainer;
-    this.dropArea;
+     this.dropArea;
     this.text;
     this.fileName;
     this.fileDropUpload;
