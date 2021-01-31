@@ -1,5 +1,6 @@
 import { SVG_SPRITE } from './helpers/svg_sprites';
 import renderElement from './helpers/renderElements';
+import { serverUrl } from '../models/Constants';
 
 const LOGGED_IN = 'loggedIn';
 const SHOW = '--show';
@@ -85,7 +86,7 @@ export default class Login {
     form.passwordError.textContent = '';
     
     const data = await this.sendRequest(
-      'http://localhost:3000/login',
+      `${serverUrl}/login`,
       form.email.value,
       form.password.value,
     );
@@ -108,7 +109,7 @@ export default class Login {
     form.passwordError.textContent = '';
 
     const data = await this.sendRequest(
-      'http://localhost:3000/signup',
+      `${serverUrl}/signup`,
       form.email.value,
       form.password.value,
     );
@@ -145,7 +146,7 @@ export default class Login {
 
   async logOut() {
     try {
-      await fetch('http://localhost:3000/logout/', { method: 'GET', credentials: 'same-origin' });
+      await fetch(`${serverUrl}/logout/`, { method: 'GET', credentials: 'same-origin' });
     } catch (err) {
       console.log(err);
     }

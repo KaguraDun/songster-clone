@@ -4,10 +4,7 @@ import { InstrumentType } from '../models/Instrument';
 import { Difficulty } from '../models/Difficulty';
 import Store, { EVENTS } from './Store';
 import { SongViewModel } from '../models/SongViewModel';
-
-//************* */
-const serverUrl = 'http://localhost:3000';
-//************* */
+import { serverUrl } from '../models/Constants';
 
 export default class SearchBar {
   parentElement: HTMLElement;

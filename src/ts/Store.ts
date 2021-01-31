@@ -10,32 +10,33 @@ export enum EVENTS {
   SELECT_SONG = 'SELECT_SONG',
   MUTE_SONG = 'MUTE_SONG',
   CHANGE_VOLUME = 'CHANGE_VOLUME',
+  TOGGLE_METRONOME = 'TOGGLE_METRONOME'
 }
 
 
 
 export default class Store {
   eventEmitter: EventEmitter;
-  songTime: number;
+  songTimeMiliSeconds: number;
   playMusic: boolean = false;
 
   isSongMuted: boolean = false;
   volumeLevel: number = 50;
 
-  selectedSongId: string = '6000a2a200bb3e15e47d4d33';
+  selectedSongId: string;
   selectedInstrumentId: number = 0;
-  tracksArray: any;
 
+  isMetronomeEnabled: boolean = false;
 
   constructor() {
-    this.songTime;
     this.eventEmitter = new EventEmitter();
+    this.setLastSelectedSongId();
   }
 
   init() {}
 
   setSongTime(time: number) {
-    this.songTime = time;
+    this.songTimeMiliSeconds = time;
     this.eventEmitter.emit(EVENTS.TIME_MARKER_POSITION_CHANGED);
   }
 
@@ -50,8 +51,15 @@ export default class Store {
     this.eventEmitter.emit(EVENTS.END_OF_SONG);
   }
 
+  setLastSelectedSongId() {
+    const id = localStorage.getItem('songID');
+    this.selectedSongId = id ? id : '601417bd36c92d00234d4a9a';
+  }
+
   selectSong(id: string) {
     this.playMusic = false;
+    this.isMetronomeEnabled = false;
+    localStorage.setItem('songID',id);
     this.selectedSongId = id;
     this.eventEmitter.emit(EVENTS.SELECT_SONG);
   }
@@ -73,5 +81,10 @@ export default class Store {
   async changeVolume(value: number) {
     this.volumeLevel = value;
     this.eventEmitter.emit(EVENTS.CHANGE_VOLUME);
+  }
+
+  toggleMetronome() {
+    this.isMetronomeEnabled = !this.isMetronomeEnabled;
+    this.eventEmitter.emit(EVENTS.TOGGLE_METRONOME);
   }
 }

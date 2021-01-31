@@ -6,6 +6,8 @@ import renderElement from './helpers/renderElements';
 import AddForm from './AddForm';
 import About from './About';
 
+import { SVG_SPRITE } from './helpers/svg_sprites';
+
 export default class Header {
   parentElement: HTMLElement;
   wrapper: HTMLElement;
@@ -19,6 +21,7 @@ export default class Header {
     this.store = store;
 
     this.renderSearchBar = this.renderSearchBar.bind(this);
+    this.renderFormUploadMedia = this.renderFormUploadMedia.bind(this);
   }
 
   render() {
@@ -55,6 +58,14 @@ export default class Header {
     new About(this.parentElement).render();
   }
 
+  renderAddMediaButton() {
+    const buttonAdd = renderElement(this.rightContainer, 'button', ['wrapper-user-login']);
+    buttonAdd.addEventListener('click', this.renderFormUploadMedia);
+    buttonAdd.title = 'Add song';
+
+    buttonAdd.innerHTML = SVG_SPRITE.ADD;
+  }
+
   renderSearchBar() {
     new SearchBar(this.parentElement.parentElement, this.store).render();
   }
@@ -63,8 +74,8 @@ export default class Header {
     new Login(this.rightContainer).render();
   }
   
-  renderAddMediaButton() {
-    new AddForm(this.rightContainer).render();
+  renderFormUploadMedia() {
+    new AddForm(this.rightContainer, this.store).render();
   }
 
 
