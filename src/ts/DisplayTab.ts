@@ -9,6 +9,7 @@ import { SVG_SPRITE } from './helpers/svg_sprites';
 import { Song } from '../models/TrackDisplayType';
 import { Midi } from '@tonejs/midi';
 import { serverUrl } from '../models/Constants';
+import FavoriteSonsAddOrDelete from './FavoriteSongs';
 
 export default class DisplayTab {
   parentElement: HTMLElement;
@@ -77,6 +78,7 @@ export default class DisplayTab {
 
   renderFavoritesButton(parentElement: HTMLElement) {
     const favButton = renderElement(parentElement, 'button', ['title__tab-fav']);
+    new FavoriteSonsAddOrDelete(favButton).init()
   }
 
   renderSongContent() {
