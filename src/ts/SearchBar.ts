@@ -27,6 +27,7 @@ export default class SearchBar {
     this.dispose = this.dispose.bind(this);
     this.search = this.search.bind(this);
     this.selectSong = this.selectSong.bind(this);
+    this.favSongsBtnOnClick = this.favSongsBtnOnClick.bind(this);
   }
 
   render() {
