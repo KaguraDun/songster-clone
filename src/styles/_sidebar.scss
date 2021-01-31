@@ -34,22 +34,25 @@
         background-color: $shadow;
         border-radius: 10px;
         transition: 0.2s;
-        color: #ffff;
+        color: $color-white;
         background-position: center;
         background-repeat: no-repeat;
         background-size: 30px 30px;
     }
     button:hover {
         transition: 0.2s;
+
+        background-color: $shadow-dark;
+        svg{
+
         background-color: #707070;
-        svg {
-            opacity: 0.8;
+                  opacity: 0.8; //new
         }
     }
     button:active {
         transform: scale(0.95);
         transition: 0.2s;
-        background-color: #353535;
+        background-color: $color-brown;
     }
     button.active {
         svg {
