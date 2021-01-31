@@ -11,11 +11,12 @@
 @import './_sidebar.scss';
 @import './_displaytab.scss';
 @import './_footer.scss';
-@import './main.scss';
+@import './_main.scss';
 @import './_sheetMusicPage.scss';
-@import './instrumentBar.scss';
-@import './playerBox';
-@import './about';
+@import './_instrumentBar.scss';
+@import './_playerBox';
+@import './_about';
+@import './_media';
 
 .--show {
     display: flex;

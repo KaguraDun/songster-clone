@@ -30,6 +30,7 @@ export default class Header {
     this.wrapper.className = 'header__wrapper';
     this.parentElement.appendChild(this.wrapper);
     this.leftContainer = renderElement(this.wrapper, 'div', ['wrapper-title']);
+    this.leftContainer.classList.add('wrapper-title');
     this.renderTitle();
 
     this.rightContainer = document.createElement('div');
