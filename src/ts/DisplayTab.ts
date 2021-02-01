@@ -85,7 +85,7 @@ export default class DisplayTab {
     span.classList.add('title__btn-star');
 
     btn.appendChild(span)
-    new FavoriteSonsAddOrDelete(btn).init()
+    new FavoriteSonsAddOrDelete(btn, this.store).init()
 
     parentElement.appendChild(btn);
 
