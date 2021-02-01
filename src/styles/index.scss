@@ -21,3 +21,10 @@
 .--show {
     display: flex;
 }
+
+
+@media screen and (prefers-color-scheme: dark) {
+    :root {
+        $dark-background: red;
+    }
+}

@@ -14,12 +14,12 @@ export default class About {
     this.createForm = this.createForm.bind(this);
   }
 
-  render() {
+  render(modificator: string) {
     this.formAbout = renderElement(this.parentElement, 'div', ['about__form']);
     this.formOverlay = renderElement(this.parentElement, 'div', ['wrapper-user__form-overlay']);
     this.formOverlay.addEventListener('click', this.hideForm);
     
-    const buttonAbout = renderElement(this.parentElement, 'button', ['about__button']);
+    const buttonAbout = renderElement(this.parentElement, 'button', ['about__button', `${modificator}`]);
     buttonAbout.addEventListener('click', this.createForm);
     buttonAbout.innerText = 'About';
     // this.createForm(this.parentElement);

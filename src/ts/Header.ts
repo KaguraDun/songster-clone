@@ -7,6 +7,8 @@ import AddForm from './AddForm';
 import About from './About';
 
 import { SVG_SPRITE } from './helpers/svg_sprites';
+import Sidebar from './Sidebar';
+import DisplayTab from './DisplayTab';
 
 export default class Header {
   parentElement: HTMLElement;
@@ -36,8 +38,10 @@ export default class Header {
     this.rightContainer = document.createElement('div');
     this.rightContainer.className = 'wrapper-user';
     this.wrapper.appendChild(this.rightContainer);
+    this.renderAboutButtonMobile('about__button--mobile');
+    // const changethem = renderElement(this.wrapper, 'button', ['change__button'], 'change');// button to change the theme
 
-    this.renderAboutButton();
+    this.renderAboutButtonDesktop('about__button--desktop');
     this.renderSearchButton();
     this.renderLoginButton();
     this.renderAddMediaButton();
@@ -51,15 +55,25 @@ export default class Header {
   }
 
   renderSearchButton() {
-    this.searchButton = renderElement(this.rightContainer, 'div', ['search__button']); 
+    this.searchButton = renderElement(this.rightContainer, 'div', ['search__button']);
     this.searchButton.addEventListener('click', this.renderSearchBar);
+
     const container = renderElement(this.searchButton, 'div', ['search__button-container']);
     renderElement(container, 'div', ['search__button-icon']);
     renderElement(container, 'div', ['search__button-content'], 'Search');
   }
-  renderAboutButton(){
-    new About(this.leftContainer).render();
+
+  renderAboutButtonDesktop(modificator: string) {
+    new About(this.leftContainer).render(modificator);
   }
+
+  renderAboutButtonMobile(modificator: string) {
+    new About(this.rightContainer).render(modificator);
+  }
+
+  // renderInstrumentButton(){
+  //    new Sidebar(this.rightContainer, this.store, DisplayTab.song.Tracks).render();
+  // }
 
   renderAddMediaButton() {
     const buttonAdd = renderElement(this.rightContainer, 'button', ['wrapper-user-login']);
@@ -76,10 +90,8 @@ export default class Header {
   renderLoginButton() {
     new Login(this.rightContainer).render();
   }
-  
+
   renderFormUploadMedia() {
     new AddForm(this.rightContainer, this.store).render();
   }
-
-
 }

@@ -47,6 +47,7 @@ export default class RenderSong {
     const bitrateContainer = document.createElement('div');
     bitrateContainer.classList.add('sheet-music__bitrate');
     bitrateContainer.textContent = `Bpm = ${Math.trunc(this.track.Bpm)}`;
+    bitrateContainer.setAttribute('id', 'print-bitrate');
 
     parentElement.appendChild(bitrateContainer);
   }

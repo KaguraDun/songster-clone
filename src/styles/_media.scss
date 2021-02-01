@@ -1,0 +1,47 @@
+@media all and (display-mode: fullscreen) {
+
+    .sidebar {
+        display: none;
+    }
+
+    .tab__content {
+        max-height: 75vh;
+    }
+
+}
+
+@media print {
+    body {
+        font-size: 14px;
+    }
+
+    .sheet-music__time-marker {
+        display: none;
+    }
+
+}
+
+@media(min-width: 768px) {
+    .about__button--mobile {
+        display: none;
+    }
+}
+
+@media(max-width: 768px) {
+    .about__button--desktop {
+        display: none;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .player-box__play-container {
+
+        .play {
+            width: 50px;
+            height: 50px;
+        }
+      
+    }
+}
