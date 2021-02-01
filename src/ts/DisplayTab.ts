@@ -76,8 +76,19 @@ export default class DisplayTab {
   }
 
   renderFavoritesButton(parentElement: HTMLElement) {
-    const favButton = renderElement(parentElement, 'button', ['title__tab-fav']);
-    new FavoriteSonsAddOrDelete(favButton).init()
+
+    const btn = document.createElement('button');
+    const span = document.createElement('span');
+
+    span.innerText = '🟊';
+    btn.classList.add('title__btn')
+    span.classList.add('title__btn-star');
+
+    btn.appendChild(span)
+    new FavoriteSonsAddOrDelete(btn).init()
+
+    parentElement.appendChild(btn);
+
   }
 
   renderSongContent() {
