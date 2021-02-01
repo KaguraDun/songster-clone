@@ -73,7 +73,6 @@ export class InstrumentBar {
   renderInstrumentIcon(parentElement: HTMLElement, Instrument: string) {
     const element = renderElement(parentElement, 'div', ['inst-bar__instrument-icon']);
     const icon = INSTRUMENT_ICONS[Instrument];
-    console.log(Instrument,icon);
     if(!icon){
       element.innerHTML = INSTRUMENT_ICONS.DEFAULT;
       return;
