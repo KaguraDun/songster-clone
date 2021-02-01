@@ -84,7 +84,7 @@ export default class Login {
   async handleLogin(form: any) {
     form.emailError.textContent = '';
     form.passwordError.textContent = '';
-    
+
     const data = await this.sendRequest(
       `${serverUrl}/login`,
       form.email.value,
@@ -100,7 +100,7 @@ export default class Login {
     if (data.user) {
       localStorage.setItem(LOGGED_IN, 'true');
       localStorage.setItem('user', `${data.user}`);
-      location.assign('/');
+      location.assign('/songster-clone/');
     }
   }
 
@@ -121,7 +121,7 @@ export default class Login {
     }
 
     if (data.user) {
-      location.assign('/');
+      location.assign('/songster-clone/');
     }
   }
 
@@ -152,7 +152,7 @@ export default class Login {
     }
 
     localStorage.clear();
-    location.assign('/');
+    location.assign('/songster-clone/');
   }
 
   hideForm() {

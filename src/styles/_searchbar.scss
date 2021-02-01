@@ -69,6 +69,20 @@
             color: $font-color;
         }
     }
+    .favorites-star {
+        height: 15px;
+        width: 15px;
+        font-size: 25px;
+    }
+    button {
+        background: transparent;
+        border: none !important;
+        outline: none;
+        cursor: pointer;
+    }
+    .favorites {
+        color: gold;
+    }
 }
 
 .songs-container {

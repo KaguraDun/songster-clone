@@ -32,6 +32,7 @@ export default class MusicPlayerBox{
         this.changeVolume = this.changeVolume.bind(this);
         this.mute = this.mute.bind(this);
         this.showHoverLocationTime = this.showHoverLocationTime.bind(this);
+        this.setSongTime = this.setSongTime.bind(this);
         this.startOrStopSlider = this.startOrStopSlider.bind(this);
         this.onSongEnded = this.onSongEnded.bind(this);
         this.onTimeMarkerPositionChanged = this.onTimeMarkerPositionChanged.bind(this);
@@ -126,6 +127,8 @@ export default class MusicPlayerBox{
 
         this.timeProgressBar = renderElement(this.progressBarContainer,'div',['progress-bar']);
         this.timeProgressBar.addEventListener('mouseenter',this.showHoverLocationTime);
+        this.timeProgressBar.addEventListener('click',this.setSongTime);
+
         this.timeProgressBarWidth = this.timeProgressBar.offsetWidth;
 
         this.timeSlider = renderElement(this.timeProgressBar,'div',['slider']);
@@ -134,9 +137,19 @@ export default class MusicPlayerBox{
         const repeat = renderElement(this.progressBarContainer,'div',['repeat']);
     }
 
+    getTime(offsetX: number){
+        const percentage = offsetX / this.timeProgressBarWidth;
+        return this.songDurationSeconds * percentage;
+    }
+
+    setSongTime(e: MouseEvent){
+        const timeInSeconds = this.getTime(e.offsetX);
+
+        this.store.setSongTimeFromPlayer(timeInSeconds * 1000);
+    }
+
     showHoverLocationTime(e: MouseEvent) {
-        const percentage = e.offsetX / this.timeProgressBarWidth;
-        const timeInSeconds = this.songDurationSeconds * percentage;
+        const timeInSeconds = this.getTime(e.offsetX);
         const date = new Date(timeInSeconds * 1000);
 
         const indicator = renderElement(this.timeProgressBar,'div',['time-indicator']);

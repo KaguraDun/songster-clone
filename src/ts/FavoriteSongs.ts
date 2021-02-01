@@ -25,16 +25,16 @@ export default class FavoriteSonsAddOrDelete {
   buttonOnClick() {
     if (!this.FavButton.classList.contains('added')) {
       this.sendRequest(this.songAddUrl);
-      this.FavButton.classList.add('added');
+      this.FavButton.classList.toggle('added');
+      this.FavButton.children[0].classList.toggle('gold');
     } else {
       this.sendRequest(this.songDelUrl);
-      this.FavButton.classList.remove('added');
+      this.FavButton.classList.toggle('added');
+      this.FavButton.children[0].classList.toggle('gold');
     }
   }
 
   async sendRequest(url: string, e?: Event) {
-
-    console.log(this.songId, this.userId)
 
     if(!this.songId || !this.userId) throw new Error()
 
@@ -45,7 +45,6 @@ export default class FavoriteSonsAddOrDelete {
         'Content-Type': 'application/json',
       },
     });
-    console.log('uhuuuu')
 
   }
 }

@@ -3,6 +3,7 @@ import request from './request';
 
 export enum EVENTS {
   TIME_MARKER_POSITION_CHANGED = 'TIME_MARKER_POSITION_CHANGED',
+  PLAYER_PROGRESS_BAR_CLICK = 'PLAYER_PROGRESS_BAR_CLICK',
   FULL_SCREEN_BUTTON_CLICK = 'FULL_SCREEN_BUTTON_CLICK',
   SELECT_INSTRUMENT = 'SELECT_INSTRUMENT',
   PLAY_BUTTON_CLICK = 'PLAY_BUTTON_CLICK',
@@ -38,6 +39,11 @@ export default class Store {
   setSongTime(time: number) {
     this.songTimeMiliSeconds = time;
     this.eventEmitter.emit(EVENTS.TIME_MARKER_POSITION_CHANGED);
+  }
+
+  setSongTimeFromPlayer(time: number){
+    this.songTimeMiliSeconds = time;
+    this.eventEmitter.emit(EVENTS.PLAYER_PROGRESS_BAR_CLICK);
   }
 
   playSong() {

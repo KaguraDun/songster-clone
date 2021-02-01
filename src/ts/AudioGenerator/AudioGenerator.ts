@@ -1,7 +1,7 @@
 import { Midi, Track } from '@tonejs/midi';
 import * as Tone from 'tone';
 import Store, { EVENTS } from '../Store';
-import SampleLibrary from '../../../tonejs-instruments/Tonejs-Instruments';
+import SampleLibrary from '../../../public/tonejs-instruments/Tonejs-Instruments';
 import { Instrument } from '@tonejs/midi/dist/Instrument';
 import { instruments } from './MidiInstruments';
 import { Metronome } from './Metronome';

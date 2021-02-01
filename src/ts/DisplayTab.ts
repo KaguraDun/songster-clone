@@ -4,7 +4,6 @@ import { AudioGenerator } from './AudioGenerator/AudioGenerator';
 import RenderSong from './RenderSong';
 import renderElement from './helpers/renderElements';
 import MusicPlayerBox from './MusicPlayerBox';
-import { Player } from 'tone';
 import { SVG_SPRITE } from './helpers/svg_sprites';
 import { Song } from '../models/TrackDisplayType';
 import { Midi } from '@tonejs/midi';
@@ -78,8 +77,19 @@ export default class DisplayTab {
   }
 
   renderFavoritesButton(parentElement: HTMLElement) {
-    const favButton = renderElement(parentElement, 'button', ['title__tab-fav']);
-    new FavoriteSonsAddOrDelete(favButton).init()
+
+    const btn = document.createElement('button');
+    const span = document.createElement('span');
+
+    span.innerText = '🟊';
+    btn.classList.add('title__btn')
+    span.classList.add('title__btn-star');
+
+    btn.appendChild(span)
+    new FavoriteSonsAddOrDelete(btn).init()
+
+    parentElement.appendChild(btn);
+
   }
 
   renderSongContent() {
