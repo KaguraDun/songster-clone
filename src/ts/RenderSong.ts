@@ -98,8 +98,10 @@ export default class RenderSong {
   }
 
   runTimeMarker() {
+    const measureWidth = window.getComputedStyle(this.timeMarker.currentMeasure).width;
+
     this.timeMarker.element.style.transition = `left ${this.measureDuration}s linear`;
-    this.timeMarker.element.style.left = `${SECTION_SIZE.width}px`;
+    this.timeMarker.element.style.left = `${measureWidth}`;
     this.timeMarker.element.scrollIntoView({ block: 'center', behavior: 'smooth' });
   }
 
@@ -119,11 +121,12 @@ export default class RenderSong {
 
   addTimeMarker() {
     const timeMarker = document.createElement('div');
+    const timeMarkerHeight = window.getComputedStyle(this.timeMarker.currentMeasure).height;
 
     this.timeMarker.firstMeasure.append(timeMarker);
 
     timeMarker.classList.add('sheet-music__time-marker');
-    timeMarker.style.height = `${SECTION_SIZE.height}px`;
+    timeMarker.style.height = `${timeMarkerHeight}`;
     timeMarker.style.left = `${0}px`;
     timeMarker.style.top = `${0}px`;
 
@@ -190,6 +193,20 @@ export default class RenderSong {
     }
   }
 
+  handleTabletChange(e: MediaQueryListEventInit) {
+    // Check if the media query is true
+    if (e.matches) {
+      // Then log the following message to the console
+      try {
+        const measureWidth = window.getComputedStyle(this.timeMarker.currentMeasure).width;
+        this.timeMarker.element.style.left = `${measureWidth}`;
+
+        const timeMarkerHeight = window.getComputedStyle(this.timeMarker.currentMeasure).height;
+        this.timeMarker.element.style.height = `${timeMarkerHeight}`;
+      } catch (e) {}
+    }
+  }
+
   init() {
     this.store.eventEmitter.addEvent(EVENTS.SELECT_INSTRUMENT, this.changeTrack);
     this.store.eventEmitter.addEvent(EVENTS.PLAY_BUTTON_CLICK, () => this.playMusicTrack());
@@ -197,6 +214,12 @@ export default class RenderSong {
 
     this.transitionEndEventName = getTransitionEndEventName();
     this.render();
+
+    const mediaQuery = window.matchMedia('(max-width: 1024px)');
+
+    mediaQuery.addListener(this.handleTabletChange);
+
+    this.handleTabletChange(mediaQuery);
   }
 
   dispose() {

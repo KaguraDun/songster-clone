@@ -47,7 +47,6 @@ export default class Store {
   }
 
   playSong() {
-    console.log('play');
     this.playMusic = !this.playMusic;
     this.eventEmitter.emit(EVENTS.PLAY_BUTTON_CLICK);
   }

@@ -5,6 +5,7 @@ import { Difficulty } from '../models/Difficulty';
 import Store, { EVENTS } from './Store';
 import { SongViewModel } from '../models/SongViewModel';
 import { serverUrl } from '../models/Constants';
+import { INSTRUMENT_ICONS } from './helpers/instrument_icons';
 
 export default class SearchBar {
   parentElement: HTMLElement;
@@ -75,7 +76,7 @@ export default class SearchBar {
     this.wrapper.appendChild(container);
 
     this.favSongsBtn = this.renderFavSongStarBtn(container);
-    this.instrumentInput = this.renderOptionSelectAndGet(InstrumentType, 'Instrument', container);
+    //this.instrumentInput = this.renderOptionSelectAndGet(InstrumentType, 'Instrument', container);
     this.genreInput = this.renderOptionSelectAndGet(Genre, 'Genre', container);
     this.difficultyInput = this.renderOptionSelectAndGet(Difficulty, 'Difficulty', container);
   }
@@ -145,7 +146,7 @@ export default class SearchBar {
 
       const searchOption: any = {
         name: this.textInput.value,
-        instrument: this.instrumentInput.selectedOptions[0].value,
+        // instrument: this.instrumentInput.selectedOptions[0].value,
         genre: this.genreInput.selectedOptions[0].value,
         difficulty: this.difficultyInput.selectedOptions[0].value,
       };
@@ -194,6 +195,7 @@ export default class SearchBar {
 
   renderSongImage(parentElement: HTMLElement) {
     const img = document.createElement('div');
+    img.innerHTML = INSTRUMENT_ICONS.DEFAULT;
     img.classList.add('image');
     parentElement.appendChild(img);
   }

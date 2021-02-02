@@ -21,9 +21,19 @@
 
 }
 
-@media(min-width: 768px) {
+@media(max-width: 1024px) {
+    .measure {
+        width: 100% !important;
+        height: 50% !important;
+    }
 
-   
+    .sheet-music__render{
+        grid-template-columns: repeat(auto-fit, 200px);
+    }
+
+    .sheet-music__time-marker{
+        height: 75px !important;
+    }
 }
 
 @media(max-width: 768px) {
@@ -40,10 +50,22 @@
             margin-left: 15px;
             // background-color: transparent;
         }
+
         // button:hover{
         //     background-color: $shadow;
         // }
-    }
+        }
+
+  
+
+        .songs-container .song{
+            padding: 15px 15px 15px 0;
+
+            .image {
+                display: none;
+            }
+        } 
+
 .wrapper-user{
     height: 55px;
 }
@@ -135,6 +157,8 @@ order: 0;
         width: 100%;
     }
     .about__button{
+        display: flex;
+        align-items: center;
         width: 60px;
         height: 60px;
         background-color: $shadow;
@@ -148,6 +172,7 @@ order: 0;
 
         &--title{
             display: none;
+            font-size: 25px;
         }
         &--svg{
             display: block;

@@ -134,7 +134,7 @@ export default class MusicPlayerBox{
         this.timeSlider = renderElement(this.timeProgressBar,'div',['slider']);
         this.timeSlider.style.width = '0px';
 
-        const repeat = renderElement(this.progressBarContainer,'div',['repeat']);
+        //const repeat = renderElement(this.progressBarContainer,'div',['repeat']);
     }
 
     getTime(offsetX: number){

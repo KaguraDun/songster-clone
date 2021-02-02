@@ -72,7 +72,7 @@
     .favorites-star {
         height: 15px;
         width: 15px;
-        font-size: 25px;
+        font-size: 35px;
     }
     button {
         background: transparent;
@@ -97,15 +97,26 @@
         margin: 0 40px;
         padding: 14px 198px 16px 0px;
         border-bottom: 1px solid $shadow-dark;
+
         &:hover {
             cursor: pointer;
             background: $color-dark-background;
         }
         & .image {
+            display: flex;
             width: 86px;
             height: 86px;
             border-radius: 10px;
             background-color: $color-another-blue;
+            justify-content: center;
+            align-items: center;
+
+            svg{
+                width: 45px;
+                height: 45px;
+                
+                fill:  $dark-background;
+            }
         }
         & .content {
             margin-left: 34px;

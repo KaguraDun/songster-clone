@@ -171,8 +171,6 @@ export class AudioGenerator {
   }
 
   getSynth(instrument: Instrument) {
-    console.log(instrument.number, instrument.name);
-    console.log('-------------');
     const name = instrument.name;
     const instrumentObj = instruments.find((obj) => obj.id === name);
     if (!instrumentObj || !instrumentObj.name) return;

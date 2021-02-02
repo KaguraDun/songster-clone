@@ -55,12 +55,10 @@ export class InstrumentBar {
     if (this.store.selectedInstrumentId === id) {
       this.highlightSelectedInstrument(instrumentElement);
     }
-    // console.log('here ' + track.Instrument);
     instrumentElement.dataset.id = id.toString();
     instrumentElement.addEventListener('click', this.selectInstrument);
 
     const instrumentName = track.Instrument;
-    console.log(instrumentName);
 
     this.renderInstrumentIcon(instrumentElement, instrumentName);
     this.renderInstrumentContent(instrumentElement, track);
