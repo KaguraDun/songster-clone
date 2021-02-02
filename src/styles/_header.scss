@@ -30,6 +30,9 @@
         padding: 22px 55px;
         background-color: $color-orange;
         border-radius: 35px;
+        &--svg{
+            display: none;
+        }
 
         &-container {
             display: flex;

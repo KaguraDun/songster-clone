@@ -9,7 +9,7 @@ import About from './About';
 import { SVG_SPRITE } from './helpers/svg_sprites';
 import Sidebar from './Sidebar';
 import DisplayTab from './DisplayTab';
-import BurgerMenu from './BurgerMenu';
+
 
 export default class Header {
   parentElement: HTMLElement;
@@ -48,8 +48,10 @@ export default class Header {
     this.searchButton.addEventListener('click', this.renderSearchBar);
 
     const container = renderElement(this.searchButton, 'div', ['search__button-container']);
-    renderElement(container, 'div', ['search__button-icon']);
+    const searchIcon = renderElement(container, 'div', ['search__button-icon']);
     renderElement(container, 'div', ['search__button-content'], 'Search');
+    const searchSvg = renderElement(container, 'div', ['search__button--svg']);
+    searchSvg.innerHTML = SVG_SPRITE.SEARCH;
   }
 
   renderAboutButtonDesktop() {

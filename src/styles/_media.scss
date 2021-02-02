@@ -29,28 +29,52 @@
 @media(max-width: 768px) {
     .header__wrapper {
         flex-direction: column;
+        padding: 15px 15px 5px;
         &-title{
             margin: 0;
-            margin-bottom: 10px;
+            margin-bottom: 20px;
         }
+        button{
+            width: 55px;
+            height: 55px;
+            margin-left: 15px;
+            // background-color: transparent;
+        }
+        // button:hover{
+        //     background-color: $shadow;
+        // }
     }
-
+.wrapper-user{
+    height: 55px;
+}
     .search__button {
-        width: 60px;
-        height: 60px;
+        width: 55px;
+        height: 55px;
         padding: 0;
+        // background-color: transparent;   
         &-icon{
-            display:block;
+            display:none;
         }
 
         &-content {
             display: none;
+        }
+        &--svg{
+            padding: 13px 10px 10px 14px;
+            display: block;
+            svg{
+            width: 25px;
+            height: 25px;
+            opacity: 0.6;
+           
+            }
         }
     }
 
     .title{
         flex-direction: row;
         font-size: 16px;
+        order: 0;
 
         &__tab-artist{
             margin-right: 10px;
@@ -62,16 +86,32 @@
     }
 
     .sidebar {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        -webkit-transform: translate(-50%);
+                transform: translate(-50%);
+        // width: 100%;
         flex-direction: row;
         justify-content: center;
         margin: 0;
         margin-top: 10px;
+        padding-top: 15px;
         width: auto;
         max-height: 62px;
+        margin: 10px;
+        order: 6;
 
         &__function {
             flex-direction: row;
             margin-left: 10px;
+           height: auto;
+        }
+        button{
+            width: 50px;
+            height: 50px;
+            margin-left: 20px;
+            // background-color: transparent;
         }
     }
 
@@ -81,7 +121,12 @@
 
     .display {
         &__data {
+order: 0;
+            flex-direction: column;
+        }
 
+        &__tab{
+            display: flex;
             flex-direction: column;
         }
 
@@ -90,29 +135,81 @@
         width: 100%;
     }
     .about__button{
-        width: 58px;
-        height: 58px;
+        width: 60px;
+        height: 60px;
         background-color: $shadow;
         opacity: 0.8;
         border-radius: 50px;
         margin-right: 20px;
-        // background-image: url('../images/Cat.svg');
-        // background-size: contain;
-        // background-repeat: no-repeat;
-        // background-position: center;
+       
         margin: 0;
         margin-right: 20px;
-        // padding:10px;
+        
 
         &--title{
             display: none;
         }
         &--svg{
             display: block;
+
+            svg{
+                width: 30px;
+      height: 30px;
+      fill: $color-white;
+      opacity: 1;
+            }
         }
     }
+    .tab__content{
+        max-height: 50vh;
+    }
+    .player-box__play-container {
+   margin: 0 0 15px;
+    
+    .play,
+    .pause{
+        max-width: 50px;
+        height: 50px;
+        margin: 0;
+        margin: 0 15px;
+    }
+    
+    .prev,
+    .next{
+        display: none;
+    }
+    }
+    .player-box{
+        padding: 0;
+        margin: 0;
 
+        &__speed{
+            display: none;
+        }
+        &__volume-container{
+            margin-left: 10px;
+        }
 
+        &__container{
+            display: flex;
+            flex-direction: row-reverse;
+            margin: 15px;
+            justify-content: center;
+            
+        }
+        &__progress{
+        max-width: 200px;
+        width: 100%;
+        padding: 15px 0;
+        margin: 0;
 
-
+        .repeat{
+            display: none;
+        }
+    }
+    &__controls{
+        padding: 0;
+    }
+    }
 }
+
