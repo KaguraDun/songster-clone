@@ -3,6 +3,7 @@ import Footer from './Footer';
 import DisplayTab from './DisplayTab';
 import Store, { EVENTS } from './Store';
 import { SVG_SPRITE } from './helpers/svg_sprites';
+import renderElement from './helpers/renderElements';
 
 export default class Page {
   parentElement: HTMLElement;
@@ -22,7 +23,6 @@ export default class Page {
 
   render() {
     this.store.eventEmitter.addEvent(EVENTS.SELECT_SONG,this.renderSong);
-
     this.renderHeader();
     this.renderMain();
     this.renderFooter();
@@ -65,4 +65,6 @@ export default class Page {
 
     new Footer(this.footerElement).render();
   }
+
+  
 }

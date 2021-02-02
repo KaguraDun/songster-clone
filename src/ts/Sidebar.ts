@@ -7,6 +7,9 @@ import { InstrumentBar } from './InstrumentBar';
 import Store, { EVENTS } from './Store';
 
 export default class Sidebar {
+  renderInstrumentsButton() {
+      throw new Error("Method not implemented.");
+  }
   parentElement: HTMLElement;
   container: HTMLElement;
   functionButtons: HTMLElement;

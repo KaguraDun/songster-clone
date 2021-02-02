@@ -1,4 +1,5 @@
 import renderElement from './helpers/renderElements';
+import { SVG_SPRITE } from './helpers/svg_sprites';
 
 const SHOW = '--show';
 export default class About {
@@ -14,14 +15,18 @@ export default class About {
     this.createForm = this.createForm.bind(this);
   }
 
-  render(modificator: string) {
+  render() {
     this.formAbout = renderElement(this.parentElement, 'div', ['about__form']);
     this.formOverlay = renderElement(this.parentElement, 'div', ['wrapper-user__form-overlay']);
     this.formOverlay.addEventListener('click', this.hideForm);
     
-    const buttonAbout = renderElement(this.parentElement, 'button', ['about__button', `${modificator}`]);
+    const buttonAbout = renderElement(this.parentElement, 'button', ['about__button']);
     buttonAbout.addEventListener('click', this.createForm);
-    buttonAbout.innerText = 'About';
+    // buttonAbout.innerText = 'About';
+    const aboutTitle = renderElement(buttonAbout, 'span', ['about__button--title']);
+    aboutTitle.innerText= 'About';
+    const svgContainer = renderElement(buttonAbout, 'div', ['about__button--svg']);
+    svgContainer.innerHTML = SVG_SPRITE.GITHUB;
     // this.createForm(this.parentElement);
   }
 

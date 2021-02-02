@@ -9,49 +9,38 @@ import About from './About';
 import { SVG_SPRITE } from './helpers/svg_sprites';
 import Sidebar from './Sidebar';
 import DisplayTab from './DisplayTab';
+import BurgerMenu from './BurgerMenu';
 
 export default class Header {
   parentElement: HTMLElement;
   wrapper: HTMLElement;
   searchButton: HTMLElement;
-  leftContainer: HTMLElement;
   rightContainer: HTMLElement;
-
   store: Store;
 
   constructor(parentElement: HTMLElement, store: Store) {
     this.parentElement = parentElement;
     this.store = store;
-
     this.renderSearchBar = this.renderSearchBar.bind(this);
     this.renderFormUploadMedia = this.renderFormUploadMedia.bind(this);
   }
 
   render() {
-    this.wrapper = document.createElement('div');
-    this.wrapper.className = 'header__wrapper';
-    this.parentElement.appendChild(this.wrapper);
-    this.leftContainer = renderElement(this.wrapper, 'div', ['wrapper-title']);
-    this.leftContainer.classList.add('wrapper-title');
+    
+    this.wrapper = renderElement(this.parentElement, 'div', ['header__wrapper']);
     this.renderTitle();
-
-    this.rightContainer = document.createElement('div');
-    this.rightContainer.className = 'wrapper-user';
-    this.wrapper.appendChild(this.rightContainer);
-    this.renderAboutButtonMobile('about__button--mobile');
-    // const changethem = renderElement(this.wrapper, 'button', ['change__button'], 'change');// button to change the theme
-
-    this.renderAboutButtonDesktop('about__button--desktop');
+    this.rightContainer = renderElement(this.wrapper, 'div', ['wrapper-user']);
+    this.renderAboutButtonDesktop();
     this.renderSearchButton();
     this.renderLoginButton();
     this.renderAddMediaButton();
+
+   
   }
 
   renderTitle() {
-    const headerTitle = document.createElement('span');
-    headerTitle.className = 'header__wrapper-title';
-    headerTitle.textContent = 'Songster-Clone';
-    this.leftContainer.appendChild(headerTitle);
+   renderElement(this.wrapper, 'h1', ['header__wrapper-title'], 'Songster-Clone');
+      
   }
 
   renderSearchButton() {
@@ -63,17 +52,9 @@ export default class Header {
     renderElement(container, 'div', ['search__button-content'], 'Search');
   }
 
-  renderAboutButtonDesktop(modificator: string) {
-    new About(this.leftContainer).render(modificator);
+  renderAboutButtonDesktop() {
+    new About(this.rightContainer).render();
   }
-
-  renderAboutButtonMobile(modificator: string) {
-    new About(this.rightContainer).render(modificator);
-  }
-
-  // renderInstrumentButton(){
-  //    new Sidebar(this.rightContainer, this.store, DisplayTab.song.Tracks).render();
-  // }
 
   renderAddMediaButton() {
     const buttonAdd = renderElement(this.rightContainer, 'button', ['wrapper-user-login']);
@@ -94,4 +75,7 @@ export default class Header {
   renderFormUploadMedia() {
     new AddForm(this.rightContainer, this.store).render();
   }
+
+
+
 }
