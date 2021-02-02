@@ -7,20 +7,22 @@
 
 .player-box {
     &__container {
-        // margin: 14.5px 80px 0 0;
         margin-top: 20px;
     }
+
     &__controls {
         padding: 0 125px;
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
+
     &__play-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
         margin-left: 60px;
+
         * {
             background-color: transparent;
             background-size: cover;
@@ -28,29 +30,36 @@
             height: 24px;
             opacity: 0.5;
         }
+
         *:hover {
             cursor: pointer;
             opacity: 0.7;
         }
+
         .next {
             background-image: url(../images/next.svg);
         }
+
         .prev {
             background-image: url(../images/next.svg);
             transform: scale(-1, 1);
         }
+
         .play-pause {
             width: 78px;
             height: 78px;
             margin: 0 40px;
         }
+
         .play {
             background-image: url(../images/play.svg);
         }
+
         .pause {
             background-image: url(../images/pause.svg);
         }
     }
+
     &__speed {
         display: -webkit-box;
         -webkit-box-pack: center;
@@ -61,25 +70,29 @@
         border-radius: 50%;
         color: $font-color;
         -webkit-appearance: none;
-        visibility: hidden;
+
         &:hover {
             cursor: pointer;
             background-color: rgba($color:$font-color, $alpha: 0.15);
         }
+
         option {
             text-align: center;
-            background:$dark-background;
+            background: $dark-background;
             color: $font-color;
             font-size: 18px;
         }
     }
+
     &__volume-container {
         display: flex;
         align-items: center;
+
         .percentage {
             margin-right: 10px;
             opacity: 0.3;
         }
+
         .progress-bar {
             width: 100px;
             height: 6px;
@@ -89,6 +102,7 @@
             -webkit-appearance: none;
             cursor: pointer;
         }
+
         .progress-bar:focus {
             outline: none;
           }
@@ -141,33 +155,39 @@
             height: 24px;
             background-color: transparent;
             background-size: cover;
+
             opacity: 0.7;
             //background-image: url(../images/mute.svg);
+
             svg {
                 fill: $font-color;
             }
         }
+
         .mute-icon:hover {
             opacity: 1;
             cursor: pointer;
         }
+
         .mute-icon.active svg {
             opacity: 1;
             fill: $color-orange;
         }
     }
+
     &__progress {
-        padding: 32px 0;
+        padding: 20px 0;
         margin: 0 auto;
         display: flex;
         justify-content: center;
         align-items: center;
-        // visibility: hidden;
+
         .time {
             margin-right: 15px;
             font-size: 12px;
             opacity: 0.7;
         }
+
         .progress-bar {
             position: relative;
             background-color: rgba($color: $font-color, $alpha: 0.1);
@@ -175,6 +195,7 @@
             height: 6px;
             margin-right: 15px;
             cursor: pointer;
+
             .slider {
                 height: 6px;
                 margin: 0;
@@ -182,6 +203,7 @@
                 border: none;
                 background-color: $color-orange;
             }
+
             .time-indicator {
                 display: flex;
                 align-items: center;
@@ -191,14 +213,16 @@
                 width: 65px;
                 height: 34px;
                 background: black;
-                color:$font-color;
+                color: $font-color;
                 font-size: 12px;
                 opacity: 0.7;
             }
         }
+
         .progress-bar:hover {
             background-color: rgba($color: $font-color, $alpha: 0.2);
         }
+
         .repeat {
             width: 24px;
             height: 24px;
@@ -207,6 +231,7 @@
             opacity: 0.5;
             background-image: url(../images/repeat.svg);
         }
+
         .repeat:hover {
             cursor: pointer;
             opacity: 0.7;

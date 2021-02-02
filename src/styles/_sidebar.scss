@@ -1,29 +1,28 @@
 .sidebar {
-    // position: fixed;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     margin-left: 20px;
-    // padding: 0 15px 0 40px;
+
     svg {
         width: 30px;
         height: 30px;
         fill: $color-white;
         opacity: 0.5;
     }
-    // padding-top: 50px;
+
     &__function {
         height: 200px;
         display: flex;
         flex-direction: column;
         justify-content: space-between;
     }
+
     &__extra {
-        // height: 200px;
         display: flex;
         flex-direction: column;
-        // justify-content: space-between;
     }
+
     button {
         background-size: cover;
         border: none;
@@ -39,24 +38,32 @@
         background-repeat: no-repeat;
         background-size: 30px 30px;
     }
+
     button:hover {
         transition: 0.2s;
 
         background-color: $shadow-dark;
-        svg{
 
-        background-color: #707070;
-                  opacity: 0.8; //new
+        svg {
+
+            background-color: #707070;
+            opacity: 0.8; 
         }
     }
+
     button:active {
         transform: scale(0.95);
         transition: 0.2s;
         background-color: $color-brown;
     }
+
     button.active {
         svg {
             fill: #ef5743;
         }
+    }
+
+    .show {
+        display: block;
     }
 }
