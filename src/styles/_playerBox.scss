@@ -20,7 +20,7 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-left: 60px;  
+        margin-left: 60px;
         * {
             background-color: transparent;
             background-size: cover;
@@ -61,6 +61,7 @@
         border-radius: 50%;
         color: $font-color;
         -webkit-appearance: none;
+        visibility: hidden;
         &:hover {
             cursor: pointer;
             background-color: rgba($color:$font-color, $alpha: 0.15);
@@ -114,6 +115,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        // visibility: hidden;
         .time {
             margin-right: 15px;
             font-size: 12px;

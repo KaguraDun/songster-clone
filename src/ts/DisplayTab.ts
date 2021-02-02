@@ -68,10 +68,11 @@ export default class DisplayTab {
 
   renderSongTitle() {
     this.titleContainer = renderElement(this.container, 'div', ['title']);
-    this.titleContainer.setAttribute('id', 'print_title');
-    renderElement(this.titleContainer, 'div', ['title__tab-artist'], this.song.Author);
+    const artistName =renderElement(this.titleContainer, 'div', ['title__tab-artist'], this.song.Author);
+    artistName.setAttribute('id','print_artist' );
     const titleBox = renderElement(this.titleContainer, 'div', ['title__box']);
-    renderElement(titleBox, 'div', ['title__tab-track'], this.song.Name);
+    const songTitle = renderElement(titleBox, 'div', ['title__tab-track'], this.song.Name);
+    songTitle.setAttribute('id', 'song_title');
     this.renderFavoritesButton(titleBox);
   }
 
@@ -85,7 +86,7 @@ export default class DisplayTab {
     span.classList.add('title__btn-star');
 
     btn.appendChild(span)
-    new FavoriteSonsAddOrDelete(btn).init()
+    new FavoriteSonsAddOrDelete(btn, this.store).init()
 
     parentElement.appendChild(btn);
 

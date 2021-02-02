@@ -7,6 +7,9 @@ import { InstrumentBar } from './InstrumentBar';
 import Store, { EVENTS } from './Store';
 
 export default class Sidebar {
+  renderInstrumentsButton() {
+      throw new Error("Method not implemented.");
+  }
   parentElement: HTMLElement;
   container: HTMLElement;
   functionButtons: HTMLElement;
@@ -93,12 +96,17 @@ export default class Sidebar {
   }
 
   onPrintClick() {
-    var title = document.getElementById('print_title').innerHTML;
-    var divContents = document.getElementById('print').innerHTML;
-    var a = window.open('', '', 'height=1200, width=900');
+    const artistName = document.getElementById('print_artist').innerHTML;
+    const songTitle = document.getElementById('song_title').innerHTML;
+    const divContents = document.getElementById('print').innerHTML;
+    const bit = document.getElementById('print-bitrate').innerHTML;
+    // const a = window.open('',  'height=1200, width=900');
+    const a = window.open('', '', 'height=1200, width=900');
     a.document.write('<html>');
-    a.document.write(`<body > <h1>${title}`);
-    a.document.write(`<h6>${divContents}</h6>`);
+    a.document.write(`<body> <h1 style="text-align:center">${artistName}`);
+    a.document.write(`<body> <h2 style="text-align:center">${songTitle}`);
+    a.document.write(`<body> <h4>${bit}`)
+    a.document.write(`<p style="font-size: 14px">${divContents}`);
     a.document.close();
     a.print();
   }

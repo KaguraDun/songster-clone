@@ -7,58 +7,55 @@ import AddForm from './AddForm';
 import About from './About';
 
 import { SVG_SPRITE } from './helpers/svg_sprites';
+import Sidebar from './Sidebar';
+import DisplayTab from './DisplayTab';
+
 
 export default class Header {
   parentElement: HTMLElement;
   wrapper: HTMLElement;
   searchButton: HTMLElement;
-  leftContainer: HTMLElement;
   rightContainer: HTMLElement;
-
   store: Store;
 
   constructor(parentElement: HTMLElement, store: Store) {
     this.parentElement = parentElement;
     this.store = store;
-
     this.renderSearchBar = this.renderSearchBar.bind(this);
     this.renderFormUploadMedia = this.renderFormUploadMedia.bind(this);
   }
 
   render() {
-    this.wrapper = document.createElement('div');
-    this.wrapper.className = 'header__wrapper';
-    this.parentElement.appendChild(this.wrapper);
-    this.leftContainer = renderElement(this.wrapper, 'div', ['wrapper-title']);
-    this.leftContainer.classList.add('wrapper-title');
+    
+    this.wrapper = renderElement(this.parentElement, 'div', ['header__wrapper']);
     this.renderTitle();
-
-    this.rightContainer = document.createElement('div');
-    this.rightContainer.className = 'wrapper-user';
-    this.wrapper.appendChild(this.rightContainer);
-
-    this.renderAboutButton();
+    this.rightContainer = renderElement(this.wrapper, 'div', ['wrapper-user']);
+    this.renderAboutButtonDesktop();
     this.renderSearchButton();
     this.renderLoginButton();
     this.renderAddMediaButton();
+
+   
   }
 
   renderTitle() {
-    const headerTitle = document.createElement('span');
-    headerTitle.className = 'header__wrapper-title';
-    headerTitle.textContent = 'Songster-Clone';
-    this.leftContainer.appendChild(headerTitle);
+   renderElement(this.wrapper, 'h1', ['header__wrapper-title'], 'Songster-Clone');
+      
   }
 
   renderSearchButton() {
-    this.searchButton = renderElement(this.rightContainer, 'div', ['search__button']); 
+    this.searchButton = renderElement(this.rightContainer, 'div', ['search__button']);
     this.searchButton.addEventListener('click', this.renderSearchBar);
+
     const container = renderElement(this.searchButton, 'div', ['search__button-container']);
-    renderElement(container, 'div', ['search__button-icon']);
+    const searchIcon = renderElement(container, 'div', ['search__button-icon']);
     renderElement(container, 'div', ['search__button-content'], 'Search');
+    const searchSvg = renderElement(container, 'div', ['search__button--svg']);
+    searchSvg.innerHTML = SVG_SPRITE.SEARCH;
   }
-  renderAboutButton(){
-    new About(this.leftContainer).render();
+
+  renderAboutButtonDesktop() {
+    new About(this.rightContainer).render();
   }
 
   renderAddMediaButton() {
@@ -76,10 +73,11 @@ export default class Header {
   renderLoginButton() {
     new Login(this.rightContainer).render();
   }
-  
+
   renderFormUploadMedia() {
     new AddForm(this.rightContainer, this.store).render();
   }
+
 
 
 }

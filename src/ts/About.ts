@@ -1,4 +1,5 @@
 import renderElement from './helpers/renderElements';
+import { SVG_SPRITE } from './helpers/svg_sprites';
 
 const SHOW = '--show';
 export default class About {
@@ -21,7 +22,11 @@ export default class About {
     
     const buttonAbout = renderElement(this.parentElement, 'button', ['about__button']);
     buttonAbout.addEventListener('click', this.createForm);
-    buttonAbout.innerText = 'About';
+    // buttonAbout.innerText = 'About';
+    const aboutTitle = renderElement(buttonAbout, 'span', ['about__button--title']);
+    aboutTitle.innerText= 'About';
+    const svgContainer = renderElement(buttonAbout, 'div', ['about__button--svg']);
+    svgContainer.innerHTML = SVG_SPRITE.GITHUB;
     // this.createForm(this.parentElement);
   }
 
