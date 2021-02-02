@@ -61,7 +61,7 @@
     }
 
     &__speed {
-        display: -webkit-box;
+        visibility: hidden;
         -webkit-box-pack: center;
         border: none;
         background-color: rgba($color: $font-color, $alpha: 0.05);
