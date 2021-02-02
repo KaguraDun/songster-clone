@@ -1,7 +1,7 @@
 import { Track } from '../models/TrackDisplayType';
 import renderElement from './helpers/renderElements';
 import Store from './Store';
-import { INSTRUMENT_ICONS, SVG_ICON } from './helpers/svg_sprites';
+import { INSTRUMENT_ICONS } from './helpers/instrument_icons';
 
 export class InstrumentBar {
   parentElement: HTMLElement;
@@ -71,14 +71,13 @@ export class InstrumentBar {
   }
 
   renderInstrumentIcon(parentElement: HTMLElement, Instrument: string) {
-    const icon = renderElement(parentElement, 'div', ['inst-bar__instrument-icon']);
-    
-    if(INSTRUMENT_ICONS[Instrument] === undefined){
-      icon.innerHTML = SVG_ICON.DEFAULT;
+    const element = renderElement(parentElement, 'div', ['inst-bar__instrument-icon']);
+    const icon = INSTRUMENT_ICONS[Instrument];
+    if(!icon){
+      element.innerHTML = INSTRUMENT_ICONS.DEFAULT;
+      return;
     }
-    else{
-      icon.innerHTML = INSTRUMENT_ICONS[Instrument];
-    }
+    element.innerHTML = icon;
    
   }
 

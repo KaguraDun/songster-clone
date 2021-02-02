@@ -65,6 +65,7 @@ export default class Store {
   selectSong(id: string) {
     this.playMusic = false;
     this.isMetronomeEnabled = false;
+    this.selectedInstrumentId = 0;
     localStorage.setItem('songID',id);
     this.selectedSongId = id;
     this.eventEmitter.emit(EVENTS.SELECT_SONG);
