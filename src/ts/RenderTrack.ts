@@ -22,27 +22,12 @@ export default class renderTrack {
     this.clef = clef;
   }
 
-  getTies(notesList: NoteTie) {
-    let tiesList: Vex.Flow.StaveTie[] = [];
-    //Нужно подумать как сделать последовательность если связь будет у нескольких нот подряд
-    //Но может и не понадобится ^_^
-    for (let i = 0; i < notesList.ties.length; i = i + 2) {
-      const tieObj = new Vex.Flow.StaveTie({
-        first_note: notesList.notes[notesList.ties[i]],
-        last_note: notesList.notes[notesList.ties[i + 1]],
-      });
-
-      tiesList.push(tieObj);
-    }
-
-    return tiesList;
-  }
-
   drawStaveMeasures() {
     if (this.measures.length <= 1) {
       const measureContainer = renderElement(this.sheetMusicRender, 'div', ['measure-error']);
 
       measureContainer.style.height = `${SECTION_SIZE.height}px`;
+      measureContainer.style.width = `${SECTION_SIZE.width}px`;
       measureContainer.dataset.time = `${this.measures[0].Time}`;
       measureContainer.dataset.measureId = `${0}`;
       measureContainer.innerText = 'Note list for this instrument is empty. Try other instrument';
@@ -69,20 +54,14 @@ export default class renderTrack {
       const beams = Vex.Flow.Beam.generateBeams(notesList.notes);
 
       measureContainer.style.height = `${SECTION_SIZE.height}px`;
+      measureContainer.style.width = `${SECTION_SIZE.width}px`;
       measureContainer.dataset.time = `${measure.Time}`;
       measureContainer.dataset.measureId = `${index}`;
-
-
+      
       Vex.Flow.Formatter.FormatAndDraw(context, stave, notesList.notes);
 
       beams.forEach((beam) => {
         beam.setContext(context).draw();
-      });
-
-      const ties = this.getTies(notesList);
-
-      ties.forEach((tie) => {
-        tie.setContext(context).draw();
       });
     });
   }
@@ -129,7 +108,5 @@ export default class renderTrack {
     this.drawStaveMeasures();
   }
 
-  dispose() {
-    
-  }
+  dispose() {}
 }
