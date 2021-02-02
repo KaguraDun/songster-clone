@@ -40,6 +40,21 @@
 
     .sidebar__button-fullscreen-mobile {
         display: none;
+  }
+}
+
+@media(max-width: 1024px) {
+    .measure {
+        width: 100% !important;
+        height: 50% !important;
+    }
+
+    .sheet-music__render{
+        grid-template-columns: repeat(auto-fit, 200px);
+    }
+
+    .sheet-music__time-marker{
+        height: 75px !important;
     }
 }
 
@@ -53,8 +68,6 @@
             margin-right: auto;
             align-items: baseline;
         }
-
-
     }
 
     .wrapper-user {
@@ -69,6 +82,32 @@
         margin-left: 15px;
         background-color: $shadow;
     }
+
+        button{
+            width: 55px;
+            height: 55px;
+            margin-left: 15px;
+            // background-color: transparent;
+        }
+
+        // button:hover{
+        //     background-color: $shadow;
+        // }
+        }
+
+  
+
+        .songs-container .song{
+            padding: 15px 15px 15px 0;
+
+            .image {
+                display: none;
+            }
+        } 
+
+.wrapper-user{
+    height: 55px;
+}
 
     .search__button {
         width: 55px;
@@ -247,6 +286,7 @@
 
         &--title {
             display: none;
+            font-size: 25px;
         }
 
         &--svg {

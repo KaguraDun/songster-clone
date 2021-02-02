@@ -37,6 +37,7 @@ export class AudioGenerator {
 
   dispose() {
     Tone.Transport.cancel();
+    Tone.Transport.stop();
     this.metronome.dispose();
 
     this.store.eventEmitter.removeEvent(EVENTS.PLAY_BUTTON_CLICK, this.play);
@@ -64,7 +65,6 @@ export class AudioGenerator {
     this.metronome = new Metronome(timeSignature,this.store);
 
     this.initTracks();
-    Tone.start();
   }
 
   initTracks() {
@@ -123,7 +123,9 @@ export class AudioGenerator {
     await this.changeVolume();
   }
 
-  play() {
+  async play() {
+    await Tone.start();
+
     if (this.store.playMusic) {
       this.start();
       this.metronome.start();
@@ -169,8 +171,6 @@ export class AudioGenerator {
   }
 
   getSynth(instrument: Instrument) {
-    console.log(instrument.number, instrument.name);
-    console.log('-------------');
     const name = instrument.name;
     const instrumentObj = instruments.find((obj) => obj.id === name);
     if (!instrumentObj || !instrumentObj.name) return;

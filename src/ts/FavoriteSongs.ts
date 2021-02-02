@@ -26,7 +26,6 @@ export default class FavoriteSonsAddOrDelete {
   }
 
   buttonOnClick() {
-    console.log(this.store.selectedSongId)
     if (!this.FavButton.classList.contains('added')) {
       this.sendRequest(this.songAddUrl);
       this.FavButton.classList.toggle('added');

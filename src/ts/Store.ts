@@ -50,7 +50,6 @@ export default class Store {
   }
 
   playSong() {
-    console.log('play');
     this.playMusic = !this.playMusic;
     this.eventEmitter.emit(EVENTS.PLAY_BUTTON_CLICK);
   }
@@ -68,6 +67,7 @@ export default class Store {
   selectSong(id: string) {
     this.playMusic = false;
     this.isMetronomeEnabled = false;
+    this.selectedInstrumentId = 0;
     localStorage.setItem('songID',id);
     this.selectedSongId = id;
     this.eventEmitter.emit(EVENTS.SELECT_SONG);
