@@ -11,7 +11,8 @@ export enum EVENTS {
   SELECT_SONG = 'SELECT_SONG',
   MUTE_SONG = 'MUTE_SONG',
   CHANGE_VOLUME = 'CHANGE_VOLUME',
-  TOGGLE_METRONOME = 'TOGGLE_METRONOME'
+  TOGGLE_METRONOME = 'TOGGLE_METRONOME',
+  TOGGLE_SIDEBAR = 'TOGGLE_SIDEBAR',
 }
 
 
@@ -28,6 +29,8 @@ export default class Store {
   selectedInstrumentId: number = 0;
 
   isMetronomeEnabled: boolean = false;
+
+  isSideBarOpened: boolean = false;
 
   constructor() {
     this.eventEmitter = new EventEmitter();
@@ -92,5 +95,11 @@ export default class Store {
   toggleMetronome() {
     this.isMetronomeEnabled = !this.isMetronomeEnabled;
     this.eventEmitter.emit(EVENTS.TOGGLE_METRONOME);
+  }
+
+  toggleSideBar(){
+    this.isSideBarOpened = !this.isSideBarOpened;
+    this.eventEmitter.emit(EVENTS.TOGGLE_SIDEBAR);
+
   }
 }

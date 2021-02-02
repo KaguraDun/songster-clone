@@ -71,6 +71,14 @@ export default class MusicPlayerBox{
         this.playButton.addEventListener('click',this.playButtonClick);
     }
 
+    //     document.addEventListener('keydown', (event)=>{
+    //         if(event.code == 'Space') {
+    //             this.playButtonClick(event);
+    //             console.log('IM HERE');
+    //         }
+    //     })
+    // }
+
     playButtonClick(e: MouseEvent) {
         const target = e.target as HTMLElement;
         target.classList.toggle('play');
@@ -78,6 +86,7 @@ export default class MusicPlayerBox{
 
         this.store.playSong();
     }
+
 
     renderSpeedButton() {
         const select = renderElement(this.controlsContainer,'select',['player-box__speed']) as HTMLSelectElement;
