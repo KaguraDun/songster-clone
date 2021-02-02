@@ -31,7 +31,7 @@ export default class SearchBar {
   }
 
   render() {
-     this.overlay = document.createElement('div');
+    this.overlay = document.createElement('div');
     this.overlay.classList.add('overlay');
     document.body.appendChild(this.overlay);
 
