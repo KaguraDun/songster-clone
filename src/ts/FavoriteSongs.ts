@@ -1,4 +1,5 @@
 import {serverUrl} from '../models/Constants'
+import store from './Store'
 
 export default class FavoriteSonsAddOrDelete {
 
@@ -7,22 +8,25 @@ export default class FavoriteSonsAddOrDelete {
   private userId: string;
   private songDelUrl: string;
   private songAddUrl: string;
+  private store: store;
 
-  constructor(FavButton: HTMLElement) {
+  constructor(FavButton: HTMLElement, store: store) {
     this.songAddUrl = 'favorite-songs-add';
     this.songDelUrl = 'favorite-songs-delete';
     this.FavButton = FavButton;
+    this.store = store
     this.init = this.init.bind(this);
     this.buttonOnClick = this.buttonOnClick.bind(this);
   }
 
   init() {
     this.FavButton.addEventListener('click', this.buttonOnClick);
-    this.songId = window.localStorage.getItem('songID');
+    this.songId = this.store.selectedSongId;
     this.userId = window.localStorage.getItem('user');
   }
 
   buttonOnClick() {
+    console.log(this.store.selectedSongId)
     if (!this.FavButton.classList.contains('added')) {
       this.sendRequest(this.songAddUrl);
       this.FavButton.classList.toggle('added');
