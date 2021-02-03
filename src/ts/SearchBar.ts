@@ -6,6 +6,7 @@ import Store, { EVENTS } from './Store';
 import { SongViewModel } from '../models/SongViewModel';
 import { serverUrl } from '../models/Constants';
 import { INSTRUMENT_ICONS } from './helpers/instrument_icons';
+import { SVG_SPRITE } from './helpers/svg_sprites';
 
 export default class SearchBar {
   parentElement: HTMLElement;
@@ -126,8 +127,8 @@ export default class SearchBar {
     const btn = document.createElement('button');
     const span = document.createElement('span');
 
-    span.innerText = '🟊';
-    span.classList.add('favorites-star');
+    span.innerHTML = SVG_SPRITE.FAVORITES;
+    span.classList.add('title__btn-star');
 
     btn.addEventListener('click', this.favSongsBtnOnClick);
 
@@ -138,9 +139,9 @@ export default class SearchBar {
   }
 
   async favSongsBtnOnClick(e: MouseEvent) {
-    this.favSongsBtn.classList.toggle('favorites');
+    this.favSongsBtn.classList.toggle('gold');
 
-    if (this.favSongsBtn.classList.contains('favorites')) {
+    if (this.favSongsBtn.classList.contains('gold')) {
       const userId = window.localStorage.getItem('user');
       if (!userId) throw new Error();
 

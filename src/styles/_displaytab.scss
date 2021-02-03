@@ -77,28 +77,6 @@
         align-items: center;
         margin-top: -10px;
 
-        .title__btn-star {
-    
-            height: 15px;
-            width: 15px;
-            font-size: 32px;
-
-            svg {
-                fill: white;
-                width: 30px;
-                height: 30px;
-            }
-        }
-
-        .gold {
-            color: $color-orange;
-            svg {
-                fill:  $color-orange;
-                width: 30px;
-                height: 30px;
-            }
-        }
-
         &-error{
             bottom: -75px;
             right: -100px;
@@ -150,5 +128,27 @@
             height: 60px;
             cursor: pointer;
         }
+    }
+}
+
+.title__btn-star {
+    
+    height: 15px;
+    width: 15px;
+    font-size: 32px;
+
+    svg {
+        fill: white;
+        width: 30px;
+        height: 30px;
+    }
+}
+
+.gold {
+    color: $color-orange;
+    svg {
+        fill:  $color-orange;
+        width: 30px;
+        height: 30px;
     }
 }
