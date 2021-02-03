@@ -29,9 +29,32 @@
     .header__wrapper>.header__wrapper-title{
         display: none;
     }
+
     .header__wrapper {
         display: flex;
         justify-content: center;
+    }
+
+    .search__wrapper {
+        width: 80%;
+    }
+
+    .search__text-input{
+        width: 100%;
+        margin: 10px 0px;
+        text-align: left;
+    }
+    .options-container{
+        padding: 0;
+
+        select {
+            font-size: 15px;
+        }
+
+    }
+
+    .songs-container .song{
+        margin: 0;
     }
 }
 
