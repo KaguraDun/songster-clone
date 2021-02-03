@@ -1,4 +1,5 @@
 import { serverUrl } from '../models/Constants';
+import renderElement from './helpers/renderElements';
 import store from './Store';
 
 export default class FavoriteSonsAddOrDelete {
@@ -25,22 +26,33 @@ export default class FavoriteSonsAddOrDelete {
   }
 
   buttonOnClick() {
-    if (!this.FavButton.classList.contains('added')) {
-      const favorites = window.localStorage.getItem('favorites').split(',');
-      favorites.push(this.songId);
-      window.localStorage.setItem('favorites', favorites.join(','));
-      
-      this.sendRequest(this.songAddUrl);
-      this.FavButton.classList.toggle('added');
-      this.FavButton.children[0].classList.toggle('gold');
-    } else {
-      this.sendRequest(this.songDelUrl);
-      const favorites = window.localStorage.getItem('favorites').split(',');
-      const newFavorites = favorites.filter((element)=> element != this.songId);
-      window.localStorage.setItem('favorites', newFavorites.join(','));
+    try {
+      if (!this.FavButton.classList.contains('added')) {
+        const favorites = window.localStorage.getItem('favorites').split(',');
+        favorites.push(this.songId);
+        window.localStorage.setItem('favorites', favorites.join(','));
 
-      this.FavButton.classList.toggle('added');
-      this.FavButton.children[0].classList.toggle('gold');
+        this.sendRequest(this.songAddUrl);
+        this.FavButton.classList.toggle('added');
+        this.FavButton.children[0].classList.toggle('gold');
+      } else {
+        this.sendRequest(this.songDelUrl);
+        const favorites = window.localStorage.getItem('favorites').split(',');
+        const newFavorites = favorites.filter((element) => element != this.songId);
+        window.localStorage.setItem('favorites', newFavorites.join(','));
+
+        this.FavButton.classList.toggle('added');
+        this.FavButton.children[0].classList.toggle('gold');
+      }
+    } catch (e) {
+      const error = renderElement(
+        this.FavButton.parentElement,
+        'div',
+        ['title__btn-error'],
+        'Please login to favorite this song.',
+      );
+      
+      setTimeout(() => error.remove(), 5000);
     }
   }
 
