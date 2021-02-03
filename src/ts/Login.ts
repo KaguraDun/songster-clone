@@ -101,6 +101,7 @@ export default class Login {
     if (data.user) {
       localStorage.setItem(LOGGED_IN, 'true');
       localStorage.setItem('user', `${data.user}`);
+      localStorage.setItem('favorites', `${data.favoriteSongs}`);
       location.assign('/songster-clone/');
     }
   }

@@ -101,6 +101,17 @@ export default class DisplayTab {
     span.classList.add('title__btn-star');
 
     btn.appendChild(span);
+    const favorites = window.localStorage.getItem('favorites');
+    
+    if (favorites) {
+      const favoritesArr = window.localStorage.getItem('favorites').split(',');
+
+      if (favoritesArr.includes(this.store.selectedSongId)) {
+        btn.classList.toggle('added');
+        span.classList.toggle('gold');
+      }
+    }
+
     new FavoriteSonsAddOrDelete(btn, this.store).init();
 
     parentElement.appendChild(btn);
