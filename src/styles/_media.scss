@@ -25,6 +25,16 @@
 
 }
 
+@media(max-width: 600px) {
+    .header__wrapper>.header__wrapper-title{
+        display: none;
+    }
+    .header__wrapper {
+        display: flex;
+        justify-content: center;
+    }
+}
+
 @media(min-width: 768px) {
     .burger__button {
         display: none;

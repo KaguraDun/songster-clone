@@ -96,7 +96,7 @@ export default class DisplayTab {
     const btn = document.createElement('button');
     const span = document.createElement('span');
     btn.title = 'Add to favorite';
-    span.innerText = '🟊';
+    span.innerHTML = SVG_SPRITE.FAVORITES;
     btn.classList.add('title__btn');
     span.classList.add('title__btn-star');
 
