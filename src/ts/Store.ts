@@ -61,7 +61,7 @@ export default class Store {
 
   setLastSelectedSongId() {
     const id = localStorage.getItem('songID');
-    this.selectedSongId = id ? id : '601417bd36c92d00234d4a9a';
+    this.selectedSongId = id ? id : '601b1b46b005af0023ae9363';
   }
 
   selectSong(id: string) {
