@@ -71,6 +71,14 @@ export default class MusicPlayerBox{
         this.playButton.addEventListener('click',this.playButtonClick);
     }
 
+    //     document.addEventListener('keydown', (event)=>{
+    //         if(event.code == 'Space') {
+    //             this.playButtonClick(event);
+    //             console.log('IM HERE');
+    //         }
+    //     })
+    // }
+
     playButtonClick(e: MouseEvent) {
         const target = e.target as HTMLElement;
         target.classList.toggle('play');
@@ -78,6 +86,7 @@ export default class MusicPlayerBox{
 
         this.store.playSong();
     }
+
 
     renderSpeedButton() {
         const select = renderElement(this.controlsContainer,'select',['player-box__speed']) as HTMLSelectElement;
@@ -126,7 +135,7 @@ export default class MusicPlayerBox{
         this.songTimeElement = renderElement(this.progressBarContainer,'div',['time'],'0:00');
 
         this.timeProgressBar = renderElement(this.progressBarContainer,'div',['progress-bar']);
-        this.timeProgressBar.addEventListener('mouseenter',this.showHoverLocationTime);
+        this.timeProgressBar.addEventListener('mouseover',this.showHoverLocationTime);
         this.timeProgressBar.addEventListener('click',this.setSongTime);
 
         this.timeProgressBarWidth = this.timeProgressBar.offsetWidth;
@@ -134,7 +143,7 @@ export default class MusicPlayerBox{
         this.timeSlider = renderElement(this.timeProgressBar,'div',['slider']);
         this.timeSlider.style.width = '0px';
 
-        const repeat = renderElement(this.progressBarContainer,'div',['repeat']);
+        //const repeat = renderElement(this.progressBarContainer,'div',['repeat']);
     }
 
     getTime(offsetX: number){
@@ -155,9 +164,12 @@ export default class MusicPlayerBox{
         const indicator = renderElement(this.timeProgressBar,'div',['time-indicator']);
         indicator.style.left = `${e.offsetX}px`;
         indicator.textContent = `${date.getMinutes()}:${this.addZero(date.getSeconds())}`;
-        this.timeProgressBar.addEventListener('mouseleave',() => {
+
+        const onmouseout = () => {
             this.timeProgressBar.removeChild(indicator);
-        });
+            this.timeProgressBar.removeEventListener('mouseout',onmouseout);
+        }
+        this.timeProgressBar.addEventListener('mouseout',onmouseout);
     }
 
     addZero(n: number) {

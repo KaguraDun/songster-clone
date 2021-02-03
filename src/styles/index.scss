@@ -18,6 +18,28 @@
 @import './_about';
 @import './_media';
 
+
 .--show {
     display: flex;
 }
+
+.--hide{
+    display: none;
+}
+
+.--printMeasures {
+    max-width: 1024px;
+    line-height: 1.15;
+    text-align: center;
+    -webkit-box-direction: normal;
+    box-sizing: border-box;
+    position: relative;
+    display: grid;
+    grid-gap: 0;
+    grid-template-columns: repeat(auto-fit, 200px);
+    grid-auto-rows: minmax(min-content, max-content);
+    -webkit-box-pack: center;
+    justify-content: center;
+}
+
+

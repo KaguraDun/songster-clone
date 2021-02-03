@@ -21,7 +21,7 @@ const instruments: Instrument[] = [
     {number: 12, id: 'vibraphone', name: 'xylophone'},
     {number: 13, id: 'marimba', name: 'xylophone'},
     {number: 14, id: 'xylophone', name: 'xylophone'},
-    {number: 15, id: 'tubular Bells', name: 'xylophone'},
+    {number: 15, id: 'tubular bells', name: 'xylophone'},
     {number: 16, id: 'dulcimer', name: 'xylophone'},
 
     {number: 17, id: 'drawbar organ', name: 'organ'},
@@ -39,9 +39,9 @@ const instruments: Instrument[] = [
     {number: 27, id: 'electric guitar (jazz)', name: 'guitar-electric'},
     {number: 28, id: 'electric guitar (clean)', name: 'guitar-electric'},
     {number: 29, id: 'electric guitar (muted)', name: 'guitar-electric'},
-    {number: 30, id: 'overdriven Guitar', name: 'guitar-electric'},
-    {number: 31, id: 'distortion Guitar', name: 'guitar-electric'},
-    {number: 32, id: 'guitar Harmonics', name: 'guitar-electric'},
+    {number: 30, id: 'overdriven guitar', name: 'guitar-electric'},
+    {number: 31, id: 'distortion guitar', name: 'guitar-electric'},
+    {number: 32, id: 'guitar harmonics', name: 'guitar-electric'},
 
     {number: 33, id: 'acoustic bass', name: 'bass-electric'},
     {number: 34, id: 'electric bass (finger)', name: 'bass-electric'},
@@ -77,7 +77,7 @@ const instruments: Instrument[] = [
     {number: 61, id: 'french horn', name: 'french-horn'},
     {number: 62, id: 'brass section', name: 'french-horn'},
     {number: 63, id: 'synth brass 1', name: 'trumpet'},
-    {number: 64, id: 'synth brass 1', name: 'trumpet'},
+    {number: 64, id: 'synth brass 2', name: 'trumpet'},
 
     {number: 65, id: 'soprano sax', name: 'saxophone'},
     {number: 66, id: 'alto sax', name: 'saxophone'},
@@ -97,7 +97,14 @@ const instruments: Instrument[] = [
     {number: 79, id: 'whistle', name: 'flute'},
     {number: 80, id: 'ocarina', name: 'flute'},
 
-    {number: 91, id: 'pad 3 (polysynth)', name: ''},
+    {number: 81, id: 'lead 1 (square)', name: 'piano'},
+    {number: 82, id: 'lead 2 (sawtooth)', name: 'piano'},
+    {number: 83, id: 'lead 3 (calliope)', name: 'piano'},
+    {number: 84, id: 'lead 4 (chiff)', name: 'piano'},
+    {number: 85, id: 'lead 5 (charang)', name: 'piano'},
+    {number: 86, id: 'lead 6 (voice)', name: 'piano'},
+    {number: 87, id: 'lead 7 (fifths)', name: 'piano'},
+    {number: 88, id: 'lead 8 (bass + lead)', name: 'piano'},
 ]
 
 export {instruments}

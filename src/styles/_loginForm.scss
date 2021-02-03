@@ -9,7 +9,6 @@
       width: 30px;
       height: 35px;
       fill: $color-white;
-      opacity: 0.5;
     }
   }
 
@@ -33,6 +32,11 @@
     padding: 70px;
     flex-direction: column;
     justify-content: center;
+
+    .header__wrapper-title{
+      margin: 0 auto 15px ;
+      padding: 0;
+    }
   }
 
   &__form-overlay {

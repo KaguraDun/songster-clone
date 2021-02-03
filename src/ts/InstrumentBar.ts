@@ -1,7 +1,7 @@
 import { Track } from '../models/TrackDisplayType';
 import renderElement from './helpers/renderElements';
 import Store from './Store';
-import { INSTRUMENT_ICONS, SVG_ICON } from './helpers/svg_sprites';
+import { INSTRUMENT_ICONS } from './helpers/instrument_icons';
 
 export class InstrumentBar {
   parentElement: HTMLElement;
@@ -55,12 +55,10 @@ export class InstrumentBar {
     if (this.store.selectedInstrumentId === id) {
       this.highlightSelectedInstrument(instrumentElement);
     }
-    // console.log('here ' + track.Instrument);
     instrumentElement.dataset.id = id.toString();
     instrumentElement.addEventListener('click', this.selectInstrument);
 
     const instrumentName = track.Instrument;
-    console.log(instrumentName);
 
     this.renderInstrumentIcon(instrumentElement, instrumentName);
     this.renderInstrumentContent(instrumentElement, track);
@@ -71,14 +69,13 @@ export class InstrumentBar {
   }
 
   renderInstrumentIcon(parentElement: HTMLElement, Instrument: string) {
-    const icon = renderElement(parentElement, 'div', ['inst-bar__instrument-icon']);
-    
-    if(INSTRUMENT_ICONS[Instrument] === undefined){
-      icon.innerHTML = SVG_ICON.DEFAULT;
+    const element = renderElement(parentElement, 'div', ['inst-bar__instrument-icon']);
+    const icon = INSTRUMENT_ICONS[Instrument];
+    if(!icon){
+      element.innerHTML = INSTRUMENT_ICONS.DEFAULT;
+      return;
     }
-    else{
-      icon.innerHTML = INSTRUMENT_ICONS[Instrument];
-    }
+    element.innerHTML = icon;
    
   }
 

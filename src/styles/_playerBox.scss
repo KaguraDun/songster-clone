@@ -7,20 +7,22 @@
 
 .player-box {
     &__container {
-        // margin: 14.5px 80px 0 0;
         margin-top: 20px;
     }
+
     &__controls {
         padding: 0 125px;
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
+
     &__play-container {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-left: 60px;  
+        margin-left: 60px;
+
         * {
             background-color: transparent;
             background-size: cover;
@@ -28,31 +30,38 @@
             height: 24px;
             opacity: 0.5;
         }
+
         *:hover {
             cursor: pointer;
             opacity: 0.7;
         }
+
         .next {
             background-image: url(../../public/icons/next.svg);
         }
+
         .prev {
             background-image: url(../../public/icons/next.svg);
             transform: scale(-1, 1);
         }
+
         .play-pause {
             width: 78px;
             height: 78px;
             margin: 0 40px;
         }
+
         .play {
             background-image: url(../../public/icons/play.svg);
         }
+
         .pause {
             background-image: url(../../public/icons/pause.svg);
         }
     }
+
     &__speed {
-        display: -webkit-box;
+        visibility: hidden;
         -webkit-box-pack: center;
         border: none;
         background-color: rgba($color: $font-color, $alpha: 0.05);
@@ -61,93 +70,159 @@
         border-radius: 50%;
         color: $font-color;
         -webkit-appearance: none;
+
         &:hover {
             cursor: pointer;
             background-color: rgba($color:$font-color, $alpha: 0.15);
         }
+
         option {
             text-align: center;
-            background:$dark-background;
+            background: $dark-background;
             color: $font-color;
             font-size: 18px;
         }
     }
+
     &__volume-container {
         display: flex;
         align-items: center;
+
         .percentage {
             margin-right: 10px;
             opacity: 0.3;
         }
+
         .progress-bar {
             width: 100px;
-            height: 4px;
+            height: 6px;
             background-color: rgba($color: $font-color, $alpha: 0.1);
             margin-right: 10px;
+            overflow: hidden;
+            -webkit-appearance: none;
+            cursor: pointer;
         }
+
+        .progress-bar:focus {
+            outline: none;
+          }
+
+        .progress-bar::-webkit-slider-runnable-track {
+            height: 10px;
+            -webkit-appearance: none;
+            color: $color-orange;
+            margin-top: -1px;
+          }
+
+        .progress-bar::-webkit-slider-thumb{
+            width: 10px;
+            -webkit-appearance: none;
+            height: 10px;
+            cursor: pointer;
+            background: $color-orange;
+            box-shadow: -80px 0 0 80px $color-orange;
+          }
+
+          .progress-bar::-moz-range-thumb {
+            width: 10px;
+            -webkit-appearance: none;
+            height: 10px;
+            cursor: pointer;
+            background: $color-orange;
+            box-shadow: -80px 0 0 80px $color-orange;
+          }
+
         .progress-bar:hover {
             background-color: rgba($color: $font-color, $alpha: 0.2);
         }
+
+        .progress-bar::-moz-range-progress {
+            background-color: rgba($color: $font-color, $alpha: 0.2); 
+          }
+          .progress-bar::-moz-range-track {  
+            background-color: rgba($color: $font-color, $alpha: 0.2);
+          }
+          /* IE*/
+          .progress-bar::-ms-fill-lower {
+            background-color: $color-orange;
+          }
+          .progress-bar::-ms-fill-upper {  
+            background-color: $color-orange;
+          }
+
         .mute-icon {
             width: 24px;
             height: 24px;
             background-color: transparent;
             background-size: cover;
-            opacity: 0.5;
-            //background-image: url(../../public/icons/mute.svg);
+
+            opacity: 0.7;
+            //background-image: url(../images/mute.svg);
+
             svg {
                 fill: $font-color;
             }
         }
+
         .mute-icon:hover {
-            opacity: 0.7;
+            opacity: 1;
             cursor: pointer;
         }
+
         .mute-icon.active svg {
             opacity: 1;
             fill: $color-orange;
         }
     }
+
     &__progress {
-        padding: 32px 0;
+        padding: 20px 0;
         margin: 0 auto;
         display: flex;
         justify-content: center;
         align-items: center;
+
         .time {
             margin-right: 15px;
             font-size: 12px;
             opacity: 0.7;
         }
+
         .progress-bar {
+            position: relative;
             background-color: rgba($color: $font-color, $alpha: 0.1);
             width: 70%;
-            height: 4px;
+            height: 6px;
             margin-right: 15px;
+            cursor: pointer;
+
             .slider {
-                height: 4px;
+                height: 6px;
                 margin: 0;
                 padding: 0;
                 border: none;
                 background-color: $color-orange;
             }
+
             .time-indicator {
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                position: relative;
+                position: absolute;
                 top: 10px;
                 width: 65px;
                 height: 34px;
                 background: black;
-                color:$font-color;
+                color: $font-color;
                 font-size: 12px;
                 opacity: 0.7;
             }
         }
+
         .progress-bar:hover {
             background-color: rgba($color: $font-color, $alpha: 0.2);
         }
+
         .repeat {
             width: 24px;
             height: 24px;
@@ -156,6 +231,7 @@
             opacity: 0.5;
             background-image: url(../../public/icons/repeat.svg);
         }
+
         .repeat:hover {
             cursor: pointer;
             opacity: 0.7;

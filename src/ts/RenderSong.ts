@@ -3,6 +3,7 @@ import Store, { EVENTS } from './Store';
 import { SECTION_SIZE } from '../models/Constants';
 import RenderTrack from './RenderTrack';
 import renderElement from './helpers/renderElements';
+import getTransitionEndEventName from './helpers/getTransitionEndEventName';
 
 interface TimeMarker {
   element: HTMLElement;
@@ -10,7 +11,6 @@ interface TimeMarker {
   firstMeasure: HTMLElement;
   lastMeasure: HTMLElement;
   currentMeasure: HTMLElement;
-  currentMeasureNum: number;
 }
 
 export default class RenderSong {
@@ -24,12 +24,11 @@ export default class RenderSong {
     firstMeasure: null,
     lastMeasure: null,
     currentMeasure: null,
-    currentMeasureNum: 1,
   };
   measureDuration: number;
-  numberElementsPerRow: number;
   track: Track;
   trackRenderer: RenderTrack;
+  transitionEndEventName: string;
 
   constructor(parentElement: HTMLElement, song: Song, store: Store) {
     this.parentElement = parentElement;
@@ -39,17 +38,19 @@ export default class RenderSong {
     this.sheetMusicRender;
     this.timeMarker;
     this.measureDuration;
-    this.numberElementsPerRow;
+    this.transitionEndEventName;
     this.playMusicTrack = this.playMusicTrack.bind(this);
     this.changeTrack = this.changeTrack.bind(this);
     this.selectMeasure = this.selectMeasure.bind(this);
     this.setTimeMarkerPosition = this.setTimeMarkerPosition.bind(this);
+    this.appendToNextMeasure = this.appendToNextMeasure.bind(this);
   }
 
   addBitrate(parentElement: HTMLElement) {
     const bitrateContainer = document.createElement('div');
     bitrateContainer.classList.add('sheet-music__bitrate');
     bitrateContainer.textContent = `Bpm = ${Math.trunc(this.track.Bpm)}`;
+    bitrateContainer.setAttribute('id', 'print-bitrate');
 
     parentElement.appendChild(bitrateContainer);
   }
@@ -62,89 +63,72 @@ export default class RenderSong {
   }
 
   moveTimeMarkerToFirstMeasure() {
-    this.timeMarker.currentMeasureNum = 1;
+    this.timeMarker.firstMeasure.append(
+      this.timeMarker.currentMeasure.removeChild(this.timeMarker.element),
+    );
     this.timeMarker.firstMeasure.scrollIntoView({ block: 'center', behavior: 'smooth' });
 
-    this.timeMarker.element.style.transition = 'none';
-    this.timeMarker.element.style.left = `${this.timeMarker.firstMeasure.offsetLeft}px`;
-    this.timeMarker.element.style.top = '0';
-
+    this.moveTimeMarkerTobeginOfMeasure();
+    this.timeMarker.currentMeasure = this.timeMarker.firstMeasure;
     this.store.endOfSong();
-    this.flushCss(this.timeMarker.element);
-
-    clearInterval(this.timeMarker.timer);
   }
 
-  moveTimeMarkerToBeginOfRow() {
+  moveTimeMarkerTobeginOfMeasure() {
     this.timeMarker.element.style.transition = 'none';
-    this.timeMarker.element.style.left = `${this.timeMarker.firstMeasure.offsetLeft}px`;
+    this.timeMarker.element.style.left = `${0}px`;
     // apply the "transition: none" and "left: Xpx" rule immediately
     this.flushCss(this.timeMarker.element);
     // restore animation
     this.timeMarker.element.style.transition = `left ${this.measureDuration}s linear`;
   }
 
-  moveTimeMarker() {
-    const rowNum = Math.ceil(this.timeMarker.currentMeasureNum / this.numberElementsPerRow) - 1;
+  appendToNextMeasure() {
+    const nextMeasure = this.timeMarker.currentMeasure.nextElementSibling as HTMLElement;
 
-    const multipler =
-      this.timeMarker.currentMeasureNum % this.numberElementsPerRow || this.numberElementsPerRow;
-    const leftShift = SECTION_SIZE.width * multipler + this.timeMarker.firstMeasure.offsetLeft;
-    const lasMeasureNum = Number(this.timeMarker.lastMeasure.dataset.measureId) + 1;
-
-    if (this.timeMarker.currentMeasureNum > lasMeasureNum) {
+    if (!nextMeasure) {
       this.moveTimeMarkerToFirstMeasure();
       return;
     }
 
-    if (multipler === 1) {
-      this.moveTimeMarkerToBeginOfRow();
-    }
+    nextMeasure.append(this.timeMarker.currentMeasure.removeChild(this.timeMarker.element));
+
+    this.timeMarker.currentMeasure = nextMeasure;
+    this.moveTimeMarkerTobeginOfMeasure();
+    this.runTimeMarker();
+  }
+
+  runTimeMarker() {
+    const measureWidth = window.getComputedStyle(this.timeMarker.currentMeasure).width;
 
     this.timeMarker.element.style.transition = `left ${this.measureDuration}s linear`;
-    this.timeMarker.element.style.top = `${SECTION_SIZE.height * rowNum}px`;
-    this.timeMarker.element.style.left = `${leftShift}px`;
-
+    this.timeMarker.element.style.left = `${measureWidth}`;
     this.timeMarker.element.scrollIntoView({ block: 'center', behavior: 'smooth' });
-
-    this.timeMarker.currentMeasureNum += 1;
   }
 
   stopMusicTrack() {
-    this.timeMarker.currentMeasureNum -= 1;
+    this.moveTimeMarkerTobeginOfMeasure();
 
-    const previousMeasure = this.sheetMusicRender.children[
-      this.timeMarker.currentMeasureNum
-    ] as HTMLElement;
-
-    this.timeMarker.element.style.transition = 'none';
-    this.timeMarker.element.style.left = `${previousMeasure.offsetLeft}px`;
-
-    this.flushCss(this.timeMarker.element);
-    clearInterval(this.timeMarker.timer);
-
-    this.store.setSongTime(Number(previousMeasure.dataset.time));
+    this.store.setSongTime(Number(this.timeMarker.currentMeasure.dataset.time));
   }
 
   playMusicTrack() {
     if (this.store.playMusic) {
-      // Call function immidiatly to avoid first delay
-      this.moveTimeMarker();
-      this.timeMarker.timer = setInterval(() => this.moveTimeMarker(), this.measureDuration * 1000);
+      this.runTimeMarker();
     } else {
       this.stopMusicTrack();
     }
   }
 
-  addTimeMarker(parentElement: HTMLElement): HTMLElement {
+  addTimeMarker() {
     const timeMarker = document.createElement('div');
-    const firstElementPosition = parentElement.firstElementChild as HTMLElement;
+    const timeMarkerHeight = window.getComputedStyle(this.timeMarker.currentMeasure).height;
+
+    this.timeMarker.firstMeasure.append(timeMarker);
 
     timeMarker.classList.add('sheet-music__time-marker');
-    timeMarker.style.height = `${SECTION_SIZE.height}px`;
-    timeMarker.style.left = `${firstElementPosition.offsetLeft}px`;
-
-    parentElement.prepend(timeMarker);
+    timeMarker.style.height = `${timeMarkerHeight}`;
+    timeMarker.style.left = `${0}px`;
+    timeMarker.style.top = `${0}px`;
 
     return timeMarker;
   }
@@ -156,60 +140,71 @@ export default class RenderSong {
     if (!closestToSvg) return;
 
     const selectedMeasure = closestToSvg.parentElement;
+
     this.changeTimeMarkerPosition(selectedMeasure);
   }
 
   changeTimeMarkerPosition(selectedMeasure: HTMLElement) {
     const currentTime = Number(selectedMeasure.dataset.time);
-    const measureID = Number(selectedMeasure.dataset.measureId);
-    const rowNum = Math.floor(measureID / this.numberElementsPerRow);
-    const timeMarkerTop = rowNum * SECTION_SIZE.height;
 
-    this.timeMarker.element.style.left = `${selectedMeasure.offsetLeft}px`;
-    this.timeMarker.element.style.top = `${timeMarkerTop}px`;
+    selectedMeasure.append(this.timeMarker.currentMeasure.removeChild(this.timeMarker.element));
 
-    this.timeMarker.element.scrollIntoView({ block: 'center', behavior: 'smooth' });
-    this.timeMarker.currentMeasureNum = Number(selectedMeasure.dataset.measureId) + 1;
-
-    if (timeMarkerTop > this.timeMarker.lastMeasure.offsetTop) {
-      this.timeMarker.element.style.top = `${this.timeMarker.lastMeasure.offsetTop}px`;
-    }
+    this.timeMarker.currentMeasure = selectedMeasure;
+    this.timeMarker.element.style.left = '0';
 
     if (this.store.playMusic) {
-      this.timeMarker.element.style.transition = 'none';
-      this.flushCss(this.timeMarker.element);
-      clearInterval(this.timeMarker.timer);
-      this.playMusicTrack();
+      this.moveTimeMarkerTobeginOfMeasure();
+      this.runTimeMarker();
     }
 
+    this.timeMarker.element.scrollIntoView({ block: 'center', behavior: 'smooth' });
     this.store.setSongTime(currentTime);
   }
 
   setTimeMarkerPosition() {
     const measureID = Math.floor(this.store.songTimeMiliSeconds / (this.measureDuration * 1000));
-    const selectedMeasure = this.sheetMusicRender.children[measureID + 1] as HTMLElement;
+    const selectedMeasure = this.sheetMusicRender.children[measureID] as HTMLElement;
 
     this.changeTimeMarkerPosition(selectedMeasure);
   }
 
   changeTrack() {
-    const currentMeasure = this.sheetMusicRender.children[
-      this.timeMarker.currentMeasureNum
-    ] as HTMLElement;
+    const currentMeasureID = Number(this.timeMarker.currentMeasure.dataset.measureId);
+    const instrumentID = this.store.selectedInstrumentId;
+    const scrollPositionY = this.parentElement.scrollTop;
 
-    const timeMarkerPositon = {
-      left: this.timeMarker.element.offsetLeft,
-      top: this.timeMarker.element.offsetTop,
-    };
+    this.track = this.song.Tracks[instrumentID];
 
-    const id = this.store.selectedInstrumentId;
-    this.track = this.song.Tracks[id];
     this.render();
 
-    this.timeMarker.element.style.left = `${timeMarkerPositon.left}px`;
-    this.timeMarker.element.style.top = `${timeMarkerPositon.top}px`;
+    this.timeMarker.currentMeasure = this.sheetMusicRender.children[
+      currentMeasureID
+    ] as HTMLElement;
 
-    this.store.setSongTime(Number(currentMeasure.dataset.time));
+    this.timeMarker.currentMeasure.append(
+      this.timeMarker.firstMeasure.removeChild(this.timeMarker.element),
+    );
+
+    this.timeMarker.element.style.left = `0`;
+    this.parentElement.scrollTo(0, scrollPositionY);
+    this.store.setSongTime(Number(this.timeMarker.currentMeasure.dataset.time));
+    if (this.store.playMusic) {
+      this.runTimeMarker();
+    }
+  }
+
+  handleTabletChange(e: MediaQueryListEventInit) {
+    // Check if the media query is true
+    if (e.matches) {
+      // Then log the following message to the console
+      try {
+        const measureWidth = window.getComputedStyle(this.timeMarker.currentMeasure).width;
+        this.timeMarker.element.style.left = `${measureWidth}`;
+
+        const timeMarkerHeight = window.getComputedStyle(this.timeMarker.currentMeasure).height;
+        this.timeMarker.element.style.height = `${timeMarkerHeight}`;
+      } catch (e) {}
+    }
   }
 
   init() {
@@ -217,7 +212,14 @@ export default class RenderSong {
     this.store.eventEmitter.addEvent(EVENTS.PLAY_BUTTON_CLICK, () => this.playMusicTrack());
     this.store.eventEmitter.addEvent(EVENTS.PLAYER_PROGRESS_BAR_CLICK, this.setTimeMarkerPosition);
 
+    this.transitionEndEventName = getTransitionEndEventName();
     this.render();
+
+    const mediaQuery = window.matchMedia('(max-width: 1024px)');
+
+    mediaQuery.addListener(this.handleTabletChange);
+
+    this.handleTabletChange(mediaQuery);
   }
 
   dispose() {
@@ -243,7 +245,6 @@ export default class RenderSong {
     const quarterDuration = 60 / this.track.Bpm;
 
     this.measureDuration = (4 * quarterDuration * this.track.Size.Count) / this.track.Size.Per;
-    this.numberElementsPerRow = Math.floor(this.parentElement.clientWidth / SECTION_SIZE.width);
 
     this.trackRenderer = new RenderTrack(
       this.track.Measures,
@@ -254,9 +255,10 @@ export default class RenderSong {
 
     this.trackRenderer.render();
 
-    this.timeMarker.element = this.addTimeMarker(this.sheetMusicRender);
-    this.timeMarker.firstMeasure = this.sheetMusicRender.children[1] as HTMLElement;
+    this.timeMarker.firstMeasure = this.sheetMusicRender.firstElementChild as HTMLElement;
     this.timeMarker.lastMeasure = this.sheetMusicRender.lastElementChild as HTMLElement;
     this.timeMarker.currentMeasure = this.timeMarker.firstMeasure;
+    this.timeMarker.element = this.addTimeMarker();
+    this.timeMarker.element.addEventListener(this.transitionEndEventName, this.appendToNextMeasure);
   }
 }

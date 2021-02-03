@@ -1,27 +1,28 @@
 .header {
     background-color: $dark-background;
     min-height: 80px;
-    
+
     &__wrapper {
         display: flex;
         flex-direction: row;
-        justify-content: space-between;
         align-items: center;
         max-width: 1440px;
         margin: 0 auto;
-        padding: 20px 20px;
-        padding-bottom: 10px;
+        padding: 10px 10px 0 10px;
 
         &-title {
+            flex-shrink: 0;
             font-size: 32px;
             color: $font-color;
             cursor: default;
             font-family: 'Segoe UI';
             font-weight: 300;
+            padding-left: 40px;
         }
     }
 }
-.wrapper-title{
+
+.wrapper-title {
     display: flex;
 }
 
@@ -31,6 +32,10 @@
         background-color: $color-orange;
         border-radius: 35px;
 
+        &--svg {
+            display: none;
+        }
+
         &-container {
             display: flex;
             justify-content: space-between;
@@ -38,7 +43,7 @@
         }
 
         &-content {
-            color:$font-color;
+            color: $font-color;
             font-size: 18px/24px;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             letter-spacing: 0px;
@@ -63,8 +68,8 @@
 .wrapper-user {
     display: flex;
     height: 60px;
-    justify-content: space-between;
     padding: 0 10px;
+    width: 100%;
 
     &-social {
         margin-top: 20px;
@@ -220,7 +225,7 @@ form {
 
     button:hover {
         cursor: pointer;
-        background-color:$color-pale-orange;
+        background-color: $color-pale-orange;
     }
 }
 
@@ -261,13 +266,13 @@ form {
 
     select {
         color: $color-white;
-        font-size: 14px;
+        font-size: 20px;
     }
 }
 
 .input__author {
     width: 330px;
-    height: 100px;
+    height: 40px;
 
     border-radius: 10px;
     outline: none;
@@ -285,7 +290,7 @@ form {
     border: 2px dashed $font-color;
     border-radius: 20px;
     width: 320px;
-    height: 120px;
+    height: 175px;
     margin: 50px auto;
     padding: 20px;
     display: flex;
@@ -305,7 +310,7 @@ form {
     }
 
     &__input {
-        // display: none;
+        width: 305px;
     }
 
 }
@@ -317,8 +322,9 @@ form {
 }
 
 .button {
+
     &-log-out,
-    &-user-login{
+    &-user-login {
         width: 60px;
         height: 60px;
         margin-left: 20px;
@@ -326,7 +332,7 @@ form {
         background-color: $shadow;
         border: 0;
         cursor: pointer;
-        outline:none;
+        outline: none;
 
         svg {
             width: 25px;
@@ -334,9 +340,6 @@ form {
             fill: $color-white;
             opacity: 0.5;
         }
-    }
-    &-form-signup{
-        opacity: 0.5;
     }
 
     &-user-login:hover,
@@ -348,12 +351,13 @@ form {
         }
     }
 
-    &-log-out{
+    &-log-out {
         border: none;
         outline: none;
         border-radius: 50px;
     }
 }
-.overlay{
+
+.overlay {
     backdrop-filter: blur(10px);
 }

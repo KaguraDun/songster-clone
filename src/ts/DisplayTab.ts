@@ -26,6 +26,7 @@ export default class DisplayTab {
   songId: string;
   song: Song;
   midiData: ArrayBuffer;
+  sidebarOverlay: HTMLElement;
 
   constructor(parentElement: HTMLElement, store: Store, songId: string) {
     this.parentElement = parentElement;
@@ -33,11 +34,12 @@ export default class DisplayTab {
     this.songId = songId;
 
     this.openFullScreenMode = this.openFullScreenMode.bind(this);
+    this.showBurgerMenu = this.showBurgerMenu.bind(this);
   }
 
   dispose() {
     this.parentElement.removeChild(this.container);
-    this.store.eventEmitter.removeEvent(EVENTS.FULL_SCREEN_BUTTON_CLICK,this.openFullScreenMode);
+    this.store.eventEmitter.removeEvent(EVENTS.FULL_SCREEN_BUTTON_CLICK, this.openFullScreenMode);
 
     this.songRenderer.dispose();
     this.musicPlayerBox.dispose();
@@ -46,7 +48,7 @@ export default class DisplayTab {
   }
 
   async render() {
-    this.store.eventEmitter.addEvent(EVENTS.FULL_SCREEN_BUTTON_CLICK,this.openFullScreenMode);
+    this.store.eventEmitter.addEvent(EVENTS.FULL_SCREEN_BUTTON_CLICK, this.openFullScreenMode);
 
     this.container = renderElement(this.parentElement, 'section', ['display__tab']);
     await this.fetchSong();
@@ -68,29 +70,64 @@ export default class DisplayTab {
 
   renderSongTitle() {
     this.titleContainer = renderElement(this.container, 'div', ['title']);
-    this.titleContainer.setAttribute('id', 'print_title');
-    renderElement(this.titleContainer, 'div', ['title__tab-artist'], this.song.Author);
-    const titleBox = renderElement(this.titleContainer, 'div', ['title__box']);
-    renderElement(titleBox, 'div', ['title__tab-track'], this.song.Name);
+    const trackData = renderElement(this.titleContainer, 'div', ['container_trackData']);
+    const artistName = renderElement(trackData, 'div', ['title__tab-artist'], this.song.Name);
+    artistName.setAttribute('id', 'song_title');
+    artistName.title = 'Artist name';
+    const titleBox = renderElement(trackData, 'div', ['title__box']);
+    const songTitle = renderElement(titleBox, 'div', ['title__tab-track'], this.song.Author);
+    songTitle.setAttribute('id', 'print_artist');
+    songTitle.title = 'Song title';
+    const burgerButton = renderElement(this.titleContainer, 'button', ['burger__button']);
+    burgerButton.innerHTML = SVG_SPRITE.MORE;
+
+    burgerButton.addEventListener('click', this.showBurgerMenu);
+    this.sidebarOverlay = renderElement(this.container, 'div', ['sidebar__overlay']);
+
+    this.sidebarOverlay.addEventListener('click', () => {
+      this.store.toggleSideBar();
+      this.sidebarOverlay.classList.remove('show');
+    });
+
     this.renderFavoritesButton(titleBox);
   }
 
   renderFavoritesButton(parentElement: HTMLElement) {
-    const favButton = renderElement(parentElement, 'button', ['title__tab-fav']);
-    new FavoriteSonsAddOrDelete(favButton).init()
+    const btn = document.createElement('button');
+    const span = document.createElement('span');
+    btn.title = 'Add to favorite';
+    span.innerText = '🟊';
+    btn.classList.add('title__btn');
+    span.classList.add('title__btn-star');
+
+    btn.appendChild(span);
+    const favorites = window.localStorage.getItem('favorites');
+    
+    if (favorites) {
+      const favoritesArr = window.localStorage.getItem('favorites').split(',');
+
+      if (favoritesArr.includes(this.store.selectedSongId)) {
+        btn.classList.toggle('added');
+        span.classList.toggle('gold');
+      }
+    }
+
+    new FavoriteSonsAddOrDelete(btn, this.store).init();
+
+    parentElement.appendChild(btn);
   }
 
   renderSongContent() {
     this.contentContainer = renderElement(this.container, 'div', ['display__data']);
     this.notesContent = renderElement(this.contentContainer, 'div', ['tab__content']);
     this.notesContent.setAttribute('id', 'data-wrapper');
-    this.songRenderer = new RenderSong(this.notesContent,this.song,this.store);
+    this.songRenderer = new RenderSong(this.notesContent, this.song, this.store);
     this.songRenderer.init();
   }
 
   renderMusicPlayer() {
     const songDuration = this.getSongDuration();
-    this.musicPlayerBox = new MusicPlayerBox(this.container, this.store,songDuration);
+    this.musicPlayerBox = new MusicPlayerBox(this.container, this.store, songDuration);
     this.musicPlayerBox.render();
   }
 
@@ -100,18 +137,22 @@ export default class DisplayTab {
   }
 
   renderSideBar() {
-    this.sidebar = new Sidebar(this.contentContainer, this.store,this.song.Tracks);
+    this.sidebar = new Sidebar(this.contentContainer, this.store, this.song.Tracks);
     this.sidebar.render();
   }
 
   initAudio() {
-    this.audioGenerator = new AudioGenerator(this.midiData,this.store);
+    this.audioGenerator = new AudioGenerator(this.midiData, this.store);
     this.audioGenerator.init();
   }
 
   openFullScreenMode() {
     this.parentElement.requestFullscreen();
   }
+
+  showBurgerMenu() {
+    // this.overlay.classList.toggle("show");
+    this.store.toggleSideBar();
+    this.sidebarOverlay.classList.toggle('show');
+  }
 }
-
-

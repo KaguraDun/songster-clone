@@ -49,6 +49,7 @@ export default class Login {
 
   renderForm() {
     this.formContainer.innerHTML = '';
+    renderElement(this.formContainer,'h1', ['header__wrapper-title'], 'Songster-Clone');
 
     const form = renderElement(this.formContainer, 'form', ['form-login']) as HTMLFormElement;
     form.action = '/signup';
@@ -84,7 +85,7 @@ export default class Login {
   async handleLogin(form: any) {
     form.emailError.textContent = '';
     form.passwordError.textContent = '';
-    
+
     const data = await this.sendRequest(
       `${serverUrl}/login`,
       form.email.value,
@@ -100,7 +101,8 @@ export default class Login {
     if (data.user) {
       localStorage.setItem(LOGGED_IN, 'true');
       localStorage.setItem('user', `${data.user}`);
-      location.assign('/');
+      localStorage.setItem('favorites', `${data.favoriteSongs}`);
+      location.assign('/songster-clone/');
     }
   }
 
@@ -121,7 +123,7 @@ export default class Login {
     }
 
     if (data.user) {
-      location.assign('/');
+      location.assign('/songster-clone/');
     }
   }
 
@@ -133,12 +135,12 @@ export default class Login {
 
     const buttonLogin = renderElement(this.formContainer, 'button', ['button-form-login'], 'Log in');
     const buttonSignup = renderElement(this.formContainer, 'button', ['button-form-signup'], 'Sign up');
-    const logSocialBox = renderElement(this.formContainer, 'div', ['social']);
+    //const logSocialBox = renderElement(this.formContainer, 'div', ['social']);
 
-    const ggButton = renderElement(logSocialBox, 'button', ['gg-button']);
-    const fbButton = renderElement(logSocialBox, 'button', ['fb-button']);
-    fbButton.innerHTML = SVG_SPRITE.FACEBOOK;
-    ggButton.innerHTML = SVG_SPRITE.GOOGLE;
+    // const ggButton = renderElement(logSocialBox, 'button', ['gg-button']);
+    // const fbButton = renderElement(logSocialBox, 'button', ['fb-button']);
+    // fbButton.innerHTML = SVG_SPRITE.FACEBOOK;
+    // ggButton.innerHTML = SVG_SPRITE.GOOGLE;
 
     buttonLogin.addEventListener('click', () => this.handleLogin(form));
     buttonSignup.addEventListener('click', () => this.handleSignIn(form));
@@ -148,11 +150,11 @@ export default class Login {
     try {
       await fetch(`${serverUrl}/logout/`, { method: 'GET', credentials: 'same-origin' });
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
 
     localStorage.clear();
-    location.assign('/');
+    location.assign('/songster-clone/');
   }
 
   hideForm() {
@@ -169,7 +171,7 @@ export default class Login {
     if (localStorage.getItem(LOGGED_IN)) {
       const buttonLogOut = renderElement(this.parentElement, 'button', ['button-log-out']);
       buttonLogOut.title = 'Log Out';
-      buttonLogOut.innerHTML= SVG_SPRITE.MUSICSIGN;
+      buttonLogOut.innerHTML= SVG_SPRITE.LOGOUT;
       buttonLogOut.addEventListener('click', this.logOut);
       return;
     }
