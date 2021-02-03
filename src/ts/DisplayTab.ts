@@ -61,11 +61,15 @@ export default class DisplayTab {
   }
 
   async fetchSong() {
-    const responce = await fetch(`${serverUrl}/songs/id/?id=${this.songId}`);
-    const { midiData, converted } = await responce.json();
+    try {
+      const responce = await fetch(`${serverUrl}/songs/id/?id=${this.songId}`);
+      const { midiData, converted } = await responce.json();
 
-    this.song = converted;
-    this.midiData = midiData.data;
+      this.song = converted;
+      this.midiData = midiData.data;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   renderSongTitle() {
@@ -102,7 +106,7 @@ export default class DisplayTab {
 
     btn.appendChild(span);
     const favorites = window.localStorage.getItem('favorites');
-    
+
     if (favorites) {
       const favoritesArr = window.localStorage.getItem('favorites').split(',');
 
