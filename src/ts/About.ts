@@ -44,7 +44,7 @@ export default class About {
   renderLogo(parentElement: HTMLElement) {
     const rssLogoLink = this.createLink(parentElement, '', 'https://rs.school/js/');
     const logoImage: any = renderElement(rssLogoLink, 'img', ['about__logo-rss']);
-    logoImage.src = '../../assets/images/white_logo.svg';
+    logoImage.src = './assets/images/white_logo.svg';
     logoImage.alt = 'logo';
   }
 
