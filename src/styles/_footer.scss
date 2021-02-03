@@ -1,0 +1,31 @@
+footer{
+    display: none;
+}
+.footer {
+    
+    &__wrapper {
+        background: $dark-background;
+        // margin-top: auto;
+    }
+    &__content {
+        max-width: 85%;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        a{
+        color: $font-color;
+        opacity: 0.3;
+        text-decoration: none;
+        
+        }
+        &-link {    
+            &-logo {
+                height: 50px;
+                padding-top: 5px;
+                margin: 10px;
+            }
+        }
+    }
+}

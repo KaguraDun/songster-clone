@@ -37,7 +37,7 @@ module.exports = {
     // Generates deprecation warning: https://github.com/jantimon/html-webpack-plugin/issues/1501
     new HtmlWebpackPlugin({
       // title: "webpack Boilerplate",
-      favicon: `${paths.src}/images/favicon.png`,
+      favicon: `${paths.src}/images/favicon1.png`,
       template: `${paths.src}/template.html`, // template file
       filename: 'index.html', // output file
     }),
@@ -62,7 +62,6 @@ module.exports = {
         loader: 'eslint-loader',
         exclude: /node_modules/,
       },
-
 
       // Styles: Inject CSS into the head with source maps
       {
@@ -111,5 +110,8 @@ module.exports = {
         },
       },
     ],
+  },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js'],
   },
 };

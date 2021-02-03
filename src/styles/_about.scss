@@ -1,0 +1,81 @@
+.about {
+  &__button {
+    outline: none;
+    background-color: transparent;
+    border: none;
+
+    margin-left: 40px;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-right: auto;
+
+    &--title{
+      font-size: 28px;
+      color: $font-color;
+      cursor: default;
+      font-family: 'Segoe UI';
+      font-weight: 200;
+      opacity: 0.4;
+    }
+
+    &--svg {
+      display: none;
+    }
+
+
+  }
+
+
+
+  &__button:hover {
+    opacity: 1;
+  }
+
+  &__form {
+    display: none;
+    position: fixed;
+    padding: 25px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: $login-bac;
+    z-index: 100;
+    border-radius: 10px;
+    box-shadow: 0 5px 10px rgba(231, 230, 230, 0.2);
+    color: $color-white;
+    font-family: 'Segoe UI';
+    font-weight: Semibold;
+    font-size: 16px;
+    text-align: left;
+    margin-bottom: 15px;
+    padding: 50px;
+  }
+
+  &__container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    a:not(:last-child) {
+      text-align: center;
+      padding: 15px 20px;
+      text-decoration: none;
+      font-size: 18px;
+      color: $color-white;
+      width: 250px;
+      opacity: 0.9;
+      border-bottom: 1px solid $shadow;
+
+
+    }
+
+    a:hover:not(:last-child) {
+      background-color: $color-orange;
+      opacity: 1;
+    }
+  }
+
+  &__logo-rss {
+    padding-top: 25px;
+  }
+}

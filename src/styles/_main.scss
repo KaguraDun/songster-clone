@@ -1,0 +1,24 @@
+main {
+    background: $dark-background;
+    flex-grow: 1;
+}
+
+.main__wrapper {
+    display: flex;
+    flex-direction: row-reverse;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.wrapper{
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.header,
+.footer{
+    flex-shrink:0;
+}

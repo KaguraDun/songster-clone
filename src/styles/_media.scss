@@ -1,0 +1,415 @@
+@media all and (display-mode: fullscreen) {
+
+    .sidebar {
+        display: none;
+    }
+
+    .tab__content {
+        max-height: 75vh;
+    }
+
+}
+
+@media print {
+    body {
+        font-size: 14px;
+    }
+
+    .sheet-music__time-marker {
+        display: none;
+    }
+
+    .sheet-music__render{
+        zoom: 50%;
+    }
+
+}
+
+@media(max-width: 600px) {
+    .header__wrapper>.header__wrapper-title{
+        display: none;
+    }
+
+    .header__wrapper {
+        display: flex;
+        justify-content: center;
+    }
+
+    .search__wrapper {
+        width: 80%;
+    }
+
+    .search__text-input{
+        width: 100%;
+        margin: 10px 0px;
+        text-align: left;
+    }
+    .options-container{
+        padding: 0;
+
+        select {
+            font-size: 15px;
+        }
+
+    }
+
+    .songs-container .song{
+        margin: 0;
+    }
+}
+
+@media(min-width: 768px) {
+    .burger__button {
+        display: none;
+    }
+
+    .sidebar__button-print-mobile {
+        display: none;
+    }
+
+    .sidebar__button-metronome-mobile {
+        display: none;
+    }
+
+    .sidebar__button-instrument-mobile {
+        display: none;
+    }
+
+    .sidebar__button-fullscreen-mobile {
+        display: none;
+  }
+}
+
+@media(max-width: 768px) {
+    .header__wrapper {
+        align-items: baseline;
+        padding: 20px 10px 20px;
+
+        &-title {
+            margin: 0;
+            margin-right: auto;
+            align-items: baseline;
+        }
+    }
+
+    .wrapper-user {
+        height: 55px;
+    }
+
+    .button-user-login,
+    .wrapper-user-login,
+    .about__button {
+        width: 55px;
+        height: 55px;
+        margin-left: 15px;
+        background-color: $shadow;
+    }
+
+        button{
+            width: 55px;
+            height: 55px;
+            margin-left: 15px;
+            // background-color: transparent;
+        }
+
+        .songs-container .song{
+            padding: 15px 15px 15px 0;
+
+            .image {
+                display: none;
+            }
+        } 
+
+.wrapper-user{
+    height: 55px;
+}
+
+    .search__button {
+        width: 55px;
+        height: 55px;
+        padding: 0;
+
+        &-icon {
+            display: none;
+        }
+
+        &-content {
+            display: none;
+        }
+
+        &--svg {
+            padding: 13px 10px 10px 14px;
+            display: block;
+
+            svg {
+                width: 25px;
+                height: 25px;
+                opacity: 0.6;
+
+            }
+        }
+    }
+
+
+
+    .title {
+        flex-direction: row;
+        font-size: 18px;
+        order: 1;
+        justify-content: space-between;
+        padding: 15px 25px 0;
+
+        &__tab-artist {
+
+            margin-right: 10px;
+            font-size: 26px;
+
+        }
+
+        &__box {
+            padding: 0;
+        }
+
+        &__tab-track {
+            font-size: 26px;
+            padding: 0;
+        }
+    }
+
+    .container_trackData {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .sidebar {
+        position: fixed;
+        background-color: $dark-background;
+        display: flex;
+        flex-direction: column;
+        border-radius: 15px 15px 0 0;
+        width: 100%;
+
+        height: 0;
+        bottom: 0;
+        right: 0;
+        min-height: 0;
+        overflow: hidden;
+        overflow-y: auto;
+        transition: 0.5s;
+        justify-content: center;
+        margin: 0;
+        order: 6;
+        box-shadow: 0 5px 10px rgba(231, 230, 230, 0.2);
+        padding: 0 0px;
+
+        &__function {
+            flex-direction: column;
+            height: auto;
+        }
+
+        button {
+            width: 90%;
+            height: 50px;
+            margin-left: 40px;
+            background-color: transparent;
+            opacity: 1;
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+
+            svg {
+                margin-right: 20px;
+                opacity: 1;
+            }
+        }
+
+        button:hover {
+            background-color: $color-orange;
+
+            svg {
+                opacity: 1;
+                background-color: $color-orange;
+            }
+        }
+    }
+
+    .burger__button {
+        display: block;
+        padding-right: 20px;
+        background-color: transparent;
+        width: 30px;
+        height: 30px;
+        outline: none;
+        border: none;
+        cursor: pointer;
+
+        svg {
+            height: 30px;
+            width: 30px;
+            opacity: 0.7;
+            fill: $font-color;
+        }
+    }
+
+    .wrapper-user {
+        width: auto;
+
+    }
+
+    .sidebar__overlay {
+        position: fixed;
+        display: none;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 100;
+        cursor: pointer;
+        backdrop-filter: blur(10px);
+    }
+
+    .display {
+        &__data {
+            order: 0;
+            flex-direction: column;
+        }
+
+        &__tab {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: auto;
+            ;
+        }
+
+    }
+
+    .tab__content {
+        width: 100%;
+    }
+
+    .about__button {
+        width: 55px;
+        height: 55px;
+        background-color: $shadow;
+        opacity: 0.8;
+        border-radius: 50px;
+        margin-right: 15px;
+
+        &--title {
+            display: none;
+            font-size: 25px;
+        }
+
+        &--svg {
+            display: block;
+
+            svg {
+                width: 30px;
+                height: 30px;
+                fill: $color-white;
+                opacity: 0.5;
+            }
+        }
+
+    }
+
+    .about__button:hover {
+        background-color: $shadow-dark;
+
+        svg:hover {
+            fill: $font-color;
+            opacity: 0.8;
+        }
+    }
+
+    .tab__content {
+        max-height: 60vh;
+    }
+
+    .player-box__play-container {
+        margin: 0 20px 15px;
+        margin-right: auto;
+
+        .play,
+        .pause {
+            max-width: 50px;
+            height: 50px;
+            margin: 0;
+            margin: 0 15px;
+        }
+
+
+    }
+
+    .player-box {
+        padding: 0;
+        margin: 0;
+
+        &__speed {
+            display: none;
+        }
+
+        &__volume-container {
+            margin-left: 10px;
+        }
+
+        &__container {
+            display: flex;
+            flex-direction: column-reverse;
+            margin: 15px;
+            justify-content: center;
+            order: 3;
+
+        }
+
+        &__progress {
+            max-width: 768px;
+            width: 100%;
+            padding: 15px 0;
+            margin: 0;
+
+            .repeat {
+                display: none;
+            }
+        }
+
+        &__controls {
+            padding: 0 70px;
+
+            justify-content: center;
+        }
+    }
+
+    .show {
+        display: block;
+    }
+
+    .open {
+        height: 300px;
+        z-index: 101;
+    }
+}
+
+@media(max-width: 1024px) {
+    .measure {
+        width: 100% !important;
+        height: 50% !important;
+    }
+
+    .sheet-music__render{
+        position: relative;
+        display: grid;
+        grid-gap: 0;
+        grid-auto-rows: minmax(min-content, max-content);
+        justify-content: center;
+        grid-template-columns: repeat(auto-fit, 200px);
+    }
+
+    .sheet-music__time-marker{
+        height: 75px !important;
+    }
+}

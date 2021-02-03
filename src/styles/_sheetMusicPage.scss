@@ -1,0 +1,58 @@
+.sheet-music {
+    position: relative;
+    &__container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+    &__bitrate {
+        font-size: 25px;
+        margin: 0 50px;
+    }
+    &__render {
+        position: relative;
+        display: grid;
+        grid-gap: 0;
+        grid-template-columns: repeat(auto-fit, 400px);
+        grid-auto-rows: minmax(min-content, max-content);
+        justify-content: center;
+    }
+    &__time-marker {
+        width: 10px;
+        background-color: rgba($color: $color-lime, $alpha: 0.6);
+        position: absolute;
+        border-radius: 30%;
+    }
+    &__aside {
+        position: fixed;
+        top: 30%;
+        left: 3%;
+        z-index: 100;
+    }
+    &__track-list {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+    }
+}
+
+.button-play,
+.button-change-track {
+    padding: 0;
+    width: 50px;
+    height: 50px;
+    left: 10px;
+    z-index: 100;
+}
+
+.button-play {
+    font-size: 20px;
+}
+
+.button-change-track {
+    font-size: 30px;
+}
+
+.measure {
+    position: relative;
+}

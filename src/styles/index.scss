@@ -1,2 +1,45 @@
+* {
+    box-sizing: border-box;
+}
+
 @import '~normalize-scss/sass/normalize';
+@import './_colorVariables.scss';
 @include normalize();
+@import './_header.scss';
+@import './_loginForm.scss';
+@import './_searchbar.scss';
+@import './_sidebar.scss';
+@import './_displaytab.scss';
+@import './_footer.scss';
+@import './_main.scss';
+@import './_sheetMusicPage.scss';
+@import './_instrumentBar.scss';
+@import './_playerBox';
+@import './_about';
+@import './_media';
+
+
+.--show {
+    display: flex;
+}
+
+.--hide{
+    display: none;
+}
+
+.--printMeasures {
+    max-width: 1024px;
+    line-height: 1.15;
+    text-align: center;
+    -webkit-box-direction: normal;
+    box-sizing: border-box;
+    position: relative;
+    display: grid;
+    grid-gap: 0;
+    grid-template-columns: repeat(auto-fit, 200px);
+    grid-auto-rows: minmax(min-content, max-content);
+    -webkit-box-pack: center;
+    justify-content: center;
+}
+
+

@@ -1,0 +1,363 @@
+.header {
+    background-color: $dark-background;
+    min-height: 80px;
+
+    &__wrapper {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        max-width: 1440px;
+        margin: 0 auto;
+        padding: 10px 10px 0 10px;
+
+        &-title {
+            flex-shrink: 0;
+            font-size: 32px;
+            color: $font-color;
+            cursor: default;
+            font-family: 'Segoe UI';
+            font-weight: 300;
+            padding-left: 40px;
+        }
+    }
+}
+
+.wrapper-title {
+    display: flex;
+}
+
+.search {
+    &__button {
+        padding: 22px 55px;
+        background-color: $color-orange;
+        border-radius: 35px;
+
+        &--svg {
+            display: none;
+        }
+
+        &-container {
+            display: flex;
+            justify-content: space-between;
+            margin: 0 auto;
+        }
+
+        &-content {
+            color: $font-color;
+            font-size: 18px/24px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            letter-spacing: 0px;
+            text-align: center;
+        }
+
+        &-icon {
+            margin-right: 10px;
+            background-color: transparent;
+            background-size: cover;
+            width: 16px;
+            background-image: url(../../public/icons/search-icon.svg);
+        }
+    }
+}
+
+.search__button:hover {
+    cursor: pointer;
+    background-color: $color-pale-orange;
+}
+
+.wrapper-user {
+    display: flex;
+    height: 60px;
+    padding: 0 10px;
+    width: 100%;
+
+    &-social {
+        margin-top: 20px;
+        display: flex;
+        width: 240px;
+        justify-content: space-between;
+        border-radius: 35px;
+
+        button {
+            cursor: pointer;
+            width: 100px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button:last-child {
+            background-color: $color-blue;
+
+            svg {
+                color: $color-white;
+                height: 35px;
+            }
+        }
+
+        button:last-child:hover {
+            background-color: $color-blue;
+            opacity: 0.8;
+        }
+
+        button:first-child {
+            background-color: $font-color;
+
+            svg {
+                color: $color-orange;
+                height: 35px;
+            }
+        }
+
+        button:first-child:hover {
+            background-color: $font-color;
+            opacity: 0.8;
+        }
+    }
+
+    &-login,
+    &-signup,
+    &-log-out {
+        margin-left: 20px;
+        border-radius: 50px;
+        background-color: $shadow;
+        outline: none;
+
+        svg {
+            width: 25px;
+            height: 25px;
+            fill: $color-white;
+            opacity: 0.5;
+        }
+    }
+
+    &-login:hover,
+    &-signup:hover,
+    &-log-out:hover {
+        background-color: $shadow-dark;
+
+        svg {
+            opacity: 0.8;
+        }
+    }
+
+    &-login,
+    &-signup {
+        background-size: cover;
+        border: none;
+        outline: none;
+        width: 60px;
+        height: 60px;
+        cursor: pointer;
+        border-radius: 50px;
+        outline: none;
+    }
+
+    &__form-container {
+        display: none;
+        position: fixed;
+        padding: 25px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: $login-bac;
+        z-index: 100;
+        border-radius: 10px;
+        box-shadow: 0 5px 10px rgba(231, 230, 230, 0.2);
+        color: $color-white;
+        font-family: 'Segoe UI';
+        font-weight: Semibold;
+        font-size: 16px;
+        text-align: left;
+        margin-bottom: 15px;
+        padding: 50px;
+    }
+
+    &__form-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background: rgba(0, 0, 0, 0.2);
+        z-index: 90;
+        backdrop-filter: blur(10px);
+    }
+}
+
+form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+
+    input {
+        height: 40px;
+        width: 330px;
+        border-radius: 35px;
+        outline: none;
+        background-color: $shadow;
+        opacity: 0.7;
+        padding: 10px 20px;
+        color: $color-white;
+        border: none;
+        font-size: 16px;
+    }
+
+    label {
+        margin: 15px;
+    }
+
+    button {
+        height: 60px;
+        width: 330px;
+        border-radius: 35px;
+        outline: none;
+        background-color: $color-orange;
+        cursor: pointer;
+        padding: 10px;
+        color: $color-white;
+        border: none;
+        margin: 5px;
+        padding: 20px;
+    }
+
+    button:hover {
+        cursor: pointer;
+        background-color: $color-pale-orange;
+    }
+}
+
+.form-add {
+    &__button-container {
+        margin-top: 40px;
+    }
+}
+
+.button-submit,
+.button-cancel {
+    width: 150px;
+}
+
+.button-cancel {
+    background-color: $shadow;
+    opacity: 0.7;
+}
+
+.form-add {
+    text-align: left;
+
+    input {
+        background-color: $shadow;
+        border-radius: 10px;
+        font-size: 16px;
+
+    }
+
+}
+
+.author__title {
+    margin-top: 10px;
+}
+
+.options-container {
+    color: $color-white;
+
+    select {
+        color: $color-white;
+        font-size: 20px;
+    }
+}
+
+.input__author {
+    width: 330px;
+    height: 40px;
+
+    border-radius: 10px;
+    outline: none;
+    background-color: $shadow;
+    opacity: 0.7;
+    padding: 10px 20px;
+    color: $color-white;
+    border: none;
+    font-size: 16px;
+    margin-top: 10px;
+    resize: none;
+}
+
+.drop-area {
+    border: 2px dashed $font-color;
+    border-radius: 20px;
+    width: 320px;
+    height: 175px;
+    margin: 50px auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.3;
+    font-size: 14px;
+    cursor: pointer;
+    // z-index: 100;
+
+    svg {
+        width: 50px;
+        fill: $color-white;
+        opacity: 0.5;
+        padding-bottom: 10px;
+    }
+
+    &__input {
+        width: 305px;
+    }
+
+}
+
+.drop-area__over {
+    background-color: $shadow;
+    // border: solid;
+    opacity: 0.8;
+}
+
+.button {
+
+    &-log-out,
+    &-user-login {
+        width: 60px;
+        height: 60px;
+        margin-left: 20px;
+        border-radius: 50px;
+        background-color: $shadow;
+        border: 0;
+        cursor: pointer;
+        outline: none;
+
+        svg {
+            width: 25px;
+            height: 25px;
+            fill: $color-white;
+            opacity: 0.5;
+        }
+    }
+
+    &-user-login:hover,
+    &-log-out:hover {
+        background-color: $shadow-dark;
+
+        svg {
+            opacity: 0.8;
+        }
+    }
+
+    &-log-out {
+        border: none;
+        outline: none;
+        border-radius: 50px;
+    }
+}
+
+.overlay {
+    backdrop-filter: blur(10px);
+}

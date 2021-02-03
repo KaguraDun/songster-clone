@@ -5,7 +5,10 @@
         "module": "es6",
         "target": "es5",
         "jsx": "react",
-        "allowJs": true
+        "allowJs": true,
+        "moduleResolution": "Node",
+        "resolveJsonModule": true,
+        "allowSyntheticDefaultImports": true,
     },
     "include": [
         "src/**/*"

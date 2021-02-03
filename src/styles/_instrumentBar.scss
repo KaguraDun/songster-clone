@@ -1,0 +1,85 @@
+.inst-bar__container * {
+    font-family: 'Segoe UI';
+    font-weight: Semibold;
+    font-size: 18px;
+    color: $font-color;
+
+}
+
+.inst-bar {
+    &__container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: $login-bac;
+        z-index: 100;
+        border-radius: 10px;
+        box-shadow: 0 5px 10px rgba(231, 230, 230, 0.2);
+        margin-bottom: 15px;
+        padding: 40px;
+
+    }
+
+    &__title {
+        font-size: 32px;
+        margin: 20px;
+    }
+
+    &__instrument-wrapper {
+        max-height: 50vh;
+        overflow-y: scroll;
+
+        &::-webkit-scrollbar {
+            width: 0px;
+        }
+    }
+
+    &__instrument {
+        display: flex;
+        justify-content: flex-start;
+        padding: 20px;
+        border-bottom: 1px solid $shadow-dark;
+
+        &:hover {
+            cursor: pointer;
+            background: $color-dark-background;
+        }
+    }
+
+    &__instrument-icon {
+        display: flex;
+        margin-right: 20px;
+        width: 50px;
+        height: 50px;
+        border-radius: 5px;
+        background-color: $shadow;
+        position: relative;
+        text-align: center;
+
+        svg {
+            position: absolute;
+            top: calc(50% - 15px);
+            left: calc(50% - 15px);
+            width: 30px;
+            height: 30px;
+            fill: $color-white;
+            opacity: 0.5;
+
+        }
+    }
+
+    &-instrument-content {}
+
+    &__highlight {
+        background: $color-orange;
+
+        &:hover {
+            background: $color-pale-orange;
+        }
+    }
+}
+
+.overlay {
+    backdrop-filter: blur(10px);
+}
