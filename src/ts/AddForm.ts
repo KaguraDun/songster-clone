@@ -1,9 +1,10 @@
 import { Difficulty } from '../models/Difficulty';
 import { Genre } from '../models/Genre';
-import renderElement from './helpers/renderElements';
-import { SVG_SPRITE } from './helpers/svg_sprites';
 import { serverUrl } from '../models/Constants';
 import Store, { EVENTS } from './Store';
+import renderElement from './helpers/renderElements';
+import { SVG_SPRITE } from './helpers/svg_sprites';
+import validateFileType from './helpers/validateFileType';
 
 const SHOW = '--show';
 
@@ -13,6 +14,7 @@ interface FormUploadMedia {
   author: HTMLInputElement;
   genreInput: HTMLSelectElement;
   difficultyInput: HTMLSelectElement;
+  uploadFileError: HTMLElement;
 }
 
 export default class AddForm {
@@ -20,9 +22,6 @@ export default class AddForm {
   formContainer: HTMLElement;
   formOverlay: HTMLElement;
   dropArea: HTMLElement;
-  text: HTMLElement;
-  fileName: string;
-  fileDropUpload: File;
   inputUpload: HTMLInputElement;
   store: Store;
 
@@ -34,10 +33,7 @@ export default class AddForm {
     this.activeArea = this.activeArea.bind(this);
     this.formContainer;
     this.formOverlay;
-     this.dropArea;
-    this.text;
-    this.fileName;
-    this.fileDropUpload;
+    this.dropArea;
     this.inputUpload;
   }
 
@@ -106,6 +102,7 @@ export default class AddForm {
     authorError.textContent = '';
 
     this.renderUploadForm(formSendFile);
+    const uploadFileError = renderElement(formSendFile, 'div', ['form-add__file-error']);
 
     const buttonContainer = renderElement(formSendFile, 'div', ['form-add__button-container']);
     const buttonSubmit = renderElement(buttonContainer, 'button', ['button-submit'], 'Submit');
@@ -113,19 +110,21 @@ export default class AddForm {
     const buttonCancel = renderElement(buttonContainer, 'button', ['button-cancel'], 'Cancel');
     buttonCancel.addEventListener('click', this.hideForm);
 
-    return { element: formSendFile, name, author, genreInput, difficultyInput };
+    return { element: formSendFile, name, author, genreInput, difficultyInput, uploadFileError };
   }
 
-  async handleFileUpload(formUpload: FormUploadMedia, event: Event) {
+  handleFileUpload(formUpload: FormUploadMedia, event: Event) {
     event.preventDefault();
 
     const formData = new FormData();
+    let inputFile = this.inputUpload.files[0];
 
-    if (this.inputUpload.files[0]) {
-      formData.append('midi', this.inputUpload.files[0]);
-    } else if (this.fileDropUpload) {
-      formData.append('midi', this.fileDropUpload);
+    if (inputFile && validateFileType(inputFile)) {
+      formData.append('midi', inputFile);
     } else {
+      this.inputUpload.value = '';
+      this.dropArea.classList.remove('drop-area__over');
+      formUpload.uploadFileError.innerText = 'Invalid file format. Supported format is .mid';
       return;
     }
 
@@ -138,6 +137,10 @@ export default class AddForm {
     formData.append('genre', genre);
     formData.append('difficulty', difficulty);
 
+    this.addSong(formData);
+  }
+
+  async addSong(formData: FormData) {
     const res = await fetch(`${serverUrl}/addSong`, {
       method: 'POST',
       body: formData,
@@ -154,10 +157,12 @@ export default class AddForm {
   renderOptionSelectAndGet(e: any, name: string, parentElement: HTMLElement) {
     const select = document.createElement('select');
     select.required = true;
+
     const option = document.createElement('option');
     option.text = name;
     option.selected = true;
     option.disabled = true;
+
     select.options.add(option);
 
     for (const value of Object.keys(e)) {
@@ -178,10 +183,11 @@ export default class AddForm {
 
   renderUploadForm(parentElement: HTMLElement) {
     this.dropArea = renderElement(parentElement, 'div', ['drop-area']);
-    this.text = renderElement(this.dropArea, 'div', [], 'Drop your file here');
-    this.dropArea.innerHTML = SVG_SPRITE.UPLOAD;
+    const dropAreaImage = renderElement(this.dropArea, 'div', ['drop-area__image']);
+    dropAreaImage.innerHTML = SVG_SPRITE.UPLOAD;
 
-    this.inputUpload = this.renderInput(this.dropArea, 'input', 'Upload the file', 'file');
+    this.inputUpload = this.renderInput(this.dropArea, 'input', 'Drop your file here', 'file');
+    this.inputUpload.accept = '.mid';
     this.inputUpload.classList.add('drop-area__input');
 
     const dropAreaElement = this.inputUpload.closest('.drop-area');
@@ -199,13 +205,7 @@ export default class AddForm {
 
     dropAreaElement.addEventListener('drop', (e: DragEvent) => {
       this.dropHandler(e);
-      this.changeDropAreaView();
     });
-  }
-
-  changeDropAreaView() {
-    this.dropArea.innerHTML = SVG_SPRITE.DONE;
-    this.text = renderElement(this.dropArea, 'div', [], this.fileName);
   }
 
   dropHandler(ev: DragEvent) {
@@ -213,17 +213,11 @@ export default class AddForm {
 
     if (ev.dataTransfer.items) {
       // Use DataTransferItemList interface to access the file(s)
-      for (var i = 0; i < ev.dataTransfer.items.length; i++) {
+      for (let i = 0; i < ev.dataTransfer.items.length; i++) {
         // If dropped items aren't files, reject them
         if (ev.dataTransfer.items[i].kind === 'file') {
-          this.fileDropUpload = ev.dataTransfer.items[i].getAsFile();
-          this.fileName = `${this.fileDropUpload.name}`;
+          this.inputUpload.files = ev.dataTransfer.files;
         }
-      }
-    } else {
-      // Use DataTransfer interface to access the file(s)
-      for (var i = 0; i < ev.dataTransfer.files.length; i++) {
-        this.fileName = `${ev.dataTransfer.files[i].name}`;
       }
     }
   }
