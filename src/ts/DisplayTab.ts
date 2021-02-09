@@ -48,6 +48,7 @@ export default class DisplayTab {
   }
 
   async render() {
+    document.body.classList.remove('loaded');
     this.store.eventEmitter.addEvent(EVENTS.FULL_SCREEN_BUTTON_CLICK, this.openFullScreenMode);
 
     this.container = renderElement(this.parentElement, 'section', ['display__tab']);
@@ -58,6 +59,12 @@ export default class DisplayTab {
     this.renderSideBar();
     this.renderMusicPlayer();
     this.initAudio();
+
+    document.body.classList.add('loaded_hiding');
+    window.setTimeout(function () {
+      document.body.classList.add('loaded');
+      document.body.classList.remove('loaded_hiding');
+    }, 500);
   }
 
   async fetchSong() {
