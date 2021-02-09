@@ -26,6 +26,8 @@ export default class Page {
     this.renderHeader();
     this.renderMain();
     this.renderFooter();
+
+
   }
 
   renderHeader() {
@@ -45,6 +47,7 @@ export default class Page {
     wrapper.appendChild(this.mainElement);
 
     this.renderSong();
+    
   }
 
   renderSong() {
@@ -53,6 +56,8 @@ export default class Page {
     const id = this.store.selectedSongId;
     this.songContent = new DisplayTab(this.mainElement,this.store,id);
     this.songContent.render();
+
+     
   }
 
   renderFooter() {
@@ -65,6 +70,7 @@ export default class Page {
 
     new Footer(this.footerElement).render();
   }
+
 
   
 }
